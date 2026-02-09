@@ -39,16 +39,16 @@ const PeelCTA = ({ visible, onClick, reducedMotion = false }: PeelCTAProps) => {
     <div
       ref={wrapperRef}
       className={clsx(
-        "pointer-events-none absolute inset-x-0 bottom-6 z-30 flex justify-center",
-        "drop-shadow-2xl"
+        "pointer-events-none absolute bottom-12 right-6 z-30 flex justify-end sm:bottom-16 sm:right-12",
+        "drop-shadow-[0_25px_60px_rgba(0,0,0,0.35)]"
       )}
     >
       <button
         type="button"
         onClick={onClick}
-        className="pointer-events-auto flex items-center gap-3 rounded-full border border-white/20 bg-[var(--color-supadark)]/80 px-6 py-3 text-sm font-semibold uppercase tracking-[0.3em] text-[var(--color-cream)] backdrop-blur-md transition hover:bg-[var(--color-highlight)] hover:text-[var(--color-ink)]"
+        className="pp-button pointer-events-auto inline-flex items-center gap-4 rounded-full border border-white/20 bg-[var(--color-highlight)]/85 px-7 py-4 text-sm font-semibold text-[var(--color-ink)] shadow-[0_15px_45px_rgba(255,255,255,0.25)] backdrop-blur transition hover:brightness-110 sm:text-base"
       >
-        <span>Find out more</span>
+        <span>Find Out More</span>
         <svg
           width="22"
           height="22"

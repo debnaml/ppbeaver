@@ -206,9 +206,25 @@ export default function Home() {
             </label>
             <button
               type="submit"
-              className="mt-2 inline-flex items-center justify-center rounded-full bg-[var(--color-highlight)] px-6 py-3 text-sm font-semibold uppercase tracking-[0.4em] text-[var(--color-ink)] transition hover:brightness-110"
+              className="pp-button mt-2 inline-flex items-center gap-4 rounded-full border border-white/20 bg-[var(--color-highlight)]/85 px-7 py-4 text-sm font-semibold text-[var(--color-ink)] shadow-[0_15px_45px_rgba(255,255,255,0.25)] backdrop-blur transition hover:brightness-110 sm:text-base"
             >
-              Send brief
+              <span>Send Brief</span>
+              <svg
+                width="22"
+                height="22"
+                viewBox="0 0 24 24"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+                aria-hidden
+              >
+                <path
+                  d="M5 12h14m0 0-4-4m4 4-4 4"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                />
+              </svg>
             </button>
           </form>
         </section>

@@ -85,3 +85,10 @@ main {
     transform: scaleX(1);
   }
 }
+
+.pp-button {
+  font-family: var(--font-syne), "Syne", system-ui, -apple-system, BlinkMacSystemFont,
+    "Segoe UI", sans-serif;
+  letter-spacing: -0.01em;
+  text-transform: none;
+}
