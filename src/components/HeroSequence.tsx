@@ -55,12 +55,16 @@ const HeroSequence = () => {
   const [progressDuration, setProgressDuration] = useState(0);
   const [progressKey, setProgressKey] = useState(0);
   const [logoMaskVisible, setLogoMaskVisible] = useState(false);
+  const [sequenceDormant, setSequenceDormant] = useState(false);
 
   const videoARef = useRef<HTMLVideoElement>(null);
   const videoBRef = useRef<HTMLVideoElement>(null);
   const ctaTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const keywordSwapTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const logoMaskTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const heroRef = useRef<HTMLElement | null>(null);
+  const wasDormantRef = useRef(false);
+  const resumeFromDormantRef = useRef(false);
 
   const getLayerRef = useCallback(
     (layer: Layer) => (layer === "A" ? videoARef : videoBRef),
@@ -144,6 +148,31 @@ const HeroSequence = () => {
   }, [isReady]);
 
   useEffect(() => {
+    if (typeof window === "undefined" || typeof IntersectionObserver === "undefined") {
+      return;
+    }
+    const element = heroRef.current;
+    if (!element) return;
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (!entry.isIntersecting) {
+          setSequenceDormant(true);
+          return;
+        }
+        setSequenceDormant(false);
+      },
+      { threshold: 0.2 }
+    );
+
+    observer.observe(element);
+
+    return () => {
+      observer.disconnect();
+    };
+  }, []);
+
+  useEffect(() => {
     const scheduleVisibility = (value: boolean, delay: number) => {
       if (logoMaskTimeoutRef.current) {
         clearTimeout(logoMaskTimeoutRef.current);
@@ -175,8 +204,29 @@ const HeroSequence = () => {
     };
   }, [isReady, reducedMotion]);
 
+  useEffect(() => {
+    const layers: Layer[] = ["A", "B"];
+
+    if (sequenceDormant) {
+      layers.forEach((layer) => {
+        const element = getLayerRef(layer).current;
+        if (!element) return;
+        element.pause();
+      });
+    } else if (wasDormantRef.current) {
+      const activeVideo = getLayerRef(activeLayer).current;
+      if (activeVideo && isReady) {
+        resumeFromDormantRef.current = true;
+        void activeVideo.play().catch(() => undefined);
+      }
+    }
+
+    wasDormantRef.current = sequenceDormant;
+  }, [activeLayer, getLayerRef, isReady, sequenceDormant]);
+
   const primeVideo = useCallback(
     (layer: Layer, index: number, autoplay = false) => {
+      if (sequenceDormant) return;
       const element = getLayerRef(layer).current;
       if (!element) return;
       const source = VIDEO_SOURCES[index];
@@ -208,7 +258,7 @@ const HeroSequence = () => {
         }
       }
     },
-    [getLayerRef]
+    [getLayerRef, sequenceDormant]
   );
 
   const pauseLayer = useCallback((layer: Layer) => {
@@ -219,6 +269,7 @@ const HeroSequence = () => {
   }, [getLayerRef]);
 
   const advanceSequence = useCallback(() => {
+    if (sequenceDormant) return;
     const totalVideos = VIDEO_SOURCES.length;
     if (totalVideos === 0) return;
 
@@ -250,9 +301,10 @@ const HeroSequence = () => {
         ctaTimeoutRef.current = null;
       }, HERO_SETTINGS.ctaRevealDelay);
     }
-  }, [activeLayer, ctaVisible, currentVideoIndex, pauseLayer, primeVideo, transitionKeyword]);
+  }, [activeLayer, ctaVisible, currentVideoIndex, pauseLayer, primeVideo, sequenceDormant, transitionKeyword]);
 
   useEffect(() => {
+    if (sequenceDormant || isReady) return;
     const initialLayer: Layer = "A";
     primeVideo(initialLayer, 0);
     const initialVideo = getLayerRef(initialLayer).current;
@@ -288,9 +340,10 @@ const HeroSequence = () => {
       cancelled = true;
       initialVideo.removeEventListener("canplaythrough", handleReady);
     };
-  }, [getLayerRef, primeVideo, restartAndPlay, waitForHdQuality]);
+  }, [getLayerRef, isReady, primeVideo, restartAndPlay, sequenceDormant, waitForHdQuality]);
 
   useEffect(() => {
+    if (sequenceDormant) return;
     const layer = activeLayer;
     const videoEl = getLayerRef(layer).current;
     if (!videoEl) return;
@@ -304,7 +357,7 @@ const HeroSequence = () => {
     return () => {
       videoEl.removeEventListener("ended", handleEnded);
     };
-  }, [activeLayer, advanceSequence, getLayerRef]);
+  }, [activeLayer, advanceSequence, getLayerRef, sequenceDormant]);
 
   useEffect(() => {
     if (!isReady) {
@@ -336,6 +389,10 @@ const HeroSequence = () => {
     };
 
     const handlePlay = () => {
+      if (resumeFromDormantRef.current) {
+        resumeFromDormantRef.current = false;
+        return;
+      }
       triggerAnimation();
     };
 
@@ -378,7 +435,10 @@ const HeroSequence = () => {
   const showProgressFill = isReady && progressDuration > 0;
 
   return (
-    <section className="relative flex min-h-screen w-full flex-col overflow-hidden bg-[var(--color-supadark)]">
+    <section
+      ref={heroRef}
+      className="relative flex min-h-screen w-full flex-col overflow-hidden bg-[var(--color-supadark)]"
+    >
       <div className="relative h-screen w-full">
         <div className="absolute inset-0">
           <video
@@ -437,6 +497,7 @@ const HeroSequence = () => {
               style={{
                 backgroundColor: HERO_SETTINGS.highlightColor,
                 animationDuration: `${progressDuration}s`,
+                animationPlayState: sequenceDormant ? "paused" : "running",
               }}
             />
           )}
@@ -444,7 +505,7 @@ const HeroSequence = () => {
 
         <div className="noise-overlay" aria-hidden />
 
-        <LogoLoader isVisible={!isReady} />
+        <LogoLoader isVisible={!isReady && !sequenceDormant} />
         <PeelCTA
           visible={ctaVisible}
           onClick={handleCTA}
