@@ -210,6 +210,7 @@ export default function Home() {
             >
               <span>Send Brief</span>
               <svg
+                className="pp-button-arrow"
                 width="22"
                 height="22"
                 viewBox="0 0 24 24"

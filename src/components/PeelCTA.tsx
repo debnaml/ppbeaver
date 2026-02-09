@@ -50,6 +50,7 @@ const PeelCTA = ({ visible, onClick, reducedMotion = false }: PeelCTAProps) => {
       >
         <span>Find Out More</span>
         <svg
+          className="pp-button-arrow"
           width="22"
           height="22"
           viewBox="0 0 24 24"

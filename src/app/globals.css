@@ -92,3 +92,38 @@ main {
   letter-spacing: -0.01em;
   text-transform: none;
 }
+
+.pp-button-arrow {
+  animation: none;
+  transition: transform 0.2s ease;
+}
+
+.pp-button:hover .pp-button-arrow,
+.pp-button:focus-visible .pp-button-arrow {
+  animation: pp-arrow-nudge 0.65s ease-out 1;
+}
+
+@keyframes pp-arrow-nudge {
+  0% {
+    transform: translateY(0);
+  }
+  30% {
+    transform: translateY(4px);
+  }
+  50% {
+    transform: translateY(0);
+  }
+  75% {
+    transform: translateY(4px);
+  }
+  100% {
+    transform: translateY(0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .pp-button:hover .pp-button-arrow,
+  .pp-button:focus-visible .pp-button-arrow {
+    animation: none;
+  }
+}
