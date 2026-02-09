@@ -5,6 +5,7 @@ import clsx from "clsx";
 
 import HeadlineOverlay from "@/components/HeadlineOverlay";
 import LogoLoader from "@/components/LogoLoader";
+import LogoMaskOverlay from "@/components/LogoMaskOverlay";
 import PeelCTA from "@/components/PeelCTA";
 
 // TODO(USER): Replace sample VIDEO_SOURCES with final Cloudflare Stream playback URLs.
@@ -51,11 +52,15 @@ const HeroSequence = () => {
   const [keywordVisible, setKeywordVisible] = useState(false);
   const [ctaVisible, setCtaVisible] = useState(false);
   const [reducedMotion, setReducedMotion] = useState(false);
+  const [progressDuration, setProgressDuration] = useState(0);
+  const [progressKey, setProgressKey] = useState(0);
+  const [logoMaskVisible, setLogoMaskVisible] = useState(false);
 
   const videoARef = useRef<HTMLVideoElement>(null);
   const videoBRef = useRef<HTMLVideoElement>(null);
   const ctaTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const keywordSwapTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const logoMaskTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const getLayerRef = useCallback(
     (layer: Layer) => (layer === "A" ? videoARef : videoBRef),
@@ -137,6 +142,38 @@ const HeroSequence = () => {
       html.style.overflow = prev;
     };
   }, [isReady]);
+
+  useEffect(() => {
+    const scheduleVisibility = (value: boolean, delay: number) => {
+      if (logoMaskTimeoutRef.current) {
+        clearTimeout(logoMaskTimeoutRef.current);
+        logoMaskTimeoutRef.current = null;
+      }
+      logoMaskTimeoutRef.current = window.setTimeout(() => {
+        setLogoMaskVisible(value);
+        logoMaskTimeoutRef.current = null;
+      }, delay);
+    };
+
+    if (!isReady) {
+      scheduleVisibility(false, 0);
+      return () => {
+        if (logoMaskTimeoutRef.current) {
+          clearTimeout(logoMaskTimeoutRef.current);
+          logoMaskTimeoutRef.current = null;
+        }
+      };
+    }
+
+    scheduleVisibility(true, reducedMotion ? 0 : 250);
+
+    return () => {
+      if (logoMaskTimeoutRef.current) {
+        clearTimeout(logoMaskTimeoutRef.current);
+        logoMaskTimeoutRef.current = null;
+      }
+    };
+  }, [isReady, reducedMotion]);
 
   const primeVideo = useCallback(
     (layer: Layer, index: number, autoplay = false) => {
@@ -258,7 +295,9 @@ const HeroSequence = () => {
     const videoEl = getLayerRef(layer).current;
     if (!videoEl) return;
 
-    const handleEnded = () => advanceSequence();
+    const handleEnded = () => {
+      advanceSequence();
+    };
 
     videoEl.addEventListener("ended", handleEnded);
 
@@ -266,6 +305,59 @@ const HeroSequence = () => {
       videoEl.removeEventListener("ended", handleEnded);
     };
   }, [activeLayer, advanceSequence, getLayerRef]);
+
+  useEffect(() => {
+    if (!isReady) {
+      return;
+    }
+
+    const video = getLayerRef(activeLayer).current;
+    if (!video) {
+      return;
+    }
+
+    const computeDuration = () => {
+      if (Number.isFinite(video.duration) && video.duration > 0) {
+        return video.duration;
+      }
+      if (video.seekable?.length) {
+        return video.seekable.end(video.seekable.length - 1);
+      }
+      return 0;
+    };
+
+    const triggerAnimation = () => {
+      const baseDuration = computeDuration();
+      if (baseDuration <= 0) return;
+      const rate = video.playbackRate || 1;
+      const adjusted = rate > 0 ? baseDuration / rate : baseDuration;
+      setProgressDuration(adjusted);
+      setProgressKey((prev) => prev + 1);
+    };
+
+    const handlePlay = () => {
+      triggerAnimation();
+    };
+
+    const handleLoadedMetadata = () => {
+      if (!video.paused) {
+        triggerAnimation();
+      }
+    };
+
+    video.addEventListener("play", handlePlay);
+    video.addEventListener("loadedmetadata", handleLoadedMetadata);
+
+    if (!video.paused) {
+      triggerAnimation();
+    }
+
+    return () => {
+      video.removeEventListener("play", handlePlay);
+      video.removeEventListener("loadedmetadata", handleLoadedMetadata);
+    };
+  }, [activeLayer, getLayerRef, isReady]);
+
 
 
   useEffect(() => {
@@ -282,6 +374,8 @@ const HeroSequence = () => {
     if (!target) return;
     target.scrollIntoView({ behavior: "smooth" });
   };
+
+  const showProgressFill = isReady && progressDuration > 0;
 
   return (
     <section className="relative flex min-h-screen w-full flex-col overflow-hidden bg-[var(--color-supadark)]">
@@ -320,6 +414,10 @@ const HeroSequence = () => {
           aria-hidden
         />
 
+        <div className="pointer-events-auto fixed left-6 top-6 z-30 sm:left-12 sm:top-10">
+          <LogoMaskOverlay visible={logoMaskVisible} reducedMotion={reducedMotion} />
+        </div>
+
         <HeadlineOverlay
           keyword={currentKeyword}
           visible={keywordVisible}
@@ -327,6 +425,22 @@ const HeroSequence = () => {
           reducedMotion={reducedMotion}
           direction="rtl"
         />
+
+        <div
+          className="pointer-events-none absolute bottom-0 left-0 right-0 z-20 h-[10px] overflow-hidden rounded-none bg-white/10"
+          aria-hidden
+        >
+          {showProgressFill && (
+            <div
+              key={progressKey}
+              className="hero-progress-fill"
+              style={{
+                backgroundColor: HERO_SETTINGS.highlightColor,
+                animationDuration: `${progressDuration}s`,
+              }}
+            />
+          )}
+        </div>
 
         <div className="noise-overlay" aria-hidden />
 
