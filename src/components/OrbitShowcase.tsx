@@ -81,13 +81,13 @@ const SERVICES: Service[] = [
       "Thoughtful planning and experienced guidance to help you prioritise the right changes with confidence.",
     detailGrid: [
       "Digital transformation roadmaps",
-      "Technology and AI strategy",
-      "Automation and integration planning",
-      "Product and service design",
-      "Vendor and platform selection",
-      "Architecture and solution design",
-      "Change and adoption planning",
-      "Delivery leadership and programme support",
+      "Technology & AI strategy",
+      "Integration planning",
+      "Product & service design",
+      "Vendor & platform selection",
+      "Architecture & solution design",
+      "Change & adoption planning",
+      "Delivery leadership & programme support",
     ],
     images: [
       {
@@ -206,6 +206,7 @@ const OrbitShowcase = () => {
   const [activeIndex, setActiveIndex] = useState(0);
   const sectionRef = useRef<HTMLElement | null>(null);
   const serviceRefs = useMemo(() => SERVICES.map(() => createRef<HTMLDivElement>()), []);
+  const lastImageRefs = useMemo(() => SERVICES.map(() => createRef<HTMLDivElement>()), []);
   const scrollFrame = useRef<number | null>(null);
   const activeService = SERVICES[activeIndex];
   const detailRows = activeService.detailGrid ? chunkItems(activeService.detailGrid) : [];
@@ -213,22 +214,23 @@ const OrbitShowcase = () => {
   useEffect(() => {
     const updateActiveService = () => {
       scrollFrame.current = null;
-      const anchor = window.innerHeight * 0.35;
-      let closestIndex = 0;
-      let minDistance = Number.POSITIVE_INFINITY;
+      const sectionNode = sectionRef.current;
+      if (!sectionNode) return;
+      const sectionTop = sectionNode.getBoundingClientRect().top;
+      const boundary = Math.max(sectionTop, 0);
 
-      serviceRefs.forEach((ref, index) => {
-        const node = ref.current;
-        if (!node) return;
-        const rect = node.getBoundingClientRect();
-        const distance = Math.abs(rect.top - anchor);
-        if (distance < minDistance) {
-          minDistance = distance;
-          closestIndex = index;
+      let nextIndex = SERVICES.length - 1;
+      for (let i = 0; i < lastImageRefs.length; i += 1) {
+        const anchorNode = lastImageRefs[i].current;
+        if (!anchorNode) continue;
+        const anchorTop = anchorNode.getBoundingClientRect().top;
+        if (anchorTop >= boundary) {
+          nextIndex = i;
+          break;
         }
-      });
+      }
 
-      setActiveIndex((prev) => (prev === closestIndex ? prev : closestIndex));
+      setActiveIndex((prev) => (prev === nextIndex ? prev : nextIndex));
     };
 
     const handleScroll = () => {
@@ -246,7 +248,7 @@ const OrbitShowcase = () => {
       }
       window.removeEventListener("scroll", handleScroll);
     };
-  }, [serviceRefs]);
+  }, [lastImageRefs]);
 
   const handleSelect = (index: number, shouldScroll = false) => {
     setActiveIndex(index);
@@ -304,7 +306,7 @@ const OrbitShowcase = () => {
               </span>
               <span
                 className={clsx(
-                  "mt-1 h-1 w-24 origin-left bg-white transition-all duration-500",
+                  "mt-1 h-1 w-24 origin-left bg-[#13C390] transition-all duration-500",
                   activeIndex === index ? "scale-x-100 opacity-100" : "scale-x-0 opacity-0 group-hover:opacity-60"
                 )}
               />
@@ -340,10 +342,15 @@ const OrbitShowcase = () => {
               ref={serviceRefs[serviceIndex]}
               className="space-y-6"
             >
-              {service.images.map((image) => (
+              {service.images.map((image, imageIndex) => (
                 <article
                   key={image.id}
                   className="relative h-[320px] overflow-hidden rounded-[40px] border border-white/10 bg-[#031216]"
+                  ref={
+                    imageIndex === service.images.length - 1
+                      ? lastImageRefs[serviceIndex]
+                      : undefined
+                  }
                 >
                   <div
                     className={clsx(
