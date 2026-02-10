@@ -57,11 +57,7 @@ const OperatorParallax = () => {
   }, []);
 
   useEffect(() => {
-    if (!isActive) {
-      setOffset(0);
-      setScrollProgress(0);
-      return;
-    }
+    if (!isActive) return;
 
     const handleScroll = () => {
       if (!containerRef.current) return;
@@ -86,6 +82,9 @@ const OperatorParallax = () => {
     return () => window.removeEventListener("scroll", handleScroll);
   }, [isActive]);
 
+  const parallaxOffset = isActive ? offset : 0;
+  const marqueeProgress = isActive ? scrollProgress : 0;
+
   return (
     <section ref={sectionRef} className="relative isolate px-0 py-0">
       <div ref={containerRef} className="relative h-[70vh] w-full overflow-hidden">
@@ -95,7 +94,7 @@ const OperatorParallax = () => {
             backgroundImage: "url(/images/operator.jpg)",
             backgroundSize: "cover",
             backgroundPosition: "center",
-            transform: `translateY(${offset}px) scale(1.05)`,
+            transform: `translateY(${parallaxOffset}px) scale(1.05)`,
             transition: "transform 120ms ease-out",
           }}
         />
@@ -110,7 +109,7 @@ const OperatorParallax = () => {
                 <span
                   className="inline-flex min-w-full whitespace-nowrap will-change-transform"
                   style={{
-                    transform: `translateX(${direction * scrollProgress * 25 + offset}%)`,
+                    transform: `translateX(${direction * marqueeProgress * 25 + offset}%)`,
                     transition: "transform 90ms linear",
                   }}
                   aria-hidden

@@ -13,19 +13,40 @@ type ServiceImage = {
 
 type Service = {
   id: string;
-  number: string;
   title: string;
   description: string;
+  detailGrid?: string[];
   images: ServiceImage[];
+};
+
+const chunkItems = (items: string[], chunkSize = 2) => {
+  const rows: string[][] = [];
+  items.forEach((item, index) => {
+    if (index % chunkSize === 0) {
+      rows.push([item]);
+    } else {
+      rows[rows.length - 1].push(item);
+    }
+  });
+  return rows;
 };
 
 const SERVICES: Service[] = [
   {
     id: "insight",
-    number: "01",
     title: "Insight",
     description:
-      "We drop inside your operation, interview your teams, and trace every workflow to understand where time, trust, and value leak away.",
+      "Independent advice grounded in your data, your team and how your organisation actually works.",
+    detailGrid: [
+      "Data analysis and reporting",
+      "Stakeholder and customer research",
+      "Process and workflow reviews",
+      "System and technology audits",
+      "Journey mapping",
+      "Opportunity discovery workshops",
+      "Feasibility and business case support",
+      "Clear, practical recommendations",
+    ],
     images: [
       {
         id: "insight-1",
@@ -55,10 +76,19 @@ const SERVICES: Service[] = [
   },
   {
     id: "strategy",
-    number: "02",
     title: "Strategy",
     description:
-      "Findings become focus. We map the opportunities, set measurable wins, and give every initiative an accountable owner.",
+      "Thoughtful planning and experienced guidance to help you prioritise the right changes with confidence.",
+    detailGrid: [
+      "Digital transformation roadmaps",
+      "Technology and AI strategy",
+      "Automation and integration planning",
+      "Product and service design",
+      "Vendor and platform selection",
+      "Architecture and solution design",
+      "Change and adoption planning",
+      "Delivery leadership and programme support",
+    ],
     images: [
       {
         id: "strategy-1",
@@ -88,10 +118,19 @@ const SERVICES: Service[] = [
   },
   {
     id: "build",
-    number: "03",
     title: "Build",
     description:
-      "Cross-functional pods stand up automations, data fabrics, and intelligent dashboards without slowing the day-to-day.",
+      "From websites to internal systems, we design and build reliable tools that are simple to use and built to last.",
+    detailGrid: [
+      "Website design and development",
+      "Web and mobile apps",
+      "Membership portals and platforms",
+      "E-learning and training systems",
+      "System integrations and APIs",
+      "Workflow automation",
+      "AI-powered features and assistants",
+      "Custom software and internal tools",
+    ],
     images: [
       {
         id: "build-1",
@@ -121,10 +160,19 @@ const SERVICES: Service[] = [
   },
   {
     id: "optimise",
-    number: "04",
     title: "Optimise",
     description:
-      "We keep score, run the playbacks, and tune the systems so gains compound instead of fading after launch.",
+      "We stay with you after launch, refining, supporting and evolving your systems so they continue to deliver value over time.",
+    detailGrid: [
+      "Ongoing optimisation and enhancements",
+      "Analytics and performance tracking",
+      "Conversion and usability improvements",
+      "AI tuning and automation improvements",
+      "Content and experience updates",
+      "Training and enablement",
+      "Support and maintenance",
+      "Long-term partnership and advisory",
+    ],
     images: [
       {
         id: "optimise-1",
@@ -160,6 +208,7 @@ const OrbitShowcase = () => {
   const serviceRefs = useMemo(() => SERVICES.map(() => createRef<HTMLDivElement>()), []);
   const scrollFrame = useRef<number | null>(null);
   const activeService = SERVICES[activeIndex];
+  const detailRows = activeService.detailGrid ? chunkItems(activeService.detailGrid) : [];
 
   useEffect(() => {
     const updateActiveService = () => {
@@ -221,7 +270,7 @@ const OrbitShowcase = () => {
             letterSpacing: "-2%",
           }}
         >
-          Practical support at{" "}
+          Practical advice and hands-on support at{" "}
           <UnderlineReveal width={3}>every</UnderlineReveal> stage.
         </h3>
         <p className="mt-12 max-w-3xl text-lg text-white/80 sm:mt-16 sm:text-xl lg:text-2xl">
@@ -229,7 +278,7 @@ const OrbitShowcase = () => {
           tomorrow.
         </p>
       </div>
-      <div className="mx-auto mt-16 grid w-full max-w-6xl gap-8 lg:grid-cols-[0.9fr_1.1fr_1.7fr] lg:items-start">
+      <div className="mx-auto mt-16 grid w-full max-w-[1600px] gap-10 lg:grid-cols-[0.65fr_1.45fr_1.6fr] lg:items-start">
         <div className="space-y-6 text-left lg:sticky lg:top-28 lg:self-start">
           {SERVICES.map((service, index) => (
             <button
@@ -243,9 +292,6 @@ const OrbitShowcase = () => {
                 activeIndex === index ? "text-white" : "text-white/45 hover:text-white/75"
               )}
             >
-              <span className="text-sm font-semibold tracking-[0.45em] text-white/50">
-                {service.number}
-              </span>
               <span
                 className="text-4xl font-semibold leading-none sm:text-5xl"
                 style={{
@@ -266,19 +312,24 @@ const OrbitShowcase = () => {
           ))}
         </div>
 
-        <div className="relative min-h-[260px] lg:sticky lg:top-28 lg:self-start">
-          <div key={activeService.id} className="description-panel rounded-[32px] border border-white/15 bg-white/10 p-8 text-left">
-            <p className="text-xs uppercase tracking-[0.45em] text-white/60">{activeService.number}</p>
-            <h4
-              className="mt-4 text-3xl font-semibold text-white sm:text-4xl"
-              style={{
-                fontFamily:
-                  "var(--font-syne), 'Syne', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
-              }}
-            >
-              {activeService.title}
-            </h4>
-            <p className="mt-4 text-lg text-white/85 sm:text-xl">{activeService.description}</p>
+        <div className="relative min-h-[200px] text-left text-white/85 lg:sticky lg:top-28 lg:self-start">
+          <div key={activeService.id} className="space-y-6">
+            <p className="text-lg sm:text-xl">{activeService.description}</p>
+            {activeService.detailGrid && (
+              <table className="w-full border-collapse text-sm text-white/80">
+                <tbody>
+                  {detailRows.map((row, rowIndex) => (
+                    <tr
+                      key={`${activeService.id}-detail-row-${rowIndex}`}
+                      className="border-t border-white/10 first:border-t-0"
+                    >
+                      <td className="py-3 pr-4 align-top">{row[0]}</td>
+                      <td className="border-l border-white/15 py-3 pl-4 align-top">{row[1] ?? ""}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            )}
           </div>
         </div>
 
@@ -316,23 +367,6 @@ const OrbitShowcase = () => {
           ))}
         </div>
       </div>
-
-      <style jsx>{`
-        .description-panel {
-          animation: panel-slide 0.6s forwards cubic-bezier(0.22, 1, 0.36, 1);
-        }
-
-        @keyframes panel-slide {
-          from {
-            opacity: 0;
-            transform: translateY(24px);
-          }
-          to {
-            opacity: 1;
-            transform: translateY(0);
-          }
-        }
-      `}</style>
     </section>
   );
 };
