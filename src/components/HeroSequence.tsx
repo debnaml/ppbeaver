@@ -55,7 +55,8 @@ const HeroSequence = () => {
   const [progressDuration, setProgressDuration] = useState(0);
   const [progressKey, setProgressKey] = useState(0);
   const [logoMaskVisible, setLogoMaskVisible] = useState(false);
-  const [sequenceDormant, setSequenceDormant] = useState(false);
+  const [heroInView, setHeroInView] = useState(true);
+  const [windowFocused, setWindowFocused] = useState(true);
 
   const videoARef = useRef<HTMLVideoElement>(null);
   const videoBRef = useRef<HTMLVideoElement>(null);
@@ -66,10 +67,27 @@ const HeroSequence = () => {
   const wasDormantRef = useRef(false);
   const resumeFromDormantRef = useRef(false);
 
+  const sequenceDormant = !heroInView || !windowFocused;
+
   const getLayerRef = useCallback(
     (layer: Layer) => (layer === "A" ? videoARef : videoBRef),
     []
   );
+
+  const pauseSequence = useCallback(() => {
+    (["A", "B"] as Layer[]).forEach((layer) => {
+      const element = getLayerRef(layer).current;
+      if (!element) return;
+      element.pause();
+    });
+  }, [getLayerRef]);
+
+  const resumeSequence = useCallback(() => {
+    const activeVideo = getLayerRef(activeLayer).current;
+    if (!activeVideo || !isReady) return;
+    resumeFromDormantRef.current = true;
+    void activeVideo.play().catch(() => undefined);
+  }, [activeLayer, getLayerRef, isReady]);
 
   const restartAndPlay = useCallback((video: HTMLVideoElement) => {
     video.pause();
@@ -117,6 +135,31 @@ const HeroSequence = () => {
     return () => mq.removeEventListener("change", handleChange);
   }, []);
 
+    useEffect(() => {
+      if (typeof window === "undefined" || typeof document === "undefined") return;
+
+    const evaluate = () => {
+      const visible = document.visibilityState !== "hidden";
+      const focused = document.hasFocus();
+      setWindowFocused(visible && focused);
+    };
+
+    const handleVisibility = () => evaluate();
+    const handleFocus = () => evaluate();
+    const handleBlur = () => setWindowFocused(false);
+
+    evaluate();
+    window.addEventListener("focus", handleFocus);
+    window.addEventListener("blur", handleBlur);
+    document.addEventListener("visibilitychange", handleVisibility);
+
+    return () => {
+      window.removeEventListener("focus", handleFocus);
+      window.removeEventListener("blur", handleBlur);
+      document.removeEventListener("visibilitychange", handleVisibility);
+    };
+  }, []);
+
   useEffect(() => {
     return () => {
       if (keywordSwapTimeoutRef.current) {
@@ -156,11 +199,7 @@ const HeroSequence = () => {
 
     const observer = new IntersectionObserver(
       ([entry]) => {
-        if (!entry.isIntersecting) {
-          setSequenceDormant(true);
-          return;
-        }
-        setSequenceDormant(false);
+        setHeroInView(entry.isIntersecting);
       },
       { threshold: 0.2 }
     );
@@ -205,24 +244,14 @@ const HeroSequence = () => {
   }, [isReady, reducedMotion]);
 
   useEffect(() => {
-    const layers: Layer[] = ["A", "B"];
-
     if (sequenceDormant) {
-      layers.forEach((layer) => {
-        const element = getLayerRef(layer).current;
-        if (!element) return;
-        element.pause();
-      });
+      pauseSequence();
     } else if (wasDormantRef.current) {
-      const activeVideo = getLayerRef(activeLayer).current;
-      if (activeVideo && isReady) {
-        resumeFromDormantRef.current = true;
-        void activeVideo.play().catch(() => undefined);
-      }
+      resumeSequence();
     }
 
     wasDormantRef.current = sequenceDormant;
-  }, [activeLayer, getLayerRef, isReady, sequenceDormant]);
+  }, [pauseSequence, resumeSequence, sequenceDormant]);
 
   const primeVideo = useCallback(
     (layer: Layer, index: number, autoplay = false) => {
