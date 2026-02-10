@@ -1,10 +1,16 @@
 import type { Metadata } from "next";
-import { Syne } from "next/font/google";
+import { Source_Sans_3, Syne } from "next/font/google";
 import "./globals.css";
 
 const syne = Syne({
   subsets: ["latin"],
   variable: "--font-syne",
+  display: "swap",
+});
+
+const sourceSans = Source_Sans_3({
+  subsets: ["latin"],
+  variable: "--font-source-sans",
   display: "swap",
 });
 
@@ -60,7 +66,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`${syne.variable} antialiased`}>
+      <body className={`${syne.variable} ${sourceSans.variable} antialiased`}>
         {children}
       </body>
     </html>

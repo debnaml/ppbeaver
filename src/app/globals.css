@@ -103,6 +103,30 @@ main {
   animation: pp-arrow-nudge 0.65s ease-out 1;
 }
 
+.underline-reveal {
+  position: relative;
+  display: inline-block;
+}
+
+.underline-reveal::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: -0.08em;
+  width: 100%;
+  height: var(--underline-thickness, 0.18em);
+  background: var(--underline-color, var(--color-highlight));
+  border-radius: 999px;
+  transform-origin: left center;
+  transform: scaleX(0);
+  transition: transform 0.5s cubic-bezier(0.4, 0.05, 0.2, 1);
+  will-change: transform;
+}
+
+.underline-reveal--visible::after {
+  transform: scaleX(1);
+}
+
 @keyframes pp-arrow-nudge {
   0% {
     transform: translateY(0);

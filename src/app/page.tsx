@@ -1,4 +1,5 @@
 import HeroSequence from "@/components/HeroSequence";
+import UnderlineReveal from "@/components/UnderlineReveal";
 
 const services = [
   {
@@ -57,40 +58,62 @@ export default function Home() {
     <main className="bg-[var(--color-supadark)] text-[var(--color-cream)]">
       <HeroSequence />
 
-      <div id="content" className="relative isolate mx-auto flex max-w-6xl flex-col gap-20 px-6 py-24 sm:px-10">
-        <section className="grid gap-10 rounded-[32px] border border-white/10 bg-[#1d2034] p-10 shadow-[0_30px_120px_rgba(0,0,0,0.4)] lg:grid-cols-[1.1fr_0.9fr]">
-          <div className="space-y-6">
-            <p className="text-sm uppercase tracking-[0.6em] text-[var(--color-highlight)]">
-              Mission
-            </p>
-            <h2 className="text-4xl font-semibold leading-tight text-[var(--color-cream)]">
-              Performance Peak is the creative performance agency for founders who refuse to trade craft for speed.
-            </h2>
-            <p className="text-lg text-[#c0c4db]">
-              We choreograph intelligence, imagination, and information into systems that launch faster heroes, smarter funnels, and richer brand experiences.
-            </p>
-          </div>
-          <div className="grid gap-6 rounded-3xl bg-gradient-to-br from-[#2d829b]/30 to-transparent p-8">
-            <p className="text-sm uppercase tracking-[0.4em] text-[#c0e3ff]">
-              Snapshot
-            </p>
-            <dl className="grid gap-4 text-base text-[#e8ebff]">
-              <div className="flex items-baseline justify-between border-b border-white/10 pb-3">
-                <dt>Studios</dt>
-                <dd className="font-semibold text-white">NYC · London · Remote</dd>
-              </div>
-              <div className="flex items-baseline justify-between border-b border-white/10 pb-3">
-                <dt>Core Services</dt>
-                <dd className="font-semibold text-white">Strategy · Creative · Media</dd>
-              </div>
-              <div className="flex items-baseline justify-between">
-                <dt>Engagements</dt>
-                <dd className="font-semibold text-white">Fractional or Foundational</dd>
-              </div>
-            </dl>
-          </div>
-        </section>
+      <section className="relative isolate w-full overflow-hidden px-6 py-24 sm:px-12">
+        <div
+          className="pointer-events-none absolute inset-y-0 right-0 flex w-1/3 min-w-[260px] justify-end opacity-10"
+          aria-hidden
+        >
+          <div
+            className="h-full w-full max-w-none rotate-90"
+            style={{
+              backgroundImage: "url(/logo.svg)",
+              backgroundRepeat: "no-repeat",
+              backgroundSize: "contain",
+              backgroundPosition: "center",
+              mixBlendMode: "screen",
+            }}
+          />
+        </div>
 
+        <div className="relative max-w-5xl space-y-6">
+          <div>
+            <h2
+              className="mt-[-0.7rem] mb-8 font-semibold leading-[1.02] text-[var(--color-cream)] drop-shadow-xl"
+              style={{
+                fontFamily:
+                  "var(--font-syne), 'Syne', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
+                fontSize: "clamp(2.85rem, 5.25vw, 6.56rem)",
+                letterSpacing: "-2%",
+              }}
+            >
+              We help organisations work <UnderlineReveal width={4}>smarter.</UnderlineReveal>
+            </h2>
+          </div>
+          <div
+            className="space-y-8 text-lg font-normal leading-relaxed text-[var(--color-cream)] sm:text-xl lg:text-2xl"
+            style={{
+              fontFamily:
+                "var(--font-source-sans), 'Source Sans 3', 'Syne', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
+            }}
+          >
+            <p>
+              Not by adding complexity, but by quietly fixing what slows you down.
+              <br />
+              Streamlining how things run <span className="text-[var(--color-highlight)]">/</span> Making better use of the tools and data you already have <span className="text-[var(--color-highlight)]">/</span> Giving you systems that just work.
+            </p>
+            <p>
+              Technology should make life easier, not harder. So we focus on practical improvements that save time, reduce effort and help your business move faster and more confidently.
+            </p>
+            <p>
+              We&apos;ve been working with data, software and AI long before it became a buzzword. That experience means we don&apos;t chase trends or over-engineer solutions. We solve the right problems and build things properly.
+            </p>
+            <p>We work alongside you as partners, not suppliers. Trusted, hands-on, and there when you need us.</p>
+            <p>So you can get on with running your business, while we handle the hard stuff.</p>
+          </div>
+        </div>
+      </section>
+
+      <div id="content" className="relative isolate mx-auto flex max-w-6xl flex-col gap-20 px-6 py-24 sm:px-10">
         <section className="space-y-8">
           <div className="flex flex-col gap-3">
             <p className="text-sm uppercase tracking-[0.6em] text-[var(--color-highlight)]">
