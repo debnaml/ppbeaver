@@ -1,6 +1,7 @@
 "use client";
 
 import clsx from "clsx";
+import { useState } from "react";
 
 interface LogoMaskOverlayProps {
   visible: boolean;
@@ -13,15 +14,23 @@ const LogoMaskOverlay = ({
   reducedMotion = false,
   dimmedProgress = 0,
 }: LogoMaskOverlayProps) => {
+  const [isFalling, setIsFalling] = useState(false);
+  const [hasFallen, setHasFallen] = useState(false);
+
   const handleClick = () => {
-    if (typeof window === "undefined") return;
-    window.scrollTo({ top: 0, behavior: reducedMotion ? "auto" : "smooth" });
+    if (isFalling || hasFallen) return;
+    setIsFalling(true);
+  };
+
+  const handleAnimationEnd = () => {
+    setIsFalling(false);
+    setHasFallen(true);
   };
 
   return (
     <button
       type="button"
-      aria-label="Back to top"
+      aria-label="Performance Peak mark"
       onClick={handleClick}
       className={clsx(
         "group relative inline-flex items-center justify-center",
@@ -31,7 +40,13 @@ const LogoMaskOverlay = ({
       )}
     >
       <span
-        className="block aspect-[1089/608] w-[clamp(120px,15vw,220px)] drop-shadow-2xl transition duration-300 group-hover:scale-[1.04]"
+        className={clsx(
+          "logo-mask-shape",
+          "block aspect-[1089/608] w-[clamp(120px,15vw,220px)] drop-shadow-2xl transition duration-300",
+          isFalling && (reducedMotion ? "logo-mask-shape--tilt" : "logo-mask-shape--falling"),
+          hasFallen && "logo-mask-shape--resting"
+        )}
+        onAnimationEnd={handleAnimationEnd}
         style={{
           backgroundColor: "var(--color-highlight)",
           mixBlendMode: "multiply",

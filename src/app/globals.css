@@ -77,12 +77,60 @@ main {
   will-change: transform;
 }
 
+.logo-mask-shape {
+  transform-origin: left bottom;
+  transform: rotate(0deg) translate3d(0, 0, 0);
+  will-change: transform;
+}
+
+.logo-mask-shape--falling {
+  animation: logo-mask-fall 1.05s cubic-bezier(0.23, 1, 0.32, 1.2) forwards;
+}
+
+.logo-mask-shape--tilt {
+  animation: logo-mask-tilt 0.45s ease-out forwards;
+}
+
+.logo-mask-shape--resting {
+  transform: rotate(90deg);
+}
+
 @keyframes hero-progress-fill {
   from {
     transform: scaleX(0);
   }
   to {
     transform: scaleX(1);
+  }
+}
+
+@keyframes logo-mask-fall {
+  0% {
+    transform: rotate(0deg) translate3d(0, 0, 0);
+  }
+  68% {
+    transform: rotate(104deg) translate3d(6px, 14px, 0);
+  }
+  82% {
+    transform: rotate(86deg) translate3d(-3px, -6px, 0);
+  }
+  94% {
+    transform: rotate(92.5deg) translate3d(1px, 4px, 0);
+  }
+  100% {
+    transform: rotate(90deg) translate3d(0, 0, 0);
+  }
+}
+
+@keyframes logo-mask-tilt {
+  0% {
+    transform: rotate(0deg);
+  }
+  60% {
+    transform: rotate(92deg);
+  }
+  100% {
+    transform: rotate(90deg);
   }
 }
 

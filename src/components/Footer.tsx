@@ -54,14 +54,13 @@ const Footer = () => {
         aria-hidden
       />
 
+      <div className="absolute bottom-20 left-0 right-0 h-px bg-white/80 md:hidden" />
+
       <div
-        className="absolute"
+        className="absolute bottom-20 hidden h-px bg-white/90 md:block"
         style={{
           left: edgeGap,
           right: `calc(300px + ${edgeGap} - 60px)`,
-          bottom: "5rem",
-          height: "1px",
-          backgroundColor: "rgba(255,255,255,0.9)",
         }}
       />
 
@@ -78,7 +77,7 @@ const Footer = () => {
       </p>
 
       <div
-        className="pointer-events-none absolute bottom-0 right-0"
+        className="pointer-events-none absolute bottom-0 right-0 hidden md:block"
         style={{ transform: "translateY(2px)" }}
         aria-hidden
       >
