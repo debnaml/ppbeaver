@@ -222,6 +222,7 @@ main {
   transform: translate3d(0, 0, 0);
 }
 
+
 @keyframes cta-circle-spin {
   from {
     transform: rotate(0deg);

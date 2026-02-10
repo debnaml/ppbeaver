@@ -58,6 +58,7 @@ const HeroSequence = () => {
   const [heroInView, setHeroInView] = useState(true);
   const [logoDimProgress, setLogoDimProgress] = useState(0);
   const [windowFocused, setWindowFocused] = useState(true);
+  const [heroFrozen, setHeroFrozen] = useState(false);
 
   const videoARef = useRef<HTMLVideoElement>(null);
   const videoBRef = useRef<HTMLVideoElement>(null);
@@ -95,11 +96,12 @@ const HeroSequence = () => {
   }, [getLayerRef]);
 
   const resumeSequence = useCallback(() => {
+    if (heroFrozen) return;
     const activeVideo = getLayerRef(activeLayer).current;
     if (!activeVideo || !isReady) return;
     resumeFromDormantRef.current = true;
     void activeVideo.play().catch(() => undefined);
-  }, [activeLayer, getLayerRef, isReady]);
+  }, [activeLayer, getLayerRef, heroFrozen, isReady]);
 
   const restartAndPlay = useCallback((video: HTMLVideoElement) => {
     video.pause();
@@ -349,14 +351,50 @@ const HeroSequence = () => {
     element.currentTime = 0;
   }, [getLayerRef]);
 
+  const holdHeroOnFirstFrame = useCallback(
+    (targetLayer: Layer, previousLayer: Layer) => {
+      const firstIndex = 0;
+      setHeroFrozen(true);
+      primeVideo(targetLayer, firstIndex, false, true);
+      const targetVideo = getLayerRef(targetLayer).current;
+      if (targetVideo) {
+        targetVideo.pause();
+        targetVideo.currentTime = 0;
+      }
+      pauseLayer(previousLayer);
+      setActiveLayer(targetLayer);
+      setCurrentVideoIndex(firstIndex);
+      setCurrentKeyword(VIDEO_SOURCES[firstIndex].keyword);
+      setKeywordVisible(true);
+      setProgressDuration(0);
+    },
+    [getLayerRef, pauseLayer, primeVideo]
+  );
+
   const advanceSequence = useCallback(() => {
-    if (sequenceDormant) return;
+    if (sequenceDormant || heroFrozen) return;
     const totalVideos = VIDEO_SOURCES.length;
     if (totalVideos === 0) return;
 
     const nextIndex = (currentVideoIndex + 1) % totalVideos;
     const nextLayer: Layer = activeLayer === "A" ? "B" : "A";
     const previousLayer = activeLayer;
+
+    const wrappingToFirst = nextIndex === 0 && currentVideoIndex === totalVideos - 1;
+
+    if (wrappingToFirst) {
+      holdHeroOnFirstFrame(nextLayer, previousLayer);
+      if (!ctaVisible) {
+        if (ctaTimeoutRef.current) {
+          clearTimeout(ctaTimeoutRef.current);
+        }
+        ctaTimeoutRef.current = window.setTimeout(() => {
+          setCtaVisible(true);
+          ctaTimeoutRef.current = null;
+        }, HERO_SETTINGS.ctaRevealDelay);
+      }
+      return;
+    }
 
     transitionKeyword(VIDEO_SOURCES[nextIndex].keyword);
     primeVideo(nextLayer, nextIndex, true);
@@ -382,7 +420,7 @@ const HeroSequence = () => {
         ctaTimeoutRef.current = null;
       }, HERO_SETTINGS.ctaRevealDelay);
     }
-  }, [activeLayer, ctaVisible, currentVideoIndex, pauseLayer, primeVideo, sequenceDormant, transitionKeyword]);
+  }, [activeLayer, ctaVisible, currentVideoIndex, heroFrozen, holdHeroOnFirstFrame, pauseLayer, primeVideo, sequenceDormant, transitionKeyword]);
 
   useEffect(() => {
     if (isReady) return;
@@ -433,7 +471,7 @@ const HeroSequence = () => {
   }, [getLayerRef, isReady, primeVideo, restartAndPlay, waitForHdQuality]);
 
   useEffect(() => {
-    if (sequenceDormant) return;
+    if (sequenceDormant || heroFrozen) return;
     const layer = activeLayer;
     const videoEl = getLayerRef(layer).current;
     if (!videoEl) return;
@@ -447,10 +485,10 @@ const HeroSequence = () => {
     return () => {
       videoEl.removeEventListener("ended", handleEnded);
     };
-  }, [activeLayer, advanceSequence, getLayerRef, sequenceDormant]);
+  }, [activeLayer, advanceSequence, getLayerRef, heroFrozen, sequenceDormant]);
 
   useEffect(() => {
-    if (!isReady) {
+    if (!isReady || heroFrozen) {
       return;
     }
 
@@ -503,7 +541,7 @@ const HeroSequence = () => {
       video.removeEventListener("play", handlePlay);
       video.removeEventListener("loadedmetadata", handleLoadedMetadata);
     };
-  }, [activeLayer, getLayerRef, isReady]);
+  }, [activeLayer, getLayerRef, heroFrozen, isReady]);
 
 
 
@@ -526,7 +564,7 @@ const HeroSequence = () => {
     scrollToSection("content");
   };
 
-  const showProgressFill = isReady && progressDuration > 0;
+  const showProgressFill = isReady && progressDuration > 0 && !heroFrozen;
 
   return (
     <section
