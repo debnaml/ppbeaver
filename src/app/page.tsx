@@ -2,6 +2,8 @@ import HeroSequence from "@/components/HeroSequence";
 import Footer from "@/components/Footer";
 import RevealParagraph from "@/components/RevealParagraph";
 import UnderlineReveal from "@/components/UnderlineReveal";
+import OrbitShowcase from "@/components/OrbitShowcase";
+import OperatorParallax from "@/components/OperatorParallax";
 
 const organizationSchema = {
   "@context": "https://schema.org",
@@ -76,11 +78,14 @@ export default function Home() {
             <RevealParagraph order={2}>
               We&apos;ve been working with data, software and AI long before it became a buzzword. That experience means we don&apos;t chase trends or over-engineer solutions. We solve the right problems and build things properly.
             </RevealParagraph>
-            <RevealParagraph order={3}>We work alongside you as partners, not suppliers. Trusted, hands-on, and there when you need us.</RevealParagraph>
-            <RevealParagraph order={4}>So you can get on with running your business, while we handle the hard stuff.</RevealParagraph>
+            <RevealParagraph order={3}>We work alongside you as partners, not suppliers. Trusted, hands-on, there when you need us, so you can get on with running your business.</RevealParagraph>
           </div>
         </div>
       </section>
+
+      <OperatorParallax />
+
+      <OrbitShowcase />
 
       <div id="content" className="px-6 py-16 sm:px-12" />
 
