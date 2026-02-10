@@ -182,11 +182,12 @@ const HeroSequence = () => {
   }, []);
 
   useEffect(() => {
-    if (typeof document === "undefined") return;
+    if (typeof document === "undefined" || typeof window === "undefined") return;
     if (isReady) return;
 
     const shouldLock = window.navigator?.connection?.saveData !== true;
-    if (!shouldLock) return;
+    const nearTop = window.scrollY <= 48;
+    if (!shouldLock || !nearTop) return;
 
     const html = document.documentElement;
     const prev = html.style.overflow;
@@ -300,8 +301,8 @@ const HeroSequence = () => {
   }, [pauseSequence, resumeSequence, sequenceDormant]);
 
   const primeVideo = useCallback(
-    (layer: Layer, index: number, autoplay = false) => {
-      if (sequenceDormant) return;
+    (layer: Layer, index: number, autoplay = false, force = false) => {
+      if (sequenceDormant && !force) return;
       const element = getLayerRef(layer).current;
       if (!element) return;
       const source = VIDEO_SOURCES[index];
@@ -322,12 +323,17 @@ const HeroSequence = () => {
       };
 
       if (autoplay) {
-        if (element.readyState >= 3) {
+        const handleAutoplay = () => {
+          if (sequenceDormant && !force) return;
           startPlayback();
+        };
+
+        if (element.readyState >= 3) {
+          handleAutoplay();
         } else {
           const handleCanPlay = () => {
             element.removeEventListener("canplaythrough", handleCanPlay);
-            startPlayback();
+            handleAutoplay();
           };
           element.addEventListener("canplaythrough", handleCanPlay);
         }
@@ -379,20 +385,20 @@ const HeroSequence = () => {
   }, [activeLayer, ctaVisible, currentVideoIndex, pauseLayer, primeVideo, sequenceDormant, transitionKeyword]);
 
   useEffect(() => {
-    if (sequenceDormant || isReady) return;
+    if (isReady) return;
     const initialLayer: Layer = "A";
-    primeVideo(initialLayer, 0);
+    primeVideo(initialLayer, 0, false, true);
     const initialVideo = getLayerRef(initialLayer).current;
     if (!initialVideo) return;
 
     let cancelled = false;
 
-    const handleReady = () => {
+    const finalizeReady = () => {
       initialVideo.pause();
       initialVideo.currentTime = 0;
       const preloadNext = 1;
       if (preloadNext < VIDEO_SOURCES.length) {
-        primeVideo("B", preloadNext);
+        primeVideo("B", preloadNext, false, true);
       }
       const hdReady = waitForHdQuality(initialVideo);
       const minimumVisible = new Promise((resolve) =>
@@ -406,16 +412,25 @@ const HeroSequence = () => {
           setKeywordVisible(true);
         }
       });
-      initialVideo.removeEventListener("canplaythrough", handleReady);
+    };
+    const handleReadyEvent = () => {
+      initialVideo.removeEventListener("canplaythrough", handleReadyEvent);
+      if (!cancelled) {
+        finalizeReady();
+      }
     };
 
-    initialVideo.addEventListener("canplaythrough", handleReady);
+    if (initialVideo.readyState >= 3) {
+      finalizeReady();
+    } else {
+      initialVideo.addEventListener("canplaythrough", handleReadyEvent);
+    }
 
     return () => {
       cancelled = true;
-      initialVideo.removeEventListener("canplaythrough", handleReady);
+      initialVideo.removeEventListener("canplaythrough", handleReadyEvent);
     };
-  }, [getLayerRef, isReady, primeVideo, restartAndPlay, sequenceDormant, waitForHdQuality]);
+  }, [getLayerRef, isReady, primeVideo, restartAndPlay, waitForHdQuality]);
 
   useEffect(() => {
     if (sequenceDormant) return;
