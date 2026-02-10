@@ -103,6 +103,40 @@ main {
   animation: pp-arrow-nudge 0.65s ease-out 1;
 }
 
+.cta-circle-button {
+  transition:
+    background-color 0.35s ease,
+    color 0.35s ease,
+    border-color 0.35s ease,
+    transform 0.35s ease;
+  backdrop-filter: blur(6px);
+}
+
+.cta-circle-button:hover,
+.cta-circle-button:focus-visible {
+  background-color: var(--color-highlight);
+  color: var(--color-ink);
+  border-color: transparent;
+}
+
+.cta-circle-arrow {
+  transition: transform 0.25s ease;
+}
+
+.cta-circle-button:hover .cta-circle-arrow,
+.cta-circle-button:focus-visible .cta-circle-arrow {
+  animation: cta-circle-arrow 0.9s ease forwards;
+}
+
+.cta-circle-spin text {
+  transition: opacity 0.25s ease;
+}
+
+.cta-circle-button:hover .cta-circle-spin text,
+.cta-circle-button:focus-visible .cta-circle-spin text {
+  opacity: 0;
+}
+
 .underline-reveal {
   position: relative;
   display: inline-block;
@@ -149,5 +183,51 @@ main {
   .pp-button:hover .pp-button-arrow,
   .pp-button:focus-visible .pp-button-arrow {
     animation: none;
+  }
+
+  .cta-circle-spin {
+    animation: none;
+  }
+
+  .cta-circle-button:hover .cta-circle-arrow,
+  .cta-circle-button:focus-visible .cta-circle-arrow {
+    animation: none;
+  }
+
+  .cta-circle-button:hover .cta-circle-spin text,
+  .cta-circle-button:focus-visible .cta-circle-spin text {
+    opacity: 1;
+  }
+}
+
+.cta-circle-spin {
+  animation: cta-circle-spin 18s linear infinite;
+  transform-origin: 50% 50%;
+}
+
+@keyframes cta-circle-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes cta-circle-arrow {
+  0% {
+    transform: translateY(0);
+  }
+  30% {
+    transform: translateY(6px);
+  }
+  45% {
+    transform: translateY(0);
+  }
+  70% {
+    transform: translateY(6px);
+  }
+  100% {
+    transform: translateY(0);
   }
 }

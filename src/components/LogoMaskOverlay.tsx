@@ -5,9 +5,14 @@ import clsx from "clsx";
 interface LogoMaskOverlayProps {
   visible: boolean;
   reducedMotion?: boolean;
+  dimmedProgress?: number;
 }
 
-const LogoMaskOverlay = ({ visible, reducedMotion = false }: LogoMaskOverlayProps) => {
+const LogoMaskOverlay = ({
+  visible,
+  reducedMotion = false,
+  dimmedProgress = 0,
+}: LogoMaskOverlayProps) => {
   const handleClick = () => {
     if (typeof window === "undefined") return;
     window.scrollTo({ top: 0, behavior: reducedMotion ? "auto" : "smooth" });
@@ -26,7 +31,7 @@ const LogoMaskOverlay = ({ visible, reducedMotion = false }: LogoMaskOverlayProp
       )}
     >
       <span
-        className="block aspect-[1089/608] w-[clamp(120px,15vw,220px)] drop-shadow-2xl transition-transform duration-300 group-hover:scale-[1.04]"
+        className="block aspect-[1089/608] w-[clamp(120px,15vw,220px)] drop-shadow-2xl transition duration-300 group-hover:scale-[1.04]"
         style={{
           backgroundColor: "var(--color-highlight)",
           mixBlendMode: "multiply",
@@ -38,7 +43,7 @@ const LogoMaskOverlay = ({ visible, reducedMotion = false }: LogoMaskOverlayProp
           WebkitMaskRepeat: "no-repeat",
           WebkitMaskPosition: "center",
           WebkitMaskSize: "contain",
-          opacity: 0.65,
+          opacity: 0.65 - 0.55 * Math.min(Math.max(dimmedProgress, 0), 1),
         }}
       />
     </button>

@@ -56,6 +56,7 @@ const HeroSequence = () => {
   const [progressKey, setProgressKey] = useState(0);
   const [logoMaskVisible, setLogoMaskVisible] = useState(false);
   const [heroInView, setHeroInView] = useState(true);
+  const [logoDimProgress, setLogoDimProgress] = useState(0);
   const [windowFocused, setWindowFocused] = useState(true);
 
   const videoARef = useRef<HTMLVideoElement>(null);
@@ -68,6 +69,17 @@ const HeroSequence = () => {
   const resumeFromDormantRef = useRef(false);
 
   const sequenceDormant = !heroInView || !windowFocused;
+
+  const scrollToSection = useCallback(
+    (id: string) => {
+      if (typeof document === "undefined") return false;
+      const target = document.getElementById(id);
+      if (!target) return false;
+      target.scrollIntoView({ behavior: reducedMotion ? "auto" : "smooth" });
+      return true;
+    },
+    [reducedMotion]
+  );
 
   const getLayerRef = useCallback(
     (layer: Layer) => (layer === "A" ? videoARef : videoBRef),
@@ -208,6 +220,40 @@ const HeroSequence = () => {
 
     return () => {
       observer.disconnect();
+    };
+  }, []);
+
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    const element = heroRef.current;
+    if (!element) return;
+
+    let raf = 0;
+
+    const updateProgress = () => {
+      const rect = element.getBoundingClientRect();
+      const progress = Math.min(Math.max((200 - rect.bottom) / 200, 0), 1);
+      setLogoDimProgress(progress);
+    };
+
+    const handleScroll = () => {
+      if (raf) return;
+      raf = window.requestAnimationFrame(() => {
+        raf = 0;
+        updateProgress();
+      });
+    };
+
+    updateProgress();
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    window.addEventListener("resize", handleScroll);
+
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+      window.removeEventListener("resize", handleScroll);
+      if (raf) {
+        window.cancelAnimationFrame(raf);
+      }
     };
   }, []);
 
@@ -456,9 +502,13 @@ const HeroSequence = () => {
   }, []);
 
   const handleCTA = () => {
-    const target = document.getElementById("content");
-    if (!target) return;
-    target.scrollIntoView({ behavior: "smooth" });
+    if (scrollToSection("about")) return;
+    scrollToSection("content");
+  };
+
+  const handleContactClick = () => {
+    if (scrollToSection("contact")) return;
+    scrollToSection("content");
   };
 
   const showProgressFill = isReady && progressDuration > 0;
@@ -503,8 +553,41 @@ const HeroSequence = () => {
           aria-hidden
         />
 
-        <div className="pointer-events-auto fixed left-6 top-6 z-30 sm:left-12 sm:top-10">
-          <LogoMaskOverlay visible={logoMaskVisible} reducedMotion={reducedMotion} />
+        <div className="pointer-events-auto absolute left-6 top-6 z-30 sm:left-12 sm:top-10">
+          <LogoMaskOverlay
+            visible={logoMaskVisible}
+            reducedMotion={reducedMotion}
+            dimmedProgress={logoDimProgress}
+          />
+        </div>
+
+        <div className="pointer-events-auto absolute right-6 top-6 z-30 sm:right-12 sm:top-10">
+          <button
+            type="button"
+            onClick={handleContactClick}
+            aria-label="Scroll to contact section"
+            className="cta-circle-button relative flex h-20 w-20 items-center justify-center rounded-full border border-white/30 bg-white/5 text-white sm:h-24 sm:w-24"
+          >
+            <span className="sr-only">Let&apos;s talk</span>
+            <svg
+              viewBox="0 0 120 120"
+              className="cta-circle-spin absolute inset-0 h-full w-full text-[var(--color-cream)]"
+              aria-hidden
+            >
+              <defs>
+                <path id="circleTextPath" d="M60,60 m-45,0 a45,45 0 1,1 90,0 a45,45 0 1,1 -90,0" />
+              </defs>
+              <text
+                className="fill-current text-[11px] tracking-[0.2em]"
+                style={{ fontFamily: "var(--font-syne), 'Syne', sans-serif" }}
+              >
+                <textPath startOffset="0" href="#circleTextPath">
+                  Let&apos;s Talk&#160;&#160;•&#160;&#160;Let&apos;s Talk&#160;&#160;•&#160;&#160;Let&apos;s Talk&#160;&#160;•
+                </textPath>
+              </text>
+            </svg>
+            <span className="cta-circle-arrow relative text-2xl font-semibold sm:text-3xl">↓</span>
+          </button>
         </div>
 
         <HeadlineOverlay
