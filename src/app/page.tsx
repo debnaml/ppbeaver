@@ -1,6 +1,6 @@
-import Image from "next/image";
-
 import HeroSequence from "@/components/HeroSequence";
+import Footer from "@/components/Footer";
+import RevealParagraph from "@/components/RevealParagraph";
 import UnderlineReveal from "@/components/UnderlineReveal";
 
 const organizationSchema = {
@@ -47,7 +47,7 @@ export default function Home() {
         <div className="relative max-w-5xl space-y-6">
           <div>
             <h2
-              className="mt-[-0.7rem] mb-8 font-semibold leading-[1.02] text-[var(--color-cream)] drop-shadow-xl"
+              className="mt-[-0.7rem] mb-12 sm:mb-16 font-semibold leading-[1.02] text-[var(--color-cream)] drop-shadow-xl"
               style={{
                 fontFamily:
                   "var(--font-syne), 'Syne', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
@@ -59,25 +59,25 @@ export default function Home() {
             </h2>
           </div>
           <div
-            className="space-y-8 text-lg font-normal leading-relaxed text-[var(--color-cream)] sm:text-xl lg:text-2xl"
+            className="space-y-8 text-lg font-normal leading-relaxed sm:text-xl lg:text-2xl"
             style={{
               fontFamily:
                 "var(--font-source-sans), 'Source Sans 3', 'Syne', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
             }}
           >
-            <p>
+            <RevealParagraph order={0}>
               Not by adding complexity, but by quietly fixing what slows you down.
               <br />
               Streamlining how things run <span className="text-[var(--color-highlight)]">/</span> Making better use of the tools and data you already have <span className="text-[var(--color-highlight)]">/</span> Giving you systems that just work.
-            </p>
-            <p>
+            </RevealParagraph>
+            <RevealParagraph order={1}>
               Technology should make life easier, not harder. So we focus on practical improvements that save time, reduce effort and help your business move faster and more confidently.
-            </p>
-            <p>
+            </RevealParagraph>
+            <RevealParagraph order={2}>
               We&apos;ve been working with data, software and AI long before it became a buzzword. That experience means we don&apos;t chase trends or over-engineer solutions. We solve the right problems and build things properly.
-            </p>
-            <p>We work alongside you as partners, not suppliers. Trusted, hands-on, and there when you need us.</p>
-            <p>So you can get on with running your business, while we handle the hard stuff.</p>
+            </RevealParagraph>
+            <RevealParagraph order={3}>We work alongside you as partners, not suppliers. Trusted, hands-on, and there when you need us.</RevealParagraph>
+            <RevealParagraph order={4}>So you can get on with running your business, while we handle the hard stuff.</RevealParagraph>
           </div>
         </div>
       </section>
@@ -119,40 +119,7 @@ export default function Home() {
         </div>
       </section>
 
-      <footer className="mt-24 w-full bg-[#2D829B] px-6 py-20 text-white sm:px-12">
-        <div className="flex w-full flex-col gap-12 text-sm text-white/85 sm:flex-row sm:items-start sm:justify-between sm:gap-20">
-          <div
-            className="text-[var(--color-cream)]"
-            style={{
-              fontFamily:
-                "var(--font-source-sans), 'Source Sans 3', 'Syne', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
-            }}
-          >
-            <Image src="/logo-full.svg" alt="Performance Peak" width={220} height={68} className="w-52" />
-            <div className="pt-[100px] text-base text-white/80">
-              <p>
-                © {new Date().getFullYear()} Performance Peak (PP Worldwide)
-                <br />
-                Company Number: 15037470
-              </p>
-            </div>
-          </div>
-          <div
-            className="flex flex-col gap-3 text-right"
-            style={{
-              fontFamily:
-                "var(--font-source-sans), 'Source Sans 3', 'Syne', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
-            }}
-          >
-            <p className="text-lg font-semibold text-white">Contact Us</p>
-            <p className="text-base text-white/80">Phone. +44 0100 123456</p>
-            <a href="mailto:hello@pp-worldwide.com" className="text-base text-white/80 hover:text-[var(--color-highlight)]">
-              Email. hello@pp-worldwide.com
-            </a>
-            <p className="text-base text-white/80">Ig. @performancepeakww</p>
-          </div>
-        </div>
-      </footer>
+      <Footer />
 
       <script
         type="application/ld+json"

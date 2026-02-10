@@ -205,6 +205,23 @@ main {
   transform-origin: 50% 50%;
 }
 
+.reveal-paragraph {
+  color: #040a0f !important;
+  opacity: 0;
+  transform: translate3d(-18px, 28px, 0);
+  transition:
+    color 0.75s ease,
+    opacity 0.65s ease,
+    transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+  will-change: opacity, transform;
+}
+
+.reveal-paragraph--visible {
+  color: var(--color-cream) !important;
+  opacity: 1;
+  transform: translate3d(0, 0, 0);
+}
+
 @keyframes cta-circle-spin {
   from {
     transform: rotate(0deg);
