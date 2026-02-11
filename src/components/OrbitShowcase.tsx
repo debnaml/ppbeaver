@@ -210,8 +210,10 @@ const OrbitShowcase = () => {
   const serviceRefs = useMemo(() => SERVICES.map(() => createRef<HTMLDivElement>()), []);
   const lastImageRefs = useMemo(() => SERVICES.map(() => createRef<HTMLDivElement>()), []);
   const heroWrapperRef = useRef<HTMLDivElement | null>(null);
+  const introRef = useRef<HTMLDivElement | null>(null);
   const scrollFrame = useRef<number | null>(null);
   const heroFrame = useRef<number | null>(null);
+  const [introVisible, setIntroVisible] = useState(false);
   const activeService = SERVICES[activeIndex];
   const detailRows = activeService.detailGrid ? chunkItems(activeService.detailGrid) : [];
 
@@ -253,6 +255,31 @@ const OrbitShowcase = () => {
       window.removeEventListener("scroll", handleScroll);
     };
   }, [lastImageRefs]);
+
+  useEffect(() => {
+    if (typeof window === "undefined") return undefined;
+
+    const node = introRef.current;
+
+    if (!node || typeof IntersectionObserver === "undefined") {
+      const raf = window.requestAnimationFrame(() => setIntroVisible(true));
+      return () => window.cancelAnimationFrame(raf);
+    }
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setIntroVisible(true);
+          observer.disconnect();
+        }
+      },
+      { threshold: 0.35 }
+    );
+
+    observer.observe(node);
+
+    return () => observer.disconnect();
+  }, []);
 
   useEffect(() => {
     const updateHeroState = () => {
@@ -305,12 +332,14 @@ const OrbitShowcase = () => {
 
   return (
     <section
+      id="services"
       ref={sectionRef}
       className="relative isolate bg-[#2D829B] px-6 py-24 text-[var(--color-cream)] sm:px-12"
     >
       <div ref={heroWrapperRef} className="relative min-h-[200vh]">
         <div className="sticky top-0 z-10 flex h-screen items-center justify-center px-2 sm:px-6">
           <div
+            ref={introRef}
             className="mx-auto flex max-w-4xl flex-col items-center text-center"
             style={{
               opacity: heroOpacity,
@@ -320,7 +349,10 @@ const OrbitShowcase = () => {
             }}
           >
             <h3
-              className="mt-4 font-semibold leading-[1.02] text-white"
+              className={clsx(
+                "mt-4 font-semibold leading-[1.02] text-white orbit-intro-line",
+                introVisible && "orbit-intro-line--visible"
+              )}
               style={{
                 fontFamily:
                   "var(--font-syne), 'Syne', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
@@ -331,7 +363,15 @@ const OrbitShowcase = () => {
               Practical advice and hands-on support at{" "}
               <UnderlineReveal width={3}>every</UnderlineReveal> stage.
             </h3>
-            <p className="mt-12 max-w-3xl text-lg text-white/80 sm:mt-16 sm:text-xl lg:text-2xl">
+            <p
+              className={clsx(
+                "mt-12 max-w-3xl text-lg text-white/80 sm:mt-16 sm:text-xl lg:text-2xl orbit-intro-line",
+                introVisible && "orbit-intro-line--visible"
+              )}
+              style={{
+                transitionDelay: introVisible ? "140ms" : undefined,
+              }}
+            >
               From understanding where you are today to building and improving the systems you rely on
               tomorrow.
             </p>
@@ -418,14 +458,20 @@ const OrbitShowcase = () => {
 
             <div className="relative min-h-[200px] text-left text-white/85 lg:sticky lg:top-28 lg:self-start">
               <div key={activeService.id} className="space-y-6">
-                <p className="text-lg sm:text-xl">{activeService.description}</p>
+                <p
+                  className={clsx("orbit-detail-row text-lg sm:text-xl")}
+                  style={{ animationDelay: "40ms" }}
+                >
+                  {activeService.description}
+                </p>
                 {activeService.detailGrid && (
                   <table className="w-full border-collapse text-sm text-white/80">
                     <tbody>
                       {detailRows.map((row, rowIndex) => (
                         <tr
                           key={`${activeService.id}-detail-row-${rowIndex}`}
-                          className="border-t border-white/10 first:border-t-0"
+                          className="orbit-detail-row border-t border-white/10 first:border-t-0"
+                          style={{ animationDelay: `${rowIndex * 110}ms` }}
                         >
                           <td className="py-3 pr-4 align-top">{row[0]}</td>
                           <td className="border-l border-white/15 py-3 pl-4 align-top">{row[1] ?? ""}</td>
