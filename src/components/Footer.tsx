@@ -1,9 +1,10 @@
 import Image from "next/image";
 
 const menuItems = [
-  { label: "About", href: "#about" },
-  { label: "Services", href: "#services" },
-  { label: "Contact Us", href: "#contact" },
+  { label: "Home", href: "/" },
+  { label: "About", href: "/#about" },
+  { label: "Services", href: "/#services" },
+  { label: "Contact Us", href: "/#contact" },
 ];
 
 const edgeGap = "clamp(2rem, 5vw, 5rem)";
@@ -22,19 +23,33 @@ const Footer = () => {
       }}
     >
       <nav
-        className="relative z-10 flex flex-col gap-4 text-2xl"
+        className="relative z-10 flex flex-col gap-6 text-2xl"
         style={{
           fontFamily:
             "var(--font-syne), 'Syne', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
           marginTop: "2rem",
-          marginBottom: "12rem",
+          marginBottom: "10rem",
         }}
       >
-        {menuItems.map((item) => (
-          <a key={item.label} href={item.href} className="transition hover:opacity-70">
-            {item.label}
+        <div className="flex flex-col gap-4">
+          {menuItems.map((item) => (
+            <a key={item.label} href={item.href} className="transition hover:opacity-70">
+              {item.label}
+            </a>
+          ))}
+        </div>
+
+        <div className="flex flex-col gap-3 text-base uppercase tracking-[0.2em] text-white/80">
+          <a href="/privacy" className="transition hover:text-white">
+            Privacy
           </a>
-        ))}
+          <a href="/cookies" className="transition hover:text-white">
+            Cookies
+          </a>
+          <a href="/terms" className="transition hover:text-white">
+            Terms
+          </a>
+        </div>
       </nav>
 
       <Image

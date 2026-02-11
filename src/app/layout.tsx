@@ -15,27 +15,29 @@ const sourceSans = Source_Sans_3({
 });
 
 const siteName = "Performance Peak";
+const defaultTitle = "Digital Strategy & AI Consultancy | Performance Peak";
 const siteUrl = "https://performancepeak.com";
 const siteDescription =
-  "Performance Peak is a creative performance agency helping teams build with intelligence, imagination, and information.";
+  "We help organisations work smarter with data, AI and thoughtful digital strategy. Practical advice, trusted partners, and technology that just works.";
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
   title: {
-    default: `${siteName} | Build with Intelligence`,
+    default: defaultTitle,
     template: `%s | ${siteName}`,
   },
   description: siteDescription,
   keywords: [
     "performance marketing",
-    "creative agency",
-    "video strategy",
+    "AI consultancy",
+    "digital strategy",
+    "data transformation",
     "Performance Peak",
   ],
   openGraph: {
     type: "website",
     siteName,
-    title: `${siteName} | Build with Intelligence`,
+    title: defaultTitle,
     description: siteDescription,
     url: siteUrl,
     images: [
@@ -49,7 +51,7 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: `${siteName} | Build with Intelligence`,
+    title: defaultTitle,
     description: siteDescription,
     creator: "@performancepeak",
     images: [`${siteUrl}/og-image.jpg`],

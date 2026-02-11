@@ -7,17 +7,22 @@ interface LogoMaskOverlayProps {
   visible: boolean;
   reducedMotion?: boolean;
   dimmedProgress?: number;
+  onActivate?: () => void;
 }
 
 const LogoMaskOverlay = ({
   visible,
   reducedMotion = false,
   dimmedProgress = 0,
+  onActivate,
 }: LogoMaskOverlayProps) => {
   const [isFalling, setIsFalling] = useState(false);
   const [hasFallen, setHasFallen] = useState(false);
 
   const handleClick = () => {
+    if (onActivate) {
+      onActivate();
+    }
     if (isFalling || hasFallen) return;
     setIsFalling(true);
   };

@@ -4,6 +4,7 @@ import RevealParagraph from "@/components/RevealParagraph";
 import UnderlineReveal from "@/components/UnderlineReveal";
 import OrbitShowcase from "@/components/OrbitShowcase";
 import OperatorParallax from "@/components/OperatorParallax";
+import ContactSection from "@/components/ContactSection";
 
 const organizationSchema = {
   "@context": "https://schema.org",
@@ -86,27 +87,7 @@ export default function Home() {
       <OperatorParallax />
 
       <OrbitShowcase />
-      <section id="contact" className="contact-pattern relative flex min-h-screen items-center px-6 py-32 sm:px-12">
-        <div className="mx-auto flex max-w-4xl flex-col items-center justify-center text-center">
-          <h2
-            className="text-4xl font-semibold text-[var(--color-cream)] sm:text-5xl lg:text-[5.5rem]"
-            style={{
-              fontFamily:
-                "var(--font-syne), 'Syne', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
-              letterSpacing: "-1px",
-            }}
-          >
-            Ready to work smarter?
-          </h2>
-          <button
-            type="button"
-            aria-label="Open contact form"
-            className="pp-button mt-12 inline-flex items-center rounded-full border border-white/20 bg-[var(--color-highlight)]/85 px-8 py-4 text-base font-semibold text-[var(--color-ink)] backdrop-blur transition hover:brightness-110"
-          >
-            Let&apos;s talk
-          </button>
-        </div>
-      </section>
+      <ContactSection />
 
       <Footer />
 
