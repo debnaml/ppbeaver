@@ -19,6 +19,8 @@ type Service = {
   images: ServiceImage[];
 };
 
+const clampValue = (value: number, min = 0, max = 1) => Math.min(Math.max(value, min), max);
+
 const chunkItems = (items: string[], chunkSize = 2) => {
   const rows: string[][] = [];
   items.forEach((item, index) => {
@@ -38,13 +40,13 @@ const SERVICES: Service[] = [
     description:
       "Independent advice grounded in your data, your team and how your organisation actually works.",
     detailGrid: [
-      "Data analysis and reporting",
-      "Stakeholder and customer research",
-      "Process and workflow reviews",
-      "System and technology audits",
+      "Data analysis & reporting",
+      "Stakeholder & customer research",
+      "Process & workflow reviews",
+      "System & technology audits",
       "Journey mapping",
       "Opportunity discovery workshops",
-      "Feasibility and business case support",
+      "Feasibility & business case support",
       "Clear, practical recommendations",
     ],
     images: [
@@ -122,14 +124,14 @@ const SERVICES: Service[] = [
     description:
       "From websites to internal systems, we design and build reliable tools that are simple to use and built to last.",
     detailGrid: [
-      "Website design and development",
+      "Website design & development",
       "Web and mobile apps",
-      "Membership portals and platforms",
-      "E-learning and training systems",
-      "System integrations and APIs",
+      "Membership portals & platforms",
+      "E-learning & training systems",
+      "System integrations & APIs",
       "Workflow automation",
-      "AI-powered features and assistants",
-      "Custom software and internal tools",
+      "AI-powered features & assistants",
+      "Custom software & internal tools",
     ],
     images: [
       {
@@ -164,14 +166,13 @@ const SERVICES: Service[] = [
     description:
       "We stay with you after launch, refining, supporting and evolving your systems so they continue to deliver value over time.",
     detailGrid: [
-      "Ongoing optimisation and enhancements",
-      "Analytics and performance tracking",
-      "Conversion and usability improvements",
-      "AI tuning and automation improvements",
-      "Content and experience updates",
-      "Training and enablement",
-      "Support and maintenance",
-      "Long-term partnership and advisory",
+      "Optimisation & enhancements",
+      "Analytics & performance tracking",
+      "Conversion & usability improvements",
+      "Tuning & automation improvements",
+      "Content & experience updates",
+      "Training & enablement",
+      "Support & maintenance",
     ],
     images: [
       {
@@ -204,10 +205,13 @@ const SERVICES: Service[] = [
 
 const OrbitShowcase = () => {
   const [activeIndex, setActiveIndex] = useState(0);
+  const [heroProgress, setHeroProgress] = useState(0);
   const sectionRef = useRef<HTMLElement | null>(null);
   const serviceRefs = useMemo(() => SERVICES.map(() => createRef<HTMLDivElement>()), []);
   const lastImageRefs = useMemo(() => SERVICES.map(() => createRef<HTMLDivElement>()), []);
+  const heroWrapperRef = useRef<HTMLDivElement | null>(null);
   const scrollFrame = useRef<number | null>(null);
+  const heroFrame = useRef<number | null>(null);
   const activeService = SERVICES[activeIndex];
   const detailRows = activeService.detailGrid ? chunkItems(activeService.detailGrid) : [];
 
@@ -250,6 +254,43 @@ const OrbitShowcase = () => {
     };
   }, [lastImageRefs]);
 
+  useEffect(() => {
+    const updateHeroState = () => {
+      heroFrame.current = null;
+      const wrapper = heroWrapperRef.current;
+      if (!wrapper) return;
+
+      const rect = wrapper.getBoundingClientRect();
+      const totalScrollable = rect.height - window.innerHeight;
+      if (totalScrollable <= 0) {
+        const resolved = rect.top <= 0 ? 1 : 0;
+        setHeroProgress((prev) => (prev === resolved ? prev : resolved));
+        return;
+      }
+
+      const progress = clampValue(-rect.top / totalScrollable, 0, 1);
+      setHeroProgress((prev) => (Math.abs(prev - progress) < 0.01 ? prev : progress));
+    };
+
+    const handleHeroScroll = () => {
+      if (heroFrame.current) return;
+      heroFrame.current = window.requestAnimationFrame(updateHeroState);
+    };
+
+    updateHeroState();
+    window.addEventListener("scroll", handleHeroScroll, { passive: true });
+    window.addEventListener("resize", handleHeroScroll);
+
+    return () => {
+      if (heroFrame.current) {
+        window.cancelAnimationFrame(heroFrame.current);
+        heroFrame.current = null;
+      }
+      window.removeEventListener("scroll", handleHeroScroll);
+      window.removeEventListener("resize", handleHeroScroll);
+    };
+  }, []);
+
   const handleSelect = (index: number, shouldScroll = false) => {
     setActiveIndex(index);
     if (shouldScroll && serviceRefs[index]?.current) {
@@ -257,121 +298,181 @@ const OrbitShowcase = () => {
     }
   };
 
+  const heroOpacity = Math.max(0, 1 - heroProgress * 1.1);
+  const heroScale = Math.max(0.86, 1 - heroProgress * 0.12);
+  const heroTranslate = heroProgress * -60;
+  const gridLift = (1 - heroProgress) * 80;
+
   return (
     <section
       ref={sectionRef}
       className="relative isolate bg-[#2D829B] px-6 py-24 text-[var(--color-cream)] sm:px-12"
     >
-      <div className="mx-auto flex max-w-4xl flex-col items-center text-center">
-        <h3
-          className="mt-4 font-semibold leading-[1.02] text-white"
-          style={{
-            fontFamily:
-              "var(--font-syne), 'Syne', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
-            fontSize: "clamp(2.85rem, 5.25vw, 6.56rem)",
-            letterSpacing: "-2%",
-          }}
-        >
-          Practical advice and hands-on support at{" "}
-          <UnderlineReveal width={3}>every</UnderlineReveal> stage.
-        </h3>
-        <p className="mt-12 max-w-3xl text-lg text-white/80 sm:mt-16 sm:text-xl lg:text-2xl">
-          From understanding where you are today to building and improving the systems you rely on
-          tomorrow.
-        </p>
-      </div>
-      <div className="mx-auto mt-16 grid w-full max-w-[1600px] gap-10 lg:grid-cols-[0.65fr_1.45fr_1.6fr] lg:items-start">
-        <div className="space-y-6 text-left lg:sticky lg:top-28 lg:self-start">
-          {SERVICES.map((service, index) => (
-            <button
-              key={service.id}
-              type="button"
-              onMouseEnter={() => handleSelect(index, false)}
-              onFocus={() => handleSelect(index, false)}
-              onClick={() => handleSelect(index, true)}
-              className={clsx(
-                "group flex flex-col gap-2 text-left transition-colors",
-                activeIndex === index ? "text-white" : "text-white/45 hover:text-white/75"
-              )}
+      <div ref={heroWrapperRef} className="relative min-h-[200vh]">
+        <div className="sticky top-0 z-10 flex h-screen items-center justify-center px-2 sm:px-6">
+          <div
+            className="mx-auto flex max-w-4xl flex-col items-center text-center"
+            style={{
+              opacity: heroOpacity,
+              transform: `translateY(${heroTranslate}px) scale(${heroScale})`,
+              filter: `blur(${heroProgress * 1.5}px)`,
+              transition: "opacity 200ms ease-out, transform 200ms ease-out, filter 200ms ease-out",
+            }}
+          >
+            <h3
+              className="mt-4 font-semibold leading-[1.02] text-white"
+              style={{
+                fontFamily:
+                  "var(--font-syne), 'Syne', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
+                fontSize: "clamp(2.85rem, 5.25vw, 6.56rem)",
+                letterSpacing: "-2%",
+              }}
             >
-              <span
-                className="text-4xl font-semibold leading-none sm:text-5xl"
-                style={{
-                  fontFamily:
-                    "var(--font-syne), 'Syne', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
-                  letterSpacing: "-0.04em",
-                }}
-              >
-                {service.title}
-              </span>
-              <span
-                className={clsx(
-                  "mt-1 h-1 w-24 origin-left bg-[#13C390] transition-all duration-500",
-                  activeIndex === index ? "scale-x-100 opacity-100" : "scale-x-0 opacity-0 group-hover:opacity-60"
-                )}
-              />
-            </button>
-          ))}
-        </div>
-
-        <div className="relative min-h-[200px] text-left text-white/85 lg:sticky lg:top-28 lg:self-start">
-          <div key={activeService.id} className="space-y-6">
-            <p className="text-lg sm:text-xl">{activeService.description}</p>
-            {activeService.detailGrid && (
-              <table className="w-full border-collapse text-sm text-white/80">
-                <tbody>
-                  {detailRows.map((row, rowIndex) => (
-                    <tr
-                      key={`${activeService.id}-detail-row-${rowIndex}`}
-                      className="border-t border-white/10 first:border-t-0"
-                    >
-                      <td className="py-3 pr-4 align-top">{row[0]}</td>
-                      <td className="border-l border-white/15 py-3 pl-4 align-top">{row[1] ?? ""}</td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            )}
+              Practical advice and hands-on support at{" "}
+              <UnderlineReveal width={3}>every</UnderlineReveal> stage.
+            </h3>
+            <p className="mt-12 max-w-3xl text-lg text-white/80 sm:mt-16 sm:text-xl lg:text-2xl">
+              From understanding where you are today to building and improving the systems you rely on
+              tomorrow.
+            </p>
           </div>
         </div>
-
-        <div className="space-y-10 pb-12">
-          {SERVICES.map((service, serviceIndex) => (
-            <div
-              key={service.id}
-              ref={serviceRefs[serviceIndex]}
-              className="space-y-6"
-            >
-              {service.images.map((image, imageIndex) => (
-                <article
-                  key={image.id}
-                  className="relative h-[320px] overflow-hidden rounded-[40px] border border-white/10 bg-[#031216]"
-                  ref={
-                    imageIndex === service.images.length - 1
-                      ? lastImageRefs[serviceIndex]
-                      : undefined
-                  }
+      </div>
+      <div
+        className="relative z-20 -mt-[30vh] sm:-mt-[38vh] lg:-mt-[45vh]"
+        style={{
+          transform: `translateY(${gridLift}px)`,
+          transition: "transform 250ms ease-out",
+        }}
+      >
+        <div className="mx-auto w-full max-w-[1600px]">
+          <div className="space-y-12 lg:hidden">
+            {SERVICES.map((service) => (
+              <div key={`${service.id}-mobile`} className="space-y-6">
+                <h4
+                  className="text-3xl font-semibold text-white"
+                  style={{
+                    fontFamily:
+                      "var(--font-syne), 'Syne', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
+                  }}
                 >
-                  <div
-                    className={clsx(
-                      "absolute inset-0 bg-cover bg-center transition duration-[900ms]",
-                      activeIndex === serviceIndex ? "scale-100" : "scale-[1.05]"
-                    )}
-                    style={{ backgroundImage: `url(${image.src})` }}
-                  />
-                  <div
-                    className="absolute inset-0"
+                  {service.title}
+                </h4>
+                <p className="text-base text-white/80">{service.description}</p>
+                <div className="grid grid-cols-2 gap-4">
+                  {service.images.map((image) => (
+                    <article
+                      key={`${service.id}-${image.id}-mobile`}
+                      className="relative h-40 overflow-hidden rounded-[10px] border border-white/10 bg-[#031216]"
+                    >
+                      <div
+                        className="absolute inset-0 bg-cover bg-center"
+                        style={{ backgroundImage: `url(${image.src})` }}
+                      />
+                      <div
+                        className="absolute inset-0"
+                        style={{
+                          background: `linear-gradient(120deg, ${image.accent} 0%, rgba(3,9,11,0.85) 65%)`,
+                        }}
+                      />
+                    </article>
+                  ))}
+                </div>
+              </div>
+            ))}
+          </div>
+
+          <div className="hidden gap-10 lg:grid lg:grid-cols-[0.65fr_1.45fr_1.6fr] lg:items-start">
+            <div className="space-y-6 text-left lg:sticky lg:top-28 lg:self-start">
+              {SERVICES.map((service, index) => (
+                <button
+                  key={service.id}
+                  type="button"
+                  onMouseEnter={() => handleSelect(index, false)}
+                  onFocus={() => handleSelect(index, false)}
+                  onClick={() => handleSelect(index, true)}
+                  className={clsx(
+                    "group flex flex-col gap-2 text-left transition-colors",
+                    activeIndex === index ? "text-white" : "text-white/45 hover:text-white/75"
+                  )}
+                >
+                  <span
+                    className="text-4xl font-semibold leading-none sm:text-5xl"
                     style={{
-                      background: `linear-gradient(120deg, ${image.accent} 0%, rgba(3,9,11,0.85) 65%)`,
+                      fontFamily:
+                        "var(--font-syne), 'Syne', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
+                      letterSpacing: "-0.04em",
                     }}
+                  >
+                    {service.title}
+                  </span>
+                  <span
+                    className={clsx(
+                      "mt-1 h-1 w-24 origin-left bg-[#13C390] transition-all duration-500",
+                      activeIndex === index ? "scale-x-100 opacity-100" : "scale-x-0 opacity-0 group-hover:opacity-60"
+                    )}
                   />
-                  <div className="absolute bottom-6 left-6 text-sm font-semibold uppercase tracking-[0.35em] text-white/80">
-                    {image.caption}
-                  </div>
-                </article>
+                </button>
               ))}
             </div>
-          ))}
+
+            <div className="relative min-h-[200px] text-left text-white/85 lg:sticky lg:top-28 lg:self-start">
+              <div key={activeService.id} className="space-y-6">
+                <p className="text-lg sm:text-xl">{activeService.description}</p>
+                {activeService.detailGrid && (
+                  <table className="w-full border-collapse text-sm text-white/80">
+                    <tbody>
+                      {detailRows.map((row, rowIndex) => (
+                        <tr
+                          key={`${activeService.id}-detail-row-${rowIndex}`}
+                          className="border-t border-white/10 first:border-t-0"
+                        >
+                          <td className="py-3 pr-4 align-top">{row[0]}</td>
+                          <td className="border-l border-white/15 py-3 pl-4 align-top">{row[1] ?? ""}</td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                )}
+              </div>
+            </div>
+
+            <div className="space-y-10 pb-12">
+              {SERVICES.map((service, serviceIndex) => (
+                <div
+                  key={service.id}
+                  ref={serviceRefs[serviceIndex]}
+                  className="space-y-6"
+                >
+                  {service.images.map((image, imageIndex) => (
+                    <article
+                      key={image.id}
+                      className="relative h-[320px] overflow-hidden rounded-[10px] border border-white/10 bg-[#031216]"
+                      ref={
+                        imageIndex === service.images.length - 1
+                          ? lastImageRefs[serviceIndex]
+                          : undefined
+                      }
+                    >
+                      <div
+                        className={clsx(
+                          "absolute inset-0 bg-cover bg-center transition duration-[900ms]",
+                          activeIndex === serviceIndex ? "scale-100" : "scale-[1.05]"
+                        )}
+                        style={{ backgroundImage: `url(${image.src})` }}
+                      />
+                      <div
+                        className="absolute inset-0"
+                        style={{
+                          background: `linear-gradient(120deg, ${image.accent} 0%, rgba(3,9,11,0.85) 65%)`,
+                        }}
+                      />
+                    </article>
+                  ))}
+                </div>
+              ))}
+            </div>
+          </div>
         </div>
       </div>
     </section>

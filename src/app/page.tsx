@@ -86,41 +86,25 @@ export default function Home() {
       <OperatorParallax />
 
       <OrbitShowcase />
-
-      <div id="content" className="px-6 py-16 sm:px-12" />
-
-      <section id="contact" className="px-6 pb-12 sm:px-12">
-        <div className="relative isolate overflow-hidden rounded-[32px] border border-white/10 bg-white/5 px-6 py-16 shadow-[0_30px_80px_rgba(0,0,0,0.35)] sm:px-16">
-          <div
-            className="space-y-8"
+      <section id="contact" className="contact-pattern relative flex min-h-screen items-center px-6 py-32 sm:px-12">
+        <div className="mx-auto flex max-w-4xl flex-col items-center justify-center text-center">
+          <h2
+            className="text-4xl font-semibold text-[var(--color-cream)] sm:text-5xl lg:text-[5.5rem]"
             style={{
               fontFamily:
-                "var(--font-source-sans), 'Source Sans 3', 'Syne', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
+                "var(--font-syne), 'Syne', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
+              letterSpacing: "-1px",
             }}
           >
-            <h3
-              className="text-4xl font-semibold leading-[1.02] text-[var(--color-cream)] sm:text-5xl lg:text-[4.5rem]"
-              style={{
-                fontFamily:
-                  "var(--font-syne), 'Syne', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
-                letterSpacing: "-0.5px",
-              }}
-            >
-              Your company is in <span className="text-[var(--color-highlight)]">safe hands.</span>
-            </h3>
-            <div className="flex flex-col gap-8 text-base text-white/80 sm:flex-row sm:items-end sm:justify-between">
-              <p className="max-w-2xl text-lg sm:text-xl">
-                Tell us what needs to move faster. We&apos;ll map the blockers, show you the wins, and build a plan that keeps your team focused on what matters.
-              </p>
-              <button
-                type="button"
-                className="inline-flex items-center justify-center rounded-full border border-white/20 bg-[var(--color-highlight)] px-8 py-4 text-base font-semibold text-[#06121A] transition hover:border-white/40 hover:bg-white"
-                aria-label="Open contact form"
-              >
-                Start the conversation
-              </button>
-            </div>
-          </div>
+            Ready to work smarter?
+          </h2>
+          <button
+            type="button"
+            aria-label="Open contact form"
+            className="pp-button mt-12 inline-flex items-center rounded-full border border-white/20 bg-[var(--color-highlight)]/85 px-8 py-4 text-base font-semibold text-[var(--color-ink)] backdrop-blur transition hover:brightness-110"
+          >
+            Let&apos;s talk
+          </button>
         </div>
       </section>
 

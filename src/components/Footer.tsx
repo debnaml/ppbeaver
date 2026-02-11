@@ -12,7 +12,7 @@ const edgeGap = "clamp(2rem, 5vw, 5rem)";
 const Footer = () => {
   return (
     <footer
-      className="relative isolate mt-24 w-full text-white"
+      className="relative isolate w-full text-white"
       style={{
         backgroundColor: "#13C390",
         minHeight: "560px",

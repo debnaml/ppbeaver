@@ -40,6 +40,48 @@ main {
   color: var(--color-ink);
 }
 
+
+.contact-pattern {
+  position: relative;
+  overflow: hidden;
+  isolation: isolate;
+  background-color: #292d40;
+}
+
+.contact-pattern::before {
+  content: "";
+  position: absolute;
+  inset: -40px 0;
+  z-index: -1;
+  opacity: 0.08;
+  pointer-events: none;
+  background-image: url("/logo.svg");
+  background-size: 200px auto;
+  background-repeat: repeat;
+  background-position: center;
+  filter: brightness(0) saturate(100%);
+  mix-blend-mode: normal;
+  background-color: #292d40;
+}
+
+@supports (mask-image: url("")) or (-webkit-mask-image: url("")) {
+  .contact-pattern::before {
+    filter: none;
+    background-image: none;
+    background-color: rgba(0, 0, 0, 0.08);
+    opacity: 1;
+    mask-image: url("/logo.svg");
+    -webkit-mask-image: url("/logo.svg");
+    mask-size: 200px auto;
+    -webkit-mask-size: 200px auto;
+    mask-repeat: repeat;
+    -webkit-mask-repeat: repeat;
+    mask-position: center;
+    -webkit-mask-position: center;
+    mix-blend-mode: normal;
+  }
+}
+
 .visually-hidden {
   position: absolute;
   width: 1px;
