@@ -22,12 +22,7 @@ export default function ContactSection({
     <section id={id} className={sectionClasses}>
       <div className="mx-auto flex max-w-4xl flex-col items-center justify-center text-center">
         <h2
-          className="text-4xl font-semibold text-[var(--color-cream)] sm:text-5xl lg:text-[5.5rem]"
-          style={{
-            fontFamily:
-              "var(--font-syne), 'Syne', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
-            letterSpacing: "-1px",
-          }}
+          className="font-heading text-4xl font-semibold text-[var(--color-cream)] tracking-[-1px] sm:text-5xl lg:text-[5.5rem]"
         >
           {heading}
         </h2>

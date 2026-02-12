@@ -23,13 +23,7 @@ const Footer = () => {
       }}
     >
       <nav
-        className="relative z-10 flex flex-col gap-6 text-2xl"
-        style={{
-          fontFamily:
-            "var(--font-syne), 'Syne', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
-          marginTop: "2rem",
-          marginBottom: "10rem",
-        }}
+        className="relative z-10 mt-8 mb-40 flex flex-col gap-6 font-heading text-2xl"
       >
         <div className="flex flex-col gap-4">
           {menuItems.map((item) => (
@@ -79,12 +73,10 @@ const Footer = () => {
       />
 
       <p
-        className="absolute text-sm text-white/90"
+        className="font-body absolute text-sm text-white/90"
         style={{
           left: edgeGap,
           bottom: "calc(2.25rem - 8px)",
-          fontFamily:
-            "var(--font-source-sans), 'Source Sans 3', 'Syne', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
         }}
       >
         © 2026 Performance Peak (PP Worldwide). Company Number: 15037470

@@ -41,28 +41,18 @@ export default function SplitHeroHeading({ leadingText, highlightText, className
       <p
         data-hero-heading-part
         className={clsx(
-          "text-[clamp(2.4rem,4vw,5.6rem)] font-medium text-[var(--color-cream)] drop-shadow leading-tight",
+          "font-heading text-[clamp(2.4rem,4vw,5.6rem)] font-medium leading-tight text-[var(--color-cream)] tracking-[-0.01em] drop-shadow",
           !prefersReducedMotion && "opacity-0"
         )}
-        style={{
-          letterSpacing: "-1%",
-          fontFamily:
-            "var(--font-syne), 'Syne', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
-        }}
       >
         {leadingText}
       </p>
       <span
         data-hero-heading-part
-        className={clsx("font-semibold leading-[1.02] drop-shadow-xl", !prefersReducedMotion && "opacity-0")}
-        style={{
-          color: "var(--color-highlight)",
-          fontSize: "clamp(3.8rem, 7vw, 8.75rem)",
-          marginTop: "-0.4rem",
-          letterSpacing: "-2%",
-          fontFamily:
-            "var(--font-syne), 'Syne', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
-        }}
+        className={clsx(
+          "font-heading mt-[-0.4rem] text-[clamp(3.8rem,7vw,8.75rem)] font-semibold leading-[1.02] text-[var(--color-highlight)] tracking-[-0.02em] drop-shadow-xl",
+          !prefersReducedMotion && "opacity-0"
+        )}
       >
         {highlightText}
       </span>

@@ -12,11 +12,11 @@
 
 3. **Duplicated legal page layout** _(completed)_
    - ✅ Added `LegalPageLayout` that wraps the hero, content sections, contact CTA, and footer.
-   - ✅ Cookies, privacy, and terms pages now pass data objects to the shared layout, keeping visuals synced and future edits data-only.
+   - ✅ Cookies, letsprivacy, and terms pages now pass data objects to the shared layout, keeping visuals synced and future edits data-only.
 
-4. **Scattered typography and inline styles**
-   - Font stacks, letter spacing, and colors are hard-coded throughout `page.tsx` and legal pages, making copy edits require style knowledge.
-   - **Idea:** consolidate recurrent styles into CSS utilities or Tailwind classes, using CSS variables for highlight colors to simplify maintenance.
+4. **Scattered typography and inline styles** _(completed)_
+   - ✅ Centralized heading/body font stacks as CSS utility classes, so components opt-in via `font-heading`/`font-body` without duplicating fallbacks.
+   - ✅ Replaced ad-hoc inline typography styles across the homepage, hero chrome, operators, orbit showcase, and legal layout with Tailwind utilities (tracking, fluid sizes) to keep visuals identical while improving maintainability.
 
 5. **Structured data reuse**
    - Organization JSON-LD is defined inside `page.tsx` and injected via `dangerouslySetInnerHTML`, so other routes miss the schema and edits are error-prone.

@@ -68,7 +68,7 @@ export default function HeroChrome({
               <defs>
                 <path id="cookiesCircleText" d="M60,60 m-45,0 a45,45 0 1,1 90,0 a45,45 0 1,1 -90,0" />
               </defs>
-              <text className="fill-current text-[11px] tracking-[0.2em]" style={{ fontFamily: "var(--font-syne), 'Syne', sans-serif" }}>
+              <text className="font-heading fill-current text-[11px] tracking-[0.2em]">
                 <textPath startOffset="0" href="#cookiesCircleText">
                   Let&apos;s Talk&#160;&#160;•&#160;&#160;Let&apos;s Talk&#160;&#160;•&#160;&#160;Let&apos;s Talk&#160;&#160;•
                 </textPath>

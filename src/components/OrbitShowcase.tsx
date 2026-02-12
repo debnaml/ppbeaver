@@ -350,15 +350,9 @@ const OrbitShowcase = () => {
           >
             <h3
               className={clsx(
-                "mt-4 font-semibold leading-[1.02] text-white orbit-intro-line",
+                "mt-4 font-heading font-semibold leading-[1.02] text-[clamp(2.85rem,5.25vw,6.56rem)] text-white tracking-[-0.02em] orbit-intro-line",
                 introVisible && "orbit-intro-line--visible"
               )}
-              style={{
-                fontFamily:
-                  "var(--font-syne), 'Syne', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
-                fontSize: "clamp(2.85rem, 5.25vw, 6.56rem)",
-                letterSpacing: "-2%",
-              }}
             >
               Practical advice and hands-on support at{" "}
               <UnderlineReveal width={3}>every</UnderlineReveal> stage.
@@ -390,11 +384,7 @@ const OrbitShowcase = () => {
             {SERVICES.map((service) => (
               <div key={`${service.id}-mobile`} className="space-y-6">
                 <h4
-                  className="text-3xl font-semibold text-white"
-                  style={{
-                    fontFamily:
-                      "var(--font-syne), 'Syne', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
-                  }}
+                  className="font-heading text-3xl font-semibold text-white"
                 >
                   {service.title}
                 </h4>
@@ -437,12 +427,7 @@ const OrbitShowcase = () => {
                   )}
                 >
                   <span
-                    className="text-4xl font-semibold leading-none sm:text-5xl"
-                    style={{
-                      fontFamily:
-                        "var(--font-syne), 'Syne', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
-                      letterSpacing: "-0.04em",
-                    }}
+                    className="font-heading text-4xl font-semibold leading-none tracking-[-0.04em] sm:text-5xl"
                   >
                     {service.title}
                   </span>

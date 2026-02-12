@@ -50,24 +50,12 @@ export default function Home() {
         <div className="relative max-w-5xl space-y-6">
           <div>
             <h2
-              className="mt-[-0.7rem] mb-12 sm:mb-16 font-semibold leading-[1.02] text-[var(--color-cream)] drop-shadow-xl"
-              style={{
-                fontFamily:
-                  "var(--font-syne), 'Syne', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
-                fontSize: "clamp(2.85rem, 5.25vw, 6.56rem)",
-                letterSpacing: "-2%",
-              }}
+              className="mt-[-0.7rem] mb-12 font-heading text-[clamp(2.85rem,5.25vw,6.56rem)] font-semibold leading-[1.02] text-[var(--color-cream)] drop-shadow-xl tracking-[-0.02em] sm:mb-16"
             >
               We help organisations work <UnderlineReveal width={4}>smarter.</UnderlineReveal>
             </h2>
           </div>
-          <div
-            className="space-y-8 text-lg font-normal leading-relaxed sm:text-xl lg:text-2xl"
-            style={{
-              fontFamily:
-                "var(--font-source-sans), 'Source Sans 3', 'Syne', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
-            }}
-          >
+          <div className="font-body space-y-8 text-lg font-normal leading-relaxed sm:text-xl lg:text-2xl">
             <RevealParagraph order={0}>
               Not by adding complexity, but by quietly fixing what slows you down.
               <br />

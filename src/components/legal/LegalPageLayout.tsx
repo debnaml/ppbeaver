@@ -56,22 +56,14 @@ const LegalPageLayout = ({
           {contentSections.map((section) => (
             <article key={section.title} className="space-y-4">
               <h2
-                className="text-3xl font-semibold text-white sm:text-4xl"
-                style={{
-                  fontFamily:
-                    "var(--font-syne), 'Syne', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
-                }}
+                className="font-heading text-3xl font-semibold text-white sm:text-4xl"
               >
                 {section.title}
               </h2>
               {section.paragraphs.map((paragraph) => (
                 <p
                   key={paragraph}
-                  className="text-lg leading-relaxed text-white/80 sm:text-xl"
-                  style={{
-                    fontFamily:
-                      "var(--font-source-sans), 'Source Sans 3', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
-                  }}
+                  className="font-body text-lg leading-relaxed text-white/80 sm:text-xl"
                 >
                   {paragraph}
                 </p>

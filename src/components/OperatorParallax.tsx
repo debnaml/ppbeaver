@@ -103,8 +103,7 @@ const OperatorParallax = () => {
           {MARQUEE_LINES.map(({ direction, offset }, index) => (
             <div key={`marquee-${index}`} className="overflow-hidden">
               <p
-                className="text-[clamp(2.5rem,6vw,5rem)] font-semibold tracking-[0.1em] text-white/80"
-                style={{ fontFamily: "var(--font-syne), 'Syne', system-ui, sans-serif" }}
+                className="font-heading text-[clamp(2.5rem,6vw,5rem)] font-semibold tracking-[0.1em] text-white/80"
               >
                 <span
                   className="inline-flex min-w-full whitespace-nowrap will-change-transform"
