@@ -1,4 +1,4 @@
-import ContactModal from "./ContactModal";
+import ContactTrigger from "./ContactTrigger";
 
 type ContactSectionProps = {
   id?: string;
@@ -32,7 +32,7 @@ export default function ContactSection({
           {heading}
         </h2>
         <div className="mt-5">
-          <ContactModal />
+          <ContactTrigger />
         </div>
       </div>
     </section>
