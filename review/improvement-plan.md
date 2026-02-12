@@ -1,13 +1,14 @@
 # Improvement Opportunities
 
-1. **Contact modal accessibility and bloat** *(completed)*
+1. **Contact modal accessibility and bloat** _(completed)_
    - ✅ Modal now traps focus, restores the trigger button on close, and keeps scroll locked without visual changes.
    - ✅ Form validation + anti-bot logic live in `useContactForm`, while `ContactTrigger` lazy-loads the modal so other pages hydrate faster.
    - ✅ No change to styling or copy; the UX is identical while the bundle is smaller.
 
-2. **HeroSequence monolith**
-   - `HeroSequence.tsx` exceeds 650 lines and mixes scroll locking, observers, video orchestration, progress animation, and keyword swapping.
-   - **Idea:** break repeated patterns into hooks (`useHeroVisibility`, `useVideoPreload`, `useProgressDuration`), move `HERO_SETTINGS`/`VIDEO_SOURCES` into typed config modules, and consider a reducer to manage boolean state to make future edits safer.
+2. **HeroSequence monolith** _(completed)_
+   - ✅ Moved `HERO_SETTINGS` and `VIDEO_SOURCES` into `hero/config.ts`, keeping constants typed and shareable.
+   - ✅ Extracted every effect/state machine into `useHeroSequence`, so the component now only renders markup while logic lives in a dedicated hook.
+   - ✅ Video refs, scroll locking, observers, and timers are encapsulated, making future tweaks safer without altering the visual treatment.
 
 3. **Duplicated legal page layout**
    - Cookies, privacy, and terms pages repeat the same hero/content/contact structure with only data changes.
