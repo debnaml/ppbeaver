@@ -10,9 +10,9 @@
    - ✅ Extracted every effect/state machine into `useHeroSequence`, so the component now only renders markup while logic lives in a dedicated hook.
    - ✅ Video refs, scroll locking, observers, and timers are encapsulated, making future tweaks safer without altering the visual treatment.
 
-3. **Duplicated legal page layout**
-   - Cookies, privacy, and terms pages repeat the same hero/content/contact structure with only data changes.
-   - **Idea:** introduce a `LegalPageLayout` that accepts hero props and `contentSections`, so new policies only supply data and optional overrides.
+3. **Duplicated legal page layout** _(completed)_
+   - ✅ Added `LegalPageLayout` that wraps the hero, content sections, contact CTA, and footer.
+   - ✅ Cookies, privacy, and terms pages now pass data objects to the shared layout, keeping visuals synced and future edits data-only.
 
 4. **Scattered typography and inline styles**
    - Font stacks, letter spacing, and colors are hard-coded throughout `page.tsx` and legal pages, making copy edits require style knowledge.
