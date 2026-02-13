@@ -1,6 +1,8 @@
-'use client';
+"use client";
 
 import { FormEvent, useCallback, useEffect, useMemo, useRef, useState } from "react";
+
+import { trackEvent } from "@/lib/analytics";
 
 export type ContactFormValues = {
   name: string;
@@ -103,6 +105,7 @@ export function useContactForm({ isOpen, onClose }: UseContactFormArgs) {
     (optionId: string) => {
       cancelIncorrectHighlight();
       setIncorrectOptionId(optionId);
+      trackEvent("contact_verification_feedback", { status: "incorrect", optionId });
       incorrectHighlightTimeout.current = window.setTimeout(() => {
         setIncorrectOptionId((current) => (current === optionId ? null : current));
         incorrectHighlightTimeout.current = null;
@@ -175,10 +178,16 @@ export function useContactForm({ isOpen, onClose }: UseContactFormArgs) {
     const validationErrors = validate(formValues);
     if (Object.keys(validationErrors).length) {
       setErrors(validationErrors);
+      trackEvent("contact_form_validation", {
+        valid: false,
+        fieldCount: Object.keys(validationErrors).length,
+      });
       return false;
     }
 
+    trackEvent("contact_form_validation", { valid: true });
     setStep("verify");
+    trackEvent("contact_form_step", { step: "verify" });
     return true;
   }, [formValues, validate]);
 
@@ -186,6 +195,11 @@ export function useContactForm({ isOpen, onClose }: UseContactFormArgs) {
     (optionId: string) => {
       clearIncorrectHighlight();
       setSelectedOption(optionId);
+      const option = verificationOptions.find((item) => item.id === optionId);
+      trackEvent("contact_verification_select", {
+        optionId,
+        isCorrect: option?.isCorrect ?? false,
+      });
     },
     [clearIncorrectHighlight]
   );
@@ -194,6 +208,7 @@ export function useContactForm({ isOpen, onClose }: UseContactFormArgs) {
     setStep("form");
     setSelectedOption("");
     clearIncorrectHighlight();
+    trackEvent("contact_form_step", { step: "form" });
   }, [clearIncorrectHighlight]);
 
   const handleSubmit = useCallback(
@@ -206,6 +221,7 @@ export function useContactForm({ isOpen, onClose }: UseContactFormArgs) {
       }
 
       if (!selectedOption) {
+        trackEvent("contact_verification_submit", { status: "missing" });
         return;
       }
 
@@ -213,15 +229,18 @@ export function useContactForm({ isOpen, onClose }: UseContactFormArgs) {
       if (!chosen?.isCorrect) {
         triggerIncorrectHighlight(selectedOption);
         refreshOptions();
+        trackEvent("contact_verification_submit", { status: "incorrect", optionId: selectedOption });
         return;
       }
 
+      trackEvent("contact_verification_submit", { status: "correct" });
       clearIncorrectHighlight();
       setStatus("submitting");
 
       try {
         await new Promise((resolve) => setTimeout(resolve, 600));
         setStatus("success");
+        trackEvent("contact_form_submit", { status: "success" });
 
         submitTimeout.current = window.setTimeout(() => {
           onClose();
@@ -230,6 +249,7 @@ export function useContactForm({ isOpen, onClose }: UseContactFormArgs) {
       } catch (error) {
         setStatus("error");
         console.error("Contact form submission failed", error);
+        trackEvent("contact_form_submit", { status: "error" });
       }
     },
     [

@@ -134,6 +134,35 @@ main {
   border: 0;
 }
 
+.skip-link {
+  position: absolute;
+  top: 0.75rem;
+  left: 0.75rem;
+  padding: 0.75rem 1.25rem;
+  border-radius: 999px;
+  background: var(--color-highlight);
+  color: var(--color-ink);
+  font-weight: 600;
+  text-decoration: none;
+  transform: translateY(-150%);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  z-index: 999;
+  clip: rect(0 0 0 0);
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+}
+
+.skip-link:focus-visible,
+.skip-link:focus {
+  clip: auto;
+  width: auto;
+  height: auto;
+  overflow: visible;
+  transform: translateY(0);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.25);
+}
+
 .noise-overlay {
   position: absolute;
   inset: 0;

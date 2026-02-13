@@ -1,5 +1,9 @@
 import type { Metadata } from "next";
+import Script from "next/script";
 import { Source_Sans_3, Syne } from "next/font/google";
+
+import AnalyticsTracker from "@/components/analytics/AnalyticsTracker";
+import { GA_MEASUREMENT_ID } from "@/lib/analytics";
 import "./globals.css";
 
 const syne = Syne({
@@ -92,6 +96,23 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={`${syne.variable} ${sourceSans.variable} antialiased`}>
+        {GA_MEASUREMENT_ID ? (
+          <>
+            <Script
+              src={`https://www.googletagmanager.com/gtag/js?id=${GA_MEASUREMENT_ID}`}
+              strategy="afterInteractive"
+            />
+            <Script id="gtag-init" strategy="afterInteractive">
+              {`
+                window.dataLayer = window.dataLayer || [];
+                function gtag(){dataLayer.push(arguments);}
+                gtag('js', new Date());
+                gtag('config', '${GA_MEASUREMENT_ID}', { anonymize_ip: true });
+              `}
+            </Script>
+            <AnalyticsTracker />
+          </>
+        ) : null}
         {children}
       </body>
     </html>

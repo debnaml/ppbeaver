@@ -3,6 +3,8 @@
 import dynamic from "next/dynamic";
 import { useEffect, useRef, useState } from "react";
 
+import { trackEvent } from "@/lib/analytics";
+
 const ContactModal = dynamic(() => import("./ContactModal"), {
   loading: () => null,
   ssr: false,
@@ -26,6 +28,13 @@ const ContactTrigger = () => {
     wasOpenRef.current = isOpen;
   }, [isOpen]);
 
+  const handleOpen = () => {
+    trackEvent("contact_cta_click", {
+      source: "contact-section",
+    });
+    setIsOpen(true);
+  };
+
   return (
     <>
       <div className="mt-12 flex flex-col items-center gap-3 text-center">
@@ -33,13 +42,24 @@ const ContactTrigger = () => {
           type="button"
           aria-label="Open contact form"
           className={buttonClasses}
-          onClick={() => setIsOpen(true)}
+          onClick={handleOpen}
           ref={triggerRef}
         >
           Let&apos;s talk
         </button>
         <p className={emailClasses} style={{ marginTop: "15px" }}>
-          Prefer email? <span className="text-[#66f2d5] underline">hello@performancepeak.com</span>
+          Prefer email?{" "}
+          <a
+            href="mailto:hello@performancepeak.com"
+            className="text-[#66f2d5] underline"
+            onClick={() =>
+              trackEvent("contact_email_click", {
+                source: "contact-section",
+              })
+            }
+          >
+            hello@performancepeak.com
+          </a>
         </p>
       </div>
 

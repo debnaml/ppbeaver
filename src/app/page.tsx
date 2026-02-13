@@ -25,10 +25,33 @@ const organizationSchema = {
   slogan: "Build with intelligence, imagination, and information.",
 };
 
+const primaryNavLinks = [
+  { label: "Home", href: "/" },
+  { label: "About", href: "/#about" },
+  { label: "Services", href: "/#services" },
+  { label: "Contact", href: "/#contact" },
+];
+
 export default function Home() {
   return (
-    <main className="bg-[var(--color-supadark)] text-[var(--color-cream)]">
-      <HeroSequence />
+    <>
+      <a className="skip-link" href="#main-content">
+        Skip to main content
+      </a>
+      <nav className="visually-hidden" aria-label="Primary navigation">
+        <ul>
+          {primaryNavLinks.map((item) => (
+            <li key={item.href}>
+              <a href={item.href}>{item.label}</a>
+            </li>
+          ))}
+        </ul>
+      </nav>
+      <main id="main-content" className="bg-[var(--color-supadark)] text-[var(--color-cream)]">
+        <h1 className="visually-hidden">
+          Digital Strategy & AI Consultancy | Performance Peak
+        </h1>
+        <HeroSequence />
 
       <section id="about" className="relative isolate w-full overflow-hidden px-6 py-24 sm:px-12">
         <div
@@ -79,11 +102,12 @@ export default function Home() {
 
       <Footer />
 
-      <script
-        type="application/ld+json"
-        suppressHydrationWarning
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationSchema) }}
-      />
-    </main>
+        <script
+          type="application/ld+json"
+          suppressHydrationWarning
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationSchema) }}
+        />
+      </main>
+    </>
   );
 }

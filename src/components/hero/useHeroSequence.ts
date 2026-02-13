@@ -2,9 +2,29 @@
 
 import { useCallback, useEffect, useMemo, useRef, useState, useLayoutEffect } from "react";
 
+import { trackEvent } from "@/lib/analytics";
+
 import { HERO_SETTINGS, VIDEO_SOURCES, type Layer } from "./config";
 
 const HERO_POSTER_STORAGE_KEY = "ppb:heroPosterMode";
+const HERO_POSTER_STORAGE_TTL = 24 * 60 * 60 * 1000; // 1 day
+
+const parsePosterPreference = (raw: string | null) => {
+  if (!raw) return false;
+  try {
+    const parsed = JSON.parse(raw) as { value?: string; expiresAt?: number };
+    if (typeof parsed === "object" && parsed) {
+      if (parsed.expiresAt && parsed.expiresAt < Date.now()) {
+        return false;
+      }
+      return parsed.value === "poster";
+    }
+  } catch {
+    // Fall back to legacy string storage
+    return raw === "poster";
+  }
+  return raw === "poster";
+};
 const useIsomorphicLayoutEffect = typeof window === "undefined" ? useEffect : useLayoutEffect;
 
 export const useHeroSequence = () => {
@@ -134,14 +154,18 @@ export const useHeroSequence = () => {
     [ctaVisible, isReady, keywordVisible, posterReady]
   );
 
-  const storePosterPreference = useCallback(() => {
-    if (typeof window === "undefined") return;
-    try {
-      window.localStorage.setItem(HERO_POSTER_STORAGE_KEY, "poster");
-    } catch {
-      // Ignore storage failures
-    }
-  }, []);
+    const storePosterPreference = useCallback(() => {
+      if (typeof window === "undefined") return;
+      try {
+        const payload = JSON.stringify({
+          value: "poster",
+          expiresAt: Date.now() + HERO_POSTER_STORAGE_TTL,
+        });
+        window.localStorage.setItem(HERO_POSTER_STORAGE_KEY, payload);
+      } catch {
+        // Ignore storage failures
+      }
+    }, []);
 
   const activatePosterPreference = useCallback(() => {
     if (persistentPosterMode) return;
@@ -161,18 +185,25 @@ export const useHeroSequence = () => {
     }
   }, []);
 
-  useIsomorphicLayoutEffect(() => {
-    if (typeof window === "undefined") return;
-    let stored = false;
-    try {
-      stored = window.localStorage.getItem(HERO_POSTER_STORAGE_KEY) === "poster";
-    } catch {
-      stored = false;
-    }
-    if (stored) {
-      setPersistentPosterMode(true);
-    }
-  }, []);
+    useIsomorphicLayoutEffect(() => {
+      if (typeof window === "undefined") return;
+      let storedRaw: string | null = null;
+      try {
+        storedRaw = window.localStorage.getItem(HERO_POSTER_STORAGE_KEY);
+      } catch {
+        storedRaw = null;
+      }
+      const shouldPersist = parsePosterPreference(storedRaw);
+      if (shouldPersist) {
+        setPersistentPosterMode(true);
+      } else if (storedRaw) {
+        try {
+          window.localStorage.removeItem(HERO_POSTER_STORAGE_KEY);
+        } catch {
+          // Ignore removal failures
+        }
+      }
+    }, []);
 
   useEffect(() => {
     if (typeof window === "undefined") return;
@@ -660,15 +691,27 @@ export const useHeroSequence = () => {
     };
   }, []);
 
-  const handleCTA = useCallback(() => {
-    if (scrollToSection("about")) return;
-    scrollToSection("content");
-  }, [scrollToSection]);
+    const handleCTA = useCallback(() => {
+      const reachedPrimary = scrollToSection("about");
+      trackEvent("hero_cta_click", {
+        source: "hero-peel",
+        destination: reachedPrimary ? "about" : "content",
+        fallbackUsed: !reachedPrimary,
+      });
+      if (reachedPrimary) return;
+      scrollToSection("content");
+    }, [scrollToSection]);
 
-  const handleContactClick = useCallback(() => {
-    if (scrollToSection("contact")) return;
-    scrollToSection("content");
-  }, [scrollToSection]);
+    const handleContactClick = useCallback(() => {
+      const reachedPrimary = scrollToSection("contact");
+      trackEvent("contact_cta_click", {
+        source: "hero-floating-button",
+        destination: reachedPrimary ? "contact" : "content",
+        fallbackUsed: !reachedPrimary,
+      });
+      if (reachedPrimary) return;
+      scrollToSection("content");
+    }, [scrollToSection]);
 
   const replayAvailable = persistentPosterMode && !reducedMotion && !networkPrefersPoster;
 

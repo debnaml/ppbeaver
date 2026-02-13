@@ -42,12 +42,12 @@ const SERVICES: Service[] = [
     detailGrid: [
       "Data analysis & reporting",
       "Stakeholder & customer research",
-      "Process & workflow reviews",
-      "System & technology audits",
+      "Process reviews",
+      "Technology audits",
       "Journey mapping",
-      "Opportunity discovery workshops",
-      "Feasibility & business case support",
-      "Clear, practical recommendations",
+      "Opportunity workshops",
+      "Feasibility studies",
+      "Business case support",
     ],
     images: [
       {
@@ -82,14 +82,13 @@ const SERVICES: Service[] = [
     description:
       "Thoughtful planning and experienced guidance to help you prioritise the right changes with confidence.",
     detailGrid: [
-      "Digital transformation roadmaps",
+      "Transformation roadmaps",
       "Technology & AI strategy",
       "Integration planning",
       "Product & service design",
       "Vendor & platform selection",
-      "Architecture & solution design",
-      "Change & adoption planning",
-      "Delivery leadership & programme support",
+      "Solution design",
+      "Delivery leadership",
     ],
     images: [
       {
@@ -126,12 +125,11 @@ const SERVICES: Service[] = [
     detailGrid: [
       "Website design & development",
       "Web and mobile apps",
-      "Membership portals & platforms",
+      "Membership portals",
       "E-learning & training systems",
       "System integrations & APIs",
       "Workflow automation",
       "AI-powered features & assistants",
-      "Custom software & internal tools",
     ],
     images: [
       {
@@ -168,10 +166,10 @@ const SERVICES: Service[] = [
     detailGrid: [
       "Optimisation & enhancements",
       "Analytics & performance tracking",
-      "Conversion & usability improvements",
-      "Tuning & automation improvements",
+      "Conversion improvements",
+      "Tuning & automation",
       "Content & experience updates",
-      "Training & enablement",
+      "Security reviews & updates",
       "Support & maintenance",
     ],
     images: [

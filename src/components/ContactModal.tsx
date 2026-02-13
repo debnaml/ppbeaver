@@ -1,9 +1,10 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useCallback, useEffect, useRef } from "react";
 import { createPortal } from "react-dom";
 
 import { useContactForm } from "@/hooks/useContactForm";
+import { trackEvent } from "@/lib/analytics";
 
 const fieldClasses =
   "block w-full rounded-2xl border border-white/10 bg-white/5 px-5 py-3 text-base text-[var(--color-cream)] outline-none transition placeholder:text-white/40 focus:border-[var(--color-highlight)] focus:bg-white/10";
@@ -36,6 +37,14 @@ type ContactModalProps = {
 
 const ContactModal = ({ isOpen, onClose }: ContactModalProps) => {
   const dialogRef = useRef<HTMLDivElement | null>(null);
+  const handleClose = useCallback(
+    (reason: string) => {
+      trackEvent("contact_modal_close", { reason });
+      onClose();
+    },
+    [onClose]
+  );
+  const handleCloseAfterSuccess = useCallback(() => handleClose("success"), [handleClose]);
 
   const {
     formValues,
@@ -51,7 +60,13 @@ const ContactModal = ({ isOpen, onClose }: ContactModalProps) => {
     handleSubmit,
     handleOptionSelect,
     handleGoBack,
-  } = useContactForm({ isOpen, onClose });
+  } = useContactForm({ isOpen, onClose: handleCloseAfterSuccess });
+
+  useEffect(() => {
+    if (isOpen) {
+      trackEvent("contact_modal_open");
+    }
+  }, [isOpen]);
 
   useEffect(() => {
     if (!isOpen || typeof document === "undefined") {
@@ -82,7 +97,7 @@ const ContactModal = ({ isOpen, onClose }: ContactModalProps) => {
     const handleKeyDown = (event: KeyboardEvent) => {
       if (event.key === "Escape") {
         event.preventDefault();
-        onClose();
+        handleClose("escape");
         return;
       }
 
@@ -116,7 +131,7 @@ const ContactModal = ({ isOpen, onClose }: ContactModalProps) => {
     return () => {
       document.removeEventListener("keydown", handleKeyDown);
     };
-  }, [isOpen, onClose]);
+  }, [handleClose, isOpen]);
 
   if (!isOpen || typeof document === "undefined") {
     return null;
@@ -126,7 +141,7 @@ const ContactModal = ({ isOpen, onClose }: ContactModalProps) => {
     <div className="fixed inset-0 z-[60] flex items-center justify-center px-4 py-8">
       <div
         className="absolute inset-0 bg-[var(--color-supadark)]/80 backdrop-blur-md"
-        onClick={onClose}
+        onClick={() => handleClose("overlay")}
         aria-hidden
       />
       <div
@@ -311,7 +326,7 @@ const ContactModal = ({ isOpen, onClose }: ContactModalProps) => {
           <button
             type="button"
             className="absolute right-6 top-6 flex h-12 w-12 items-center justify-center rounded-full text-3xl text-white/70 transition hover:text-white"
-            onClick={onClose}
+            onClick={() => handleClose("button")}
             aria-label="Close contact form"
           >
             &times;
