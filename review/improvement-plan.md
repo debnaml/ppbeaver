@@ -18,15 +18,16 @@
    - ✅ Centralized heading/body font stacks as CSS utility classes, so components opt-in via `font-heading`/`font-body` without duplicating fallbacks.
    - ✅ Replaced ad-hoc inline typography styles across the homepage, hero chrome, operators, orbit showcase, and legal layout with Tailwind utilities (tracking, fluid sizes) to keep visuals identical while improving maintainability.
 
-5. **Structured data reuse**
-   - Organization JSON-LD is defined inside `page.tsx` and injected via `dangerouslySetInnerHTML`, so other routes miss the schema and edits are error-prone.
-   - **Idea:** move schema definitions into a shared helper and render via `next/script` so every route can import the same data.
+5. **Structured data reuse** _(completed)_
+   - ✅ Extracted the organization JSON-LD into `src/lib/structuredData.ts`, so every route can import the same canonical schema object.
+   - ✅ `page.tsx` now renders the schema via `next/script` with `beforeInteractive` strategy for best performance while removing raw `dangerouslySetInnerHTML` usage.
 
 6. **Form backend + resilience (open question)**
    - Contact form still simulates submission with a timeout and has no `/api/contact` endpoint or spam protection beyond the image puzzle.
    - **Idea:** plan a server action or API route plus real verification (e.g., Turnstile) so the UX stays the same but submissions are actionable.
 
-7. **Hero degradation strategy (open question)**
-   - Heavy video hero may impact low-power devices; currently only reduced-motion preference is checked.
-
-- **Idea:** serve a static poster when `navigator.connection.saveData` or low bandwidth is detected, keeping visuals intact for high-end clients.
+7. **Hero degradation strategy** _(completed)_
+   - ✅ Added `HeroPoster` plus responsive `frame-{size}.(webp|jpg)` sources so the hero can swap to a static image without visual drift.
+   - ✅ `useHeroSequence` now respects `prefers-reduced-motion`, `saveData`, slow connection types, and post-loop freezes to keep the poster visible and skip video decoding.
+   - ✅ CTA timing, keyword transitions, and overlays remain in sync whether the hero is video-driven or poster-only, so users still see the full narrative even in low-motion contexts.
+   - ✅ Returning visitors land directly on the poster with a "Play hero again" control, thanks to a persisted preference that avoids reloading the videos unless requested.

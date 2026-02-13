@@ -1,8 +1,11 @@
 "use client";
 
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState, useLayoutEffect } from "react";
 
 import { HERO_SETTINGS, VIDEO_SOURCES, type Layer } from "./config";
+
+const HERO_POSTER_STORAGE_KEY = "ppb:heroPosterMode";
+const useIsomorphicLayoutEffect = typeof window === "undefined" ? useEffect : useLayoutEffect;
 
 export const useHeroSequence = () => {
   const heroRef = useRef<HTMLElement | null>(null);
@@ -28,8 +31,13 @@ export const useHeroSequence = () => {
   const [logoDimProgress, setLogoDimProgress] = useState(0);
   const [windowFocused, setWindowFocused] = useState(true);
   const [heroFrozen, setHeroFrozen] = useState(false);
+  const [networkPrefersPoster, setNetworkPrefersPoster] = useState(false);
+  const [posterReady, setPosterReady] = useState(false);
+  const [persistentPosterMode, setPersistentPosterMode] = useState(false);
 
   const sequenceDormant = !heroInView || !windowFocused;
+  const preferStaticPoster = reducedMotion || networkPrefersPoster || persistentPosterMode;
+  const posterVisible = preferStaticPoster || heroFrozen;
 
   const scrollToSection = useCallback(
     (id: string) => {
@@ -56,12 +64,12 @@ export const useHeroSequence = () => {
   }, [getLayerRef]);
 
   const resumeSequence = useCallback(() => {
-    if (heroFrozen) return;
+    if (heroFrozen || preferStaticPoster) return;
     const activeVideo = getLayerRef(activeLayer).current;
     if (!activeVideo || !isReady) return;
     resumeFromDormantRef.current = true;
     void activeVideo.play().catch(() => undefined);
-  }, [activeLayer, getLayerRef, heroFrozen, isReady]);
+  }, [activeLayer, getLayerRef, heroFrozen, isReady, preferStaticPoster]);
 
   const restartAndPlay = useCallback((video: HTMLVideoElement) => {
     video.pause();
@@ -100,14 +108,126 @@ export const useHeroSequence = () => {
     }, HERO_SETTINGS.keywordSwapDelay);
   }, []);
 
+  const commitPosterExperience = useCallback(
+    (shouldUsePoster: boolean, allowWithoutPoster = false) => {
+      if (!shouldUsePoster) return;
+      if (!posterReady && !allowWithoutPoster) return;
+      if (allowWithoutPoster && !posterReady) {
+        setPosterReady(true);
+      }
+      if (!isReady) {
+        setIsReady(true);
+      }
+      if (!keywordVisible) {
+        setKeywordVisible(true);
+      }
+      if (!ctaVisible) {
+        if (ctaTimeoutRef.current) {
+          clearTimeout(ctaTimeoutRef.current);
+        }
+        ctaTimeoutRef.current = window.setTimeout(() => {
+          setCtaVisible(true);
+          ctaTimeoutRef.current = null;
+        }, HERO_SETTINGS.ctaRevealDelay);
+      }
+    },
+    [ctaVisible, isReady, keywordVisible, posterReady]
+  );
+
+  const storePosterPreference = useCallback(() => {
+    if (typeof window === "undefined") return;
+    try {
+      window.localStorage.setItem(HERO_POSTER_STORAGE_KEY, "poster");
+    } catch {
+      // Ignore storage failures
+    }
+  }, []);
+
+  const activatePosterPreference = useCallback(() => {
+    if (persistentPosterMode) return;
+    setPersistentPosterMode(true);
+    storePosterPreference();
+    commitPosterExperience(true);
+  }, [commitPosterExperience, persistentPosterMode, storePosterPreference]);
+
+  const clearPosterPreference = useCallback(() => {
+    setPersistentPosterMode(false);
+    if (typeof window !== "undefined") {
+      try {
+        window.localStorage.removeItem(HERO_POSTER_STORAGE_KEY);
+      } catch {
+        // Ignore storage failures
+      }
+    }
+  }, []);
+
+  useIsomorphicLayoutEffect(() => {
+    if (typeof window === "undefined") return;
+    let stored = false;
+    try {
+      stored = window.localStorage.getItem(HERO_POSTER_STORAGE_KEY) === "poster";
+    } catch {
+      stored = false;
+    }
+    if (stored) {
+      setPersistentPosterMode(true);
+    }
+  }, []);
+
   useEffect(() => {
     if (typeof window === "undefined") return;
     const mq = window.matchMedia("(prefers-reduced-motion: reduce)");
-    const handleChange = () => setReducedMotion(mq.matches);
+    const handleChange = () => {
+      const prefersReducedMotion = mq.matches;
+      setReducedMotion(prefersReducedMotion);
+      commitPosterExperience(prefersReducedMotion || networkPrefersPoster);
+    };
     handleChange();
     mq.addEventListener("change", handleChange);
     return () => mq.removeEventListener("change", handleChange);
-  }, []);
+  }, [commitPosterExperience, networkPrefersPoster]);
+
+  useEffect(() => {
+    if (typeof navigator === "undefined") return;
+
+    type NavigatorWithConnection = Navigator & {
+      connection?: NetworkInformation;
+      mozConnection?: NetworkInformation;
+      webkitConnection?: NetworkInformation;
+    };
+
+    const nav = navigator as NavigatorWithConnection;
+    const connection = nav.connection ?? nav.mozConnection ?? nav.webkitConnection;
+    if (!connection) return;
+
+    const evaluate = () => {
+      const saveData = connection.saveData === true;
+      const slowType =
+        connection.effectiveType === "slow-2g" || connection.effectiveType === "2g";
+      const lowDownlink =
+        typeof connection.downlink === "number" &&
+        connection.downlink > 0 &&
+        connection.downlink < 1.5;
+      const prefersPoster = saveData || slowType || lowDownlink;
+      setNetworkPrefersPoster(prefersPoster);
+      commitPosterExperience(prefersPoster || reducedMotion);
+    };
+
+    evaluate();
+
+    const handleChange = () => evaluate();
+
+    if (typeof connection.addEventListener === "function") {
+      connection.addEventListener("change", handleChange);
+      return () => connection.removeEventListener("change", handleChange);
+    }
+
+    const previous = connection.onchange;
+    connection.onchange = handleChange;
+    return () => {
+      connection.onchange = previous ?? null;
+    };
+  }, [commitPosterExperience, reducedMotion]);
 
   useEffect(() => {
     if (typeof window === "undefined" || typeof document === "undefined") return;
@@ -145,9 +265,10 @@ export const useHeroSequence = () => {
 
   useEffect(() => {
     if (typeof document === "undefined" || typeof window === "undefined") return;
-    if (isReady) return;
+    if (isReady || preferStaticPoster) return;
 
-    const shouldLock = window.navigator?.connection?.saveData !== true;
+    const shouldLock =
+      window.navigator?.connection?.saveData !== true && !preferStaticPoster;
     const nearTop = window.scrollY <= 48;
     if (!shouldLock || !nearTop) return;
 
@@ -163,7 +284,7 @@ export const useHeroSequence = () => {
       window.clearTimeout(failsafe);
       html.style.overflow = prev;
     };
-  }, [isReady]);
+  }, [isReady, preferStaticPoster]);
 
   useEffect(() => {
     if (typeof window === "undefined" || typeof IntersectionObserver === "undefined") {
@@ -262,8 +383,31 @@ export const useHeroSequence = () => {
     wasDormantRef.current = sequenceDormant;
   }, [pauseSequence, resumeSequence, sequenceDormant]);
 
+  useEffect(() => {
+    if (!isReady) return;
+    storePosterPreference();
+  }, [isReady, storePosterPreference]);
+
+  useEffect(() => {
+    if (!preferStaticPoster || isReady) return;
+    if (typeof window === "undefined") return;
+
+    if (posterReady) {
+      const raf = window.requestAnimationFrame(() => {
+        commitPosterExperience(true);
+      });
+      return () => window.cancelAnimationFrame(raf);
+    }
+
+    const fallback = window.setTimeout(() => {
+      commitPosterExperience(true, true);
+    }, HERO_SETTINGS.posterFallbackReveal);
+    return () => window.clearTimeout(fallback);
+  }, [commitPosterExperience, isReady, posterReady, preferStaticPoster]);
+
   const primeVideo = useCallback(
     (layer: Layer, index: number, autoplay = false, force = false) => {
+      if (preferStaticPoster) return;
       if (sequenceDormant && !force) return;
       const element = getLayerRef(layer).current;
       if (!element) return;
@@ -301,7 +445,7 @@ export const useHeroSequence = () => {
         }
       }
     },
-    [getLayerRef, sequenceDormant]
+    [getLayerRef, preferStaticPoster, sequenceDormant]
   );
 
   const pauseLayer = useCallback(
@@ -330,12 +474,13 @@ export const useHeroSequence = () => {
       setCurrentKeyword(VIDEO_SOURCES[firstIndex].keyword);
       setKeywordVisible(true);
       setProgressDuration(0);
+      activatePosterPreference();
     },
-    [getLayerRef, pauseLayer, primeVideo]
+    [activatePosterPreference, getLayerRef, pauseLayer, primeVideo]
   );
 
   const advanceSequence = useCallback(() => {
-    if (sequenceDormant || heroFrozen) return;
+    if (sequenceDormant || heroFrozen || preferStaticPoster) return;
     const totalVideos = VIDEO_SOURCES.length;
     if (totalVideos === 0) return;
 
@@ -383,10 +528,10 @@ export const useHeroSequence = () => {
         ctaTimeoutRef.current = null;
       }, HERO_SETTINGS.ctaRevealDelay);
     }
-  }, [activeLayer, ctaVisible, currentVideoIndex, heroFrozen, holdHeroOnFirstFrame, pauseLayer, primeVideo, sequenceDormant, transitionKeyword]);
+  }, [activeLayer, ctaVisible, currentVideoIndex, heroFrozen, holdHeroOnFirstFrame, pauseLayer, preferStaticPoster, primeVideo, sequenceDormant, transitionKeyword]);
 
   useEffect(() => {
-    if (isReady) return;
+    if (isReady || preferStaticPoster) return;
     const initialLayer: Layer = "A";
     primeVideo(initialLayer, 0, false, true);
     const initialVideo = getLayerRef(initialLayer).current;
@@ -431,10 +576,10 @@ export const useHeroSequence = () => {
       cancelled = true;
       initialVideo.removeEventListener("canplaythrough", handleReadyEvent);
     };
-  }, [getLayerRef, isReady, primeVideo, restartAndPlay, waitForHdQuality]);
+  }, [getLayerRef, isReady, preferStaticPoster, primeVideo, restartAndPlay, waitForHdQuality]);
 
   useEffect(() => {
-    if (sequenceDormant || heroFrozen) return;
+    if (sequenceDormant || heroFrozen || preferStaticPoster) return;
     const layer = activeLayer;
     const videoEl = getLayerRef(layer).current;
     if (!videoEl) return;
@@ -448,10 +593,10 @@ export const useHeroSequence = () => {
     return () => {
       videoEl.removeEventListener("ended", handleEnded);
     };
-  }, [activeLayer, advanceSequence, getLayerRef, heroFrozen, sequenceDormant]);
+  }, [activeLayer, advanceSequence, getLayerRef, heroFrozen, preferStaticPoster, sequenceDormant]);
 
   useEffect(() => {
-    if (!isReady || heroFrozen) {
+    if (!isReady || heroFrozen || preferStaticPoster) {
       return;
     }
 
@@ -504,7 +649,7 @@ export const useHeroSequence = () => {
       video.removeEventListener("play", handlePlay);
       video.removeEventListener("loadedmetadata", handleLoadedMetadata);
     };
-  }, [activeLayer, getLayerRef, heroFrozen, isReady]);
+  }, [activeLayer, getLayerRef, heroFrozen, isReady, preferStaticPoster]);
 
   useEffect(() => {
     return () => {
@@ -525,7 +670,39 @@ export const useHeroSequence = () => {
     scrollToSection("content");
   }, [scrollToSection]);
 
-  const showProgressFill = useMemo(() => isReady && progressDuration > 0 && !heroFrozen, [isReady, progressDuration, heroFrozen]);
+  const replayAvailable = persistentPosterMode && !reducedMotion && !networkPrefersPoster;
+
+  const handleReplay = useCallback(() => {
+    if (!replayAvailable) return;
+    clearPosterPreference();
+    if (ctaTimeoutRef.current) {
+      clearTimeout(ctaTimeoutRef.current);
+      ctaTimeoutRef.current = null;
+    }
+    setHeroFrozen(false);
+    setCtaVisible(false);
+    setKeywordVisible(false);
+    setIsReady(false);
+    setLogoMaskVisible(false);
+    setProgressDuration(0);
+    setProgressKey((prev) => prev + 1);
+    setCurrentVideoIndex(0);
+    setActiveLayer("A");
+    const firstSource = VIDEO_SOURCES[0];
+    if (firstSource) {
+      setCurrentKeyword(firstSource.keyword);
+    }
+  }, [clearPosterPreference, replayAvailable]);
+
+  const handlePosterReady = useCallback(() => {
+    setPosterReady(true);
+    commitPosterExperience(preferStaticPoster);
+  }, [commitPosterExperience, preferStaticPoster]);
+
+  const showProgressFill = useMemo(
+    () => isReady && progressDuration > 0 && !heroFrozen && !preferStaticPoster,
+    [heroFrozen, isReady, preferStaticPoster, progressDuration]
+  );
 
   return {
     heroRef,
@@ -543,6 +720,11 @@ export const useHeroSequence = () => {
     sequenceDormant,
     isReady,
     showProgressFill,
+    posterVisible,
+    posterOnlyMode: preferStaticPoster,
+    replayAvailable,
+    handleReplay,
+    handlePosterReady,
     handleCTA,
     handleContactClick,
   } as const;

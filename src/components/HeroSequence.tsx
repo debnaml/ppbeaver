@@ -6,6 +6,7 @@ import HeadlineOverlay from "@/components/HeadlineOverlay";
 import LogoLoader from "@/components/LogoLoader";
 import LogoMaskOverlay from "@/components/LogoMaskOverlay";
 import PeelCTA from "@/components/PeelCTA";
+import HeroPoster from "@/components/hero/HeroPoster";
 import { HERO_SETTINGS } from "@/components/hero/config";
 import { useHeroSequence } from "@/components/hero/useHeroSequence";
 
@@ -26,6 +27,11 @@ const HeroSequence = () => {
     sequenceDormant,
     isReady,
     showProgressFill,
+    posterVisible,
+    posterOnlyMode,
+    replayAvailable,
+    handleReplay,
+    handlePosterReady,
     handleCTA,
     handleContactClick,
   } = useHeroSequence();
@@ -37,32 +43,38 @@ const HeroSequence = () => {
     >
       <div className="relative h-screen w-full">
         <div className="absolute inset-0">
-          <video
-            ref={videoARef}
-            data-layer="A"
-            className={clsx(
-              "absolute inset-0 h-full w-full object-cover transition-opacity",
-              activeLayer === "A" ? "opacity-100" : "opacity-0"
-            )}
-            playsInline
-            muted
-            preload="auto"
-            loop={false}
-            autoPlay={false}
-          />
-          <video
-            ref={videoBRef}
-            data-layer="B"
-            className={clsx(
-              "absolute inset-0 h-full w-full object-cover transition-opacity",
-              activeLayer === "B" ? "opacity-100" : "opacity-0"
-            )}
-            playsInline
-            muted
-            preload="auto"
-            loop={false}
-            autoPlay={false}
-          />
+          {!posterOnlyMode && (
+            <>
+              <video
+                ref={videoARef}
+                data-layer="A"
+                className={clsx(
+                  "absolute inset-0 h-full w-full object-cover transition-opacity",
+                  activeLayer === "A" ? "opacity-100" : "opacity-0"
+                )}
+                playsInline
+                muted
+                preload="auto"
+                loop={false}
+                autoPlay={false}
+              />
+              <video
+                ref={videoBRef}
+                data-layer="B"
+                className={clsx(
+                  "absolute inset-0 h-full w-full object-cover transition-opacity",
+                  activeLayer === "B" ? "opacity-100" : "opacity-0"
+                )}
+                playsInline
+                muted
+                preload="auto"
+                loop={false}
+                autoPlay={false}
+              />
+            </>
+          )}
+
+          <HeroPoster visible={posterVisible} onReady={handlePosterReady} />
         </div>
 
         <div
@@ -130,6 +142,25 @@ const HeroSequence = () => {
         </div>
 
         <div className="noise-overlay" aria-hidden />
+
+        {posterOnlyMode && replayAvailable && (
+          <div className="pointer-events-auto absolute inset-0 z-30 flex items-center justify-center">
+            <button
+              type="button"
+              onClick={handleReplay}
+              className="group flex h-24 w-24 items-center justify-center rounded-full border border-white/40 bg-black/40 text-white transition hover:bg-white/10 sm:h-28 sm:w-28"
+              aria-label="Play hero again"
+            >
+              <svg
+                viewBox="0 0 60 60"
+                aria-hidden
+                className="h-9 w-9 fill-current text-white transition group-hover:text-[var(--color-highlight)]"
+              >
+                <path d="M20 15v30l25-15L20 15z" />
+              </svg>
+            </button>
+          </div>
+        )}
 
         <LogoLoader isVisible={!isReady && !sequenceDormant} />
         <PeelCTA
