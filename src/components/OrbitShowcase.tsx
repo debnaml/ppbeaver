@@ -1,7 +1,7 @@
 "use client";
 
 import clsx from "clsx";
-import { createRef, useEffect, useMemo, useRef, useState } from "react";
+import { createRef, useCallback, useEffect, useMemo, useRef, useState } from "react";
 import UnderlineReveal from "@/components/UnderlineReveal";
 
 type ServiceImage = {
@@ -9,8 +9,12 @@ type ServiceImage = {
   src: string;
   caption: string;
   accent: string;
+  mediaType?: "image" | "video";
+  poster?: string;
+  size?: "sm" | "lg";
+  alt?: string;
+  highlightDetail?: string;
 };
-
 type Service = {
   id: string;
   title: string;
@@ -33,6 +37,8 @@ const chunkItems = (items: string[], chunkSize = 2) => {
   return rows;
 };
 
+const ALIGNMENT_THRESHOLD = 16;
+
 const SERVICES: Service[] = [
   {
     id: "insight",
@@ -52,27 +58,10 @@ const SERVICES: Service[] = [
     images: [
       {
         id: "insight-1",
-        src: "/images/operator.jpg",
-        caption: "Ops floor interviews",
-        accent: "rgba(19,195,144,0.4)",
-      },
-      {
-        id: "insight-2",
-        src: "/images/orbit-operator.jpg",
-        caption: "Shadowing live work",
-        accent: "rgba(14,27,52,0.55)",
-      },
-      {
-        id: "insight-3",
-        src: "/images/operator.jpg",
-        caption: "Signal vs. noise",
-        accent: "rgba(116,185,255,0.35)",
-      },
-      {
-        id: "insight-4",
-        src: "/images/orbit-operator.jpg",
-        caption: "Systems audit",
-        accent: "rgba(255,255,255,0.18)",
+        src: "/images/service-images/customer-research-dark.png",
+        caption: "Customer research",
+        accent: "rgba(51, 11, 63, 0.0)",
+        highlightDetail: "Stakeholder & customer research",
       },
     ],
   },
@@ -93,27 +82,10 @@ const SERVICES: Service[] = [
     images: [
       {
         id: "strategy-1",
-        src: "/images/orbit-operator.jpg",
-        caption: "North-star planning",
+        src: "/images/service-images/service-mobile.jpg",
+        caption: "Product design",
         accent: "rgba(212,173,255,0.35)",
-      },
-      {
-        id: "strategy-2",
-        src: "/images/operator.jpg",
-        caption: "Decision tables",
-        accent: "rgba(19,195,144,0.4)",
-      },
-      {
-        id: "strategy-3",
-        src: "/images/orbit-operator.jpg",
-        caption: "Value roadmaps",
-        accent: "rgba(255,214,153,0.3)",
-      },
-      {
-        id: "strategy-4",
-        src: "/images/operator.jpg",
-        caption: "Investment cases",
-        accent: "rgba(14,27,52,0.55)",
+        highlightDetail: "Product & service design",
       },
     ],
   },
@@ -131,30 +103,22 @@ const SERVICES: Service[] = [
       "Workflow automation",
       "AI-powered features & assistants",
     ],
-    images: [
+    images: [      
       {
         id: "build-1",
-        src: "/images/operator.jpg",
-        caption: "Automation pods",
-        accent: "rgba(19,195,144,0.5)",
+        src: "/images/service-images/e-learning.png",
+        caption: "eLearning & training",
+        accent: "rgba(60,13,57,0.35)",
+        size: "lg",
+        highlightDetail: "E-learning & training systems",
       },
       {
         id: "build-2",
-        src: "/images/orbit-operator.jpg",
-        caption: "AI copilots",
-        accent: "rgba(144,205,244,0.35)",
-      },
-      {
-        id: "build-3",
-        src: "/images/operator.jpg",
-        caption: "Decision engines",
-        accent: "rgba(255,255,255,0.2)",
-      },
-      {
-        id: "build-4",
-        src: "/images/orbit-operator.jpg",
-        caption: "Command dashboards",
-        accent: "rgba(212,173,255,0.35)",
+        src: "/images/service-images/web.jpg",
+        caption: "eLearning & training",
+        accent: "rgba(60,13,57,0.35)",
+        size: "lg",
+        highlightDetail: "Web and mobile apps",
       },
     ],
   },
@@ -178,25 +142,9 @@ const SERVICES: Service[] = [
         src: "/images/orbit-operator.jpg",
         caption: "Runbook reviews",
         accent: "rgba(14,27,52,0.55)",
+        highlightDetail: "Support & maintenance",
       },
-      {
-        id: "optimise-2",
-        src: "/images/operator.jpg",
-        caption: "Performance telemetry",
-        accent: "rgba(19,195,144,0.45)",
-      },
-      {
-        id: "optimise-3",
-        src: "/images/orbit-operator.jpg",
-        caption: "Continuous tuning",
-        accent: "rgba(255,214,153,0.3)",
-      },
-      {
-        id: "optimise-4",
-        src: "/images/operator.jpg",
-        caption: "Playbacks",
-        accent: "rgba(212,173,255,0.35)",
-      },
+      
     ],
   },
 ];
@@ -206,53 +154,21 @@ const OrbitShowcase = () => {
   const [heroProgress, setHeroProgress] = useState(0);
   const sectionRef = useRef<HTMLElement | null>(null);
   const serviceRefs = useMemo(() => SERVICES.map(() => createRef<HTMLDivElement>()), []);
-  const lastImageRefs = useMemo(() => SERVICES.map(() => createRef<HTMLDivElement>()), []);
+  const imageRefs = useMemo(
+    () => SERVICES.map((service) => service.images.map(() => createRef<HTMLDivElement>())),
+    []
+  );
+  const detailColumnRef = useRef<HTMLDivElement | null>(null);
   const heroWrapperRef = useRef<HTMLDivElement | null>(null);
   const introRef = useRef<HTMLDivElement | null>(null);
-  const scrollFrame = useRef<number | null>(null);
   const heroFrame = useRef<number | null>(null);
+  const imageScrollFrame = useRef<number | null>(null);
+  const [activeImageIndices, setActiveImageIndices] = useState(() => SERVICES.map(() => 0));
   const [introVisible, setIntroVisible] = useState(false);
   const activeService = SERVICES[activeIndex];
   const detailRows = activeService.detailGrid ? chunkItems(activeService.detailGrid) : [];
-
-  useEffect(() => {
-    const updateActiveService = () => {
-      scrollFrame.current = null;
-      const sectionNode = sectionRef.current;
-      if (!sectionNode) return;
-      const sectionTop = sectionNode.getBoundingClientRect().top;
-      const boundary = Math.max(sectionTop, 0);
-
-      let nextIndex = SERVICES.length - 1;
-      for (let i = 0; i < lastImageRefs.length; i += 1) {
-        const anchorNode = lastImageRefs[i].current;
-        if (!anchorNode) continue;
-        const anchorTop = anchorNode.getBoundingClientRect().top;
-        if (anchorTop >= boundary) {
-          nextIndex = i;
-          break;
-        }
-      }
-
-      setActiveIndex((prev) => (prev === nextIndex ? prev : nextIndex));
-    };
-
-    const handleScroll = () => {
-      if (scrollFrame.current) return;
-      scrollFrame.current = window.requestAnimationFrame(updateActiveService);
-    };
-
-    updateActiveService();
-    window.addEventListener("scroll", handleScroll, { passive: true });
-
-    return () => {
-      if (scrollFrame.current) {
-        window.cancelAnimationFrame(scrollFrame.current);
-        scrollFrame.current = null;
-      }
-      window.removeEventListener("scroll", handleScroll);
-    };
-  }, [lastImageRefs]);
+  const activeImageIndex = activeImageIndices[activeIndex] ?? 0;
+  const highlightedDetail = activeService.images[activeImageIndex]?.highlightDetail;
 
   useEffect(() => {
     if (typeof window === "undefined") return undefined;
@@ -316,6 +232,73 @@ const OrbitShowcase = () => {
     };
   }, []);
 
+  useEffect(() => {
+    if (typeof window === "undefined") return undefined;
+
+    const updateActiveImages = () => {
+      imageScrollFrame.current = null;
+      const detailTop = detailColumnRef.current
+        ? detailColumnRef.current.getBoundingClientRect().top
+        : window.innerHeight * 0.25;
+
+      const nextIndices = SERVICES.map((service, serviceIndex) => {
+        const refs = imageRefs[serviceIndex];
+        if (!refs.length) return 0;
+        let current = 0;
+        refs.forEach((refObj, imageIndex) => {
+          const node = refObj.current;
+          if (!node) return;
+          const top = node.getBoundingClientRect().top;
+          if (top <= detailTop + ALIGNMENT_THRESHOLD) {
+            current = imageIndex;
+          }
+        });
+        return current;
+      });
+
+      let nextActiveService = 0;
+      for (let i = 0; i < SERVICES.length; i += 1) {
+        const firstRef = imageRefs[i]?.[0]?.current ?? serviceRefs[i]?.current;
+        if (!firstRef) continue;
+        const top = firstRef.getBoundingClientRect().top;
+        if (top <= detailTop + ALIGNMENT_THRESHOLD) {
+          nextActiveService = i;
+        } else {
+          break;
+        }
+      }
+
+      setActiveImageIndices((prev) => {
+        for (let i = 0; i < nextIndices.length; i += 1) {
+          if (prev[i] !== nextIndices[i]) {
+            return nextIndices;
+          }
+        }
+        return prev;
+      });
+
+      setActiveIndex((prev) => (prev === nextActiveService ? prev : nextActiveService));
+    };
+
+    const handleImageScroll = () => {
+      if (imageScrollFrame.current) return;
+      imageScrollFrame.current = window.requestAnimationFrame(updateActiveImages);
+    };
+
+    updateActiveImages();
+    window.addEventListener("scroll", handleImageScroll, { passive: true });
+    window.addEventListener("resize", handleImageScroll);
+
+    return () => {
+      if (imageScrollFrame.current) {
+        window.cancelAnimationFrame(imageScrollFrame.current);
+        imageScrollFrame.current = null;
+      }
+      window.removeEventListener("scroll", handleImageScroll);
+      window.removeEventListener("resize", handleImageScroll);
+    };
+  }, [imageRefs, serviceRefs]);
+
   const handleSelect = (index: number, shouldScroll = false) => {
     setActiveIndex(index);
     if (shouldScroll && serviceRefs[index]?.current) {
@@ -327,6 +310,13 @@ const OrbitShowcase = () => {
   const heroScale = Math.max(0.86, 1 - heroProgress * 0.12);
   const heroTranslate = heroProgress * -60;
   const gridLift = (1 - heroProgress) * 80;
+  const isHighlightedDetail = (value?: string) => Boolean(value && highlightedDetail && value === highlightedDetail);
+  const assignImageRef = useCallback(
+    (serviceIndex: number, imageIndex: number) => (node: HTMLDivElement | null) => {
+      imageRefs[serviceIndex][imageIndex].current = node;
+    },
+    [imageRefs]
+  );
 
   return (
     <section
@@ -391,18 +381,31 @@ const OrbitShowcase = () => {
                   {service.images.map((image) => (
                     <article
                       key={`${service.id}-${image.id}-mobile`}
-                      className="relative h-40 overflow-hidden rounded-[10px] border border-white/10 bg-[#031216]"
+                      className={clsx(
+                        "relative overflow-hidden rounded-[10px]",
+                        image.size === "lg" ? "" : ""
+                      )}
                     >
-                      <div
-                        className="absolute inset-0 bg-cover bg-center"
-                        style={{ backgroundImage: `url(${image.src})` }}
-                      />
-                      <div
-                        className="absolute inset-0"
-                        style={{
-                          background: `linear-gradient(120deg, ${image.accent} 0%, rgba(3,9,11,0.85) 65%)`,
-                        }}
-                      />
+                      {image.mediaType === "video" ? (
+                        <video
+                          className="block w-full"
+                          autoPlay
+                          loop
+                          muted
+                          playsInline
+                          preload="metadata"
+                          poster={image.poster}
+                        >
+                          <source src={image.src} type="video/mp4" />
+                        </video>
+                      ) : (
+                        <img
+                          src={image.src}
+                          alt={image.alt ?? image.caption}
+                          className="block w-full"
+                          loading="lazy"
+                        />
+                      )}
                     </article>
                   ))}
                 </div>
@@ -410,7 +413,7 @@ const OrbitShowcase = () => {
             ))}
           </div>
 
-          <div className="hidden gap-10 lg:grid lg:grid-cols-[0.65fr_1.45fr_1.6fr] lg:items-start">
+          <div className="hidden gap-10 lg:grid lg:grid-cols-[0.75fr_1.35fr_1.3fr] lg:items-start">
             <div className="space-y-6 text-left lg:sticky lg:top-28 lg:self-start">
               {SERVICES.map((service, index) => (
                 <button
@@ -439,7 +442,10 @@ const OrbitShowcase = () => {
               ))}
             </div>
 
-            <div className="relative min-h-[200px] text-left text-white/85 lg:sticky lg:top-28 lg:self-start">
+            <div
+              ref={detailColumnRef}
+              className="relative min-h-[200px] text-left text-white/85 lg:sticky lg:top-28 lg:self-start"
+            >
               <div key={activeService.id} className="space-y-6">
                 <p
                   className={clsx("orbit-detail-row text-lg sm:text-xl")}
@@ -456,8 +462,24 @@ const OrbitShowcase = () => {
                           className="orbit-detail-row border-t border-white/10 first:border-t-0"
                           style={{ animationDelay: `${rowIndex * 110}ms` }}
                         >
-                          <td className="py-3 pr-4 align-top">{row[0]}</td>
-                          <td className="border-l border-white/15 py-3 pl-4 align-top">{row[1] ?? ""}</td>
+                          <td
+                            className={clsx(
+                              "py-3 pr-4 align-top transition-colors",
+                              isHighlightedDetail(row[0]) &&
+                                "text-white underline decoration-[#13C390] decoration-2 underline-offset-4"
+                            )}
+                          >
+                            {row[0]}
+                          </td>
+                          <td
+                            className={clsx(
+                              "border-l border-white/15 py-3 pl-4 align-top transition-colors",
+                              isHighlightedDetail(row[1]) &&
+                                "text-white underline decoration-[#13C390] decoration-2 underline-offset-4"
+                            )}
+                          >
+                            {row[1] ?? ""}
+                          </td>
                         </tr>
                       ))}
                     </tbody>
@@ -476,26 +498,34 @@ const OrbitShowcase = () => {
                   {service.images.map((image, imageIndex) => (
                     <article
                       key={image.id}
-                      className="relative h-[320px] overflow-hidden rounded-[10px] border border-white/10 bg-[#031216]"
-                      ref={
-                        imageIndex === service.images.length - 1
-                          ? lastImageRefs[serviceIndex]
-                          : undefined
-                      }
+                      className={clsx(
+                        "relative overflow-hidden rounded-[10px]"
+                      )}
+                      ref={assignImageRef(serviceIndex, imageIndex)}
                     >
-                      <div
-                        className={clsx(
-                          "absolute inset-0 bg-cover bg-center transition duration-[900ms]",
-                          activeIndex === serviceIndex ? "scale-100" : "scale-[1.05]"
-                        )}
-                        style={{ backgroundImage: `url(${image.src})` }}
-                      />
-                      <div
-                        className="absolute inset-0"
-                        style={{
-                          background: `linear-gradient(120deg, ${image.accent} 0%, rgba(3,9,11,0.85) 65%)`,
-                        }}
-                      />
+                      {image.mediaType === "video" ? (
+                        <video
+                          className={clsx(
+                            "block w-full transition duration-[900ms]",
+                            activeIndex === serviceIndex ? "scale-100" : "scale-100"
+                          )}
+                          autoPlay
+                          loop
+                          muted
+                          playsInline
+                          preload="metadata"
+                          poster={image.poster}
+                        >
+                          <source src={image.src} type="video/mp4" />
+                        </video>
+                      ) : (
+                        <img
+                          src={image.src}
+                          alt={image.alt ?? image.caption}
+                          className="block w-full"
+                          loading="lazy"
+                        />
+                      )}
                     </article>
                   ))}
                 </div>
