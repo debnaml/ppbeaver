@@ -55,6 +55,7 @@ const ContactModal = ({ isOpen, onClose }: ContactModalProps) => {
     displayedOptions,
     incorrectOptionId,
     disableSubmit,
+    submissionError,
     setFieldValue,
     handleCheckHuman,
     handleSubmit,
@@ -303,6 +304,10 @@ const ContactModal = ({ isOpen, onClose }: ContactModalProps) => {
                   ))}
                 </div>
 
+                {submissionError && (
+                  <p className="text-sm text-[#FF9B9B] text-right">{submissionError}</p>
+                )}
+
                 <div className="flex items-center justify-between gap-4 pt-2">
                   <button
                     type="button"
@@ -316,7 +321,7 @@ const ContactModal = ({ isOpen, onClose }: ContactModalProps) => {
                     className="pp-button inline-flex items-center rounded-full border border-white/20 bg-[var(--color-highlight)]/85 px-8 py-4 text-base font-semibold text-[var(--color-ink)] backdrop-blur transition hover:brightness-110 disabled:opacity-60"
                     disabled={disableSubmit}
                   >
-                    {status === "submitting" ? "Sending" : "Send details"}
+                    {status === "submitting" ? "Sending" : status === "success" ? "Sent!" : "Send details"}
                   </button>
                 </div>
               </>

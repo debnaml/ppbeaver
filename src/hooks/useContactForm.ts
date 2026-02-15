@@ -87,8 +87,9 @@ export function useContactForm({ isOpen, onClose }: UseContactFormArgs) {
   const [incorrectOptionId, setIncorrectOptionId] = useState<string | null>(null);
   const incorrectHighlightTimeout = useRef<ReturnType<typeof setTimeout> | null>(null);
   const submitTimeout = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const [submissionError, setSubmissionError] = useState<string | null>(null);
 
-  const disableSubmit = useMemo(() => status === "submitting", [status]);
+  const disableSubmit = useMemo(() => status === "submitting" || status === "success", [status]);
 
   const cancelIncorrectHighlight = useCallback(() => {
     if (!incorrectHighlightTimeout.current) return;
@@ -126,6 +127,7 @@ export function useContactForm({ isOpen, onClose }: UseContactFormArgs) {
     setSelectedOption("");
     clearIncorrectHighlight();
     refreshOptions();
+    setSubmissionError(null);
   }, [clearIncorrectHighlight, refreshOptions]);
 
   useEffect(() => {
@@ -187,6 +189,7 @@ export function useContactForm({ isOpen, onClose }: UseContactFormArgs) {
 
     trackEvent("contact_form_validation", { valid: true });
     setStep("verify");
+    setSubmissionError(null);
     trackEvent("contact_form_step", { step: "verify" });
     return true;
   }, [formValues, validate]);
@@ -195,6 +198,7 @@ export function useContactForm({ isOpen, onClose }: UseContactFormArgs) {
     (optionId: string) => {
       clearIncorrectHighlight();
       setSelectedOption(optionId);
+      setSubmissionError(null);
       const option = verificationOptions.find((item) => item.id === optionId);
       trackEvent("contact_verification_select", {
         optionId,
@@ -208,6 +212,7 @@ export function useContactForm({ isOpen, onClose }: UseContactFormArgs) {
     setStep("form");
     setSelectedOption("");
     clearIncorrectHighlight();
+    setSubmissionError(null);
     trackEvent("contact_form_step", { step: "form" });
   }, [clearIncorrectHighlight]);
 
@@ -236,9 +241,28 @@ export function useContactForm({ isOpen, onClose }: UseContactFormArgs) {
       trackEvent("contact_verification_submit", { status: "correct" });
       clearIncorrectHighlight();
       setStatus("submitting");
+      setSubmissionError(null);
 
       try {
-        await new Promise((resolve) => setTimeout(resolve, 600));
+        const response = await fetch("/api/contact", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(formValues),
+        });
+
+        if (!response.ok) {
+          let message = "Unable to send your details right now. Please try again.";
+          try {
+            const data = await response.json();
+            if (data?.error) {
+              message = data.error;
+            }
+          } catch (parseError) {
+            console.error("Failed to parse contact response", parseError);
+          }
+          throw new Error(message);
+        }
+
         setStatus("success");
         trackEvent("contact_form_submit", { status: "success" });
 
@@ -247,13 +271,16 @@ export function useContactForm({ isOpen, onClose }: UseContactFormArgs) {
           resetForm();
         }, 900);
       } catch (error) {
+        const message = error instanceof Error ? error.message : "Something went wrong. Please try again.";
         setStatus("error");
+        setSubmissionError(message);
         console.error("Contact form submission failed", error);
-        trackEvent("contact_form_submit", { status: "error" });
+        trackEvent("contact_form_submit", { status: "error", message });
       }
     },
     [
       clearIncorrectHighlight,
+      formValues,
       handleCheckHuman,
       onClose,
       refreshOptions,
@@ -273,6 +300,7 @@ export function useContactForm({ isOpen, onClose }: UseContactFormArgs) {
     displayedOptions,
     incorrectOptionId,
     disableSubmit,
+    submissionError,
     setFieldValue,
     handleCheckHuman,
     handleSubmit,
