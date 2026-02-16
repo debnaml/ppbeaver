@@ -724,11 +724,10 @@ export const useHeroSequence = () => {
       const reachedPrimary = scrollToSection("contact");
       trackEvent("contact_cta_click", {
         source: "hero-floating-button",
-        destination: reachedPrimary ? "contact" : "content",
+        destination: "contact",
         fallbackUsed: !reachedPrimary,
       });
-      if (reachedPrimary) return;
-      scrollToSection("content");
+      return reachedPrimary;
     }, [scrollToSection]);
 
   const replayAvailable = persistentPosterMode && !reducedMotion && !networkPrefersPoster;

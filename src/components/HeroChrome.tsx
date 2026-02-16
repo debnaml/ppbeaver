@@ -1,5 +1,7 @@
 "use client";
 
+import type { MouseEvent } from "react";
+
 import { useRouter } from "next/navigation";
 import LogoMaskOverlay from "./LogoMaskOverlay";
 
@@ -18,19 +20,12 @@ export default function HeroChrome({
 }: HeroChromeProps) {
   const router = useRouter();
 
-  const handleCtaClick = () => {
+  const handleCtaClick = (event: MouseEvent<HTMLAnchorElement>) => {
     if (!ctaTargetId) return;
     const target = document.getElementById(ctaTargetId);
-    if (target) {
-      target.scrollIntoView({ behavior: "smooth", block: "start" });
-      return;
-    }
-
-    try {
-      window.location.hash = `#${ctaTargetId}`;
-    } catch (error) {
-      console.error("Unable to set location hash for CTA", error);
-    }
+    if (!target) return;
+    event.preventDefault();
+    target.scrollIntoView({ behavior: "smooth", block: "start" });
   };
 
   const handleLogoClick = () => {
@@ -53,8 +48,8 @@ export default function HeroChrome({
 
       {showCTA && (
         <div className="pointer-events-auto absolute right-6 top-6 z-30 sm:right-12 sm:top-10">
-          <button
-            type="button"
+          <a
+            href={ctaTargetId ? `#${ctaTargetId}` : undefined}
             onClick={handleCtaClick}
             aria-label="Scroll to contact section"
             className="cta-circle-button relative flex h-20 w-20 items-center justify-center rounded-full border border-white/30 bg-white/5 text-white transition hover:bg-white/10 sm:h-24 sm:w-24"
@@ -75,7 +70,7 @@ export default function HeroChrome({
               </text>
             </svg>
             <span className="cta-circle-arrow relative text-2xl font-semibold sm:text-3xl">↓</span>
-          </button>
+          </a>
         </div>
       )}
     </>
