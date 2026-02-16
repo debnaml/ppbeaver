@@ -1,5 +1,5 @@
-import type { Metadata } from "next";
 import LegalPageLayout from "@/components/legal/LegalPageLayout";
+import { buildPageMetadata } from "@/lib/siteMetadata";
 
 const contentSections = [
   {
@@ -26,10 +26,12 @@ const contentSections = [
   },
 ];
 
-export const metadata: Metadata = {
+export const metadata = buildPageMetadata({
   title: "Cookies Policy | Performance Peak",
-  description: "Learn how Performance Peak uses cookies, why they matter, and how you can control your preferences.",
-};
+  description:
+    "Learn how Performance Peak uses cookies, why they matter, and how you can control your preferences.",
+  path: "/cookies",
+});
 
 export default function CookiesPage() {
   return (

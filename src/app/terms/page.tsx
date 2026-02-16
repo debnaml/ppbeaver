@@ -1,5 +1,5 @@
-import type { Metadata } from "next";
 import LegalPageLayout from "@/components/legal/LegalPageLayout";
+import { buildPageMetadata } from "@/lib/siteMetadata";
 
 const contentSections = [
   {
@@ -33,10 +33,12 @@ const contentSections = [
   },
 ];
 
-export const metadata: Metadata = {
+export const metadata = buildPageMetadata({
   title: "Terms & Conditions | Performance Peak",
-  description: "A clear view of how Performance Peak works with clients, from scope and collaboration to change management.",
-};
+  description:
+    "A clear view of how Performance Peak works with clients, from scope and collaboration to change management.",
+  path: "/terms",
+});
 
 export default function TermsPage() {
   return (

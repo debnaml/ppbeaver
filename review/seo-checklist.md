@@ -9,9 +9,9 @@ Track the remaining work needed before we can mark the "SEO pass" todo as comple
 
 ## 2. Route-Level Metadata
 
-- [ ] For every legal route (`/privacy`, `/cookies`, `/terms`), export a canonical URL via `metadata.alternates.canonical`.
-- [ ] Add per-page `openGraph` + `twitter` overrides so OG/Twitter cards link to the right URL + social image.
-- [ ] Ensure future pages follow the same pattern (consider a helper that consumes route config to produce metadata).
+- [x] For every legal route (`/privacy`, `/cookies`, `/terms`), export a canonical URL via `metadata.alternates.canonical`.
+- [x] Add per-page `openGraph` + `twitter` overrides so OG/Twitter cards link to the right URL + social image.
+- [x] Ensure future pages follow the same pattern (consider a helper that consumes route config to produce metadata).
 
 ## 3. Social Preview Assets
 

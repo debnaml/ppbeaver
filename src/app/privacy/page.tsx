@@ -1,5 +1,5 @@
-import type { Metadata } from "next";
 import LegalPageLayout from "@/components/legal/LegalPageLayout";
+import { buildPageMetadata } from "@/lib/siteMetadata";
 
 const contentSections = [
   {
@@ -31,10 +31,12 @@ const contentSections = [
   },
 ];
 
-export const metadata: Metadata = {
+export const metadata = buildPageMetadata({
   title: "Privacy Policy | Performance Peak",
-  description: "Understand what data we collect, how we use it, and the controls you have with Performance Peak.",
-};
+  description:
+    "Understand what data we collect, how we use it, and the controls you have with Performance Peak.",
+  path: "/privacy",
+});
 
 export default function PrivacyPage() {
   return (
