@@ -235,6 +235,11 @@ export const useHeroSequence = () => {
   }, [commitPosterExperience, networkPrefersPoster]);
 
   useEffect(() => {
+    if (!reducedMotion) return;
+    commitPosterExperience(true, true);
+  }, [commitPosterExperience, reducedMotion]);
+
+  useEffect(() => {
     if (typeof navigator === "undefined") return;
 
     const nav = navigator as NavigatorWithConnection;

@@ -87,6 +87,26 @@ export const metadata: Metadata = {
   alternates: {
     canonical: siteUrl,
   },
+  other: {
+    "application/ld+json": {
+      "@context": "https://schema.org",
+      "@type": "Organization",
+      name: siteName,
+      url: siteUrl,
+      logo: `${siteUrl}/logo.svg`,
+      sameAs: [
+        "https://www.linkedin.com/company/performancepeak",
+        "https://www.instagram.com/performancepeak",
+      ],
+      contactPoint: {
+        "@type": "ContactPoint",
+        contactType: "Business",
+        email: "hello@performancepeak.com",
+        areaServed: "Global",
+      },
+      slogan: "Build with intelligence, imagination, and information.",
+    },
+  },
 };
 
 export default function RootLayout({

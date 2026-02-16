@@ -84,7 +84,7 @@ const HeroSequence = () => {
 
         <div className="pointer-events-auto absolute left-6 top-6 z-30 sm:left-12 sm:top-10">
           <LogoMaskOverlay
-            visible={logoMaskVisible}
+            visible={reducedMotion ? true : logoMaskVisible}
             reducedMotion={reducedMotion}
             dimmedProgress={logoDimProgress}
           />
@@ -102,6 +102,7 @@ const HeroSequence = () => {
               viewBox="0 0 120 120"
               className="cta-circle-spin absolute inset-0 h-full w-full text-[var(--color-cream)]"
               aria-hidden
+              style={reducedMotion ? { animation: "none" } : undefined}
             >
               <defs>
                 <path id="circleTextPath" d="M60,60 m-45,0 a45,45 0 1,1 90,0 a45,45 0 1,1 -90,0" />
@@ -124,22 +125,24 @@ const HeroSequence = () => {
           direction="rtl"
         />
 
-        <div
-          className="pointer-events-none absolute bottom-0 left-0 right-0 z-20 h-[10px] overflow-hidden rounded-none bg-white/10"
-          aria-hidden
-        >
-          {showProgressFill && (
-            <div
-              key={progressKey}
-              className="hero-progress-fill"
-              style={{
-                backgroundColor: HERO_SETTINGS.highlightColor,
-                animationDuration: `${progressDuration}s`,
-                animationPlayState: sequenceDormant ? "paused" : "running",
-              }}
-            />
-          )}
-        </div>
+        {!posterOnlyMode && (
+          <div
+            className="pointer-events-none absolute bottom-0 left-0 right-0 z-20 h-[10px] overflow-hidden rounded-none bg-white/10"
+            aria-hidden
+          >
+            {showProgressFill && (
+              <div
+                key={progressKey}
+                className="hero-progress-fill"
+                style={{
+                  backgroundColor: HERO_SETTINGS.highlightColor,
+                  animationDuration: `${progressDuration}s`,
+                  animationPlayState: sequenceDormant ? "paused" : "running",
+                }}
+              />
+            )}
+          </div>
+        )}
 
         <div className="noise-overlay" aria-hidden />
 
@@ -163,12 +166,14 @@ const HeroSequence = () => {
         )}
 
         <LogoLoader isVisible={!isReady && !sequenceDormant} />
-        <PeelCTA
-          visible={ctaVisible}
-          onClick={handleCTA}
-          reducedMotion={reducedMotion}
-          hideOnMobile
-        />
+        {!reducedMotion && (
+          <PeelCTA
+            visible={ctaVisible}
+            onClick={handleCTA}
+            reducedMotion={reducedMotion}
+            hideOnMobile
+          />
+        )}
       </div>
     </section>
   );

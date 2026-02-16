@@ -24,30 +24,28 @@ const HeadlineOverlay = ({
   useEffect(() => {
     const keywordEl = keywordRef.current;
     if (!keywordEl) return;
+    if (reducedMotion) {
+      keywordEl.style.opacity = visible ? "1" : "0";
+      keywordEl.style.transform = "none";
+      keywordEl.style.transition = "opacity 0.15s ease";
+      return;
+    }
     const fromX = direction === "rtl" ? 60 : -60;
     const tl = gsap.timeline();
 
     if (visible) {
-      if (reducedMotion) {
-        tl.fromTo(keywordEl, { opacity: 0 }, { opacity: 1, duration: 0.15 });
-      } else {
-        tl.fromTo(
-          keywordEl,
-          { opacity: 0, x: -fromX },
-          { opacity: 1, x: 0, duration: 0.3, ease: "power2.out" }
-        );
-      }
+      tl.fromTo(
+        keywordEl,
+        { opacity: 0, x: -fromX },
+        { opacity: 1, x: 0, duration: 0.3, ease: "power2.out" }
+      );
     } else {
-      if (reducedMotion) {
-        tl.to(keywordEl, { opacity: 0, duration: 0.15 });
-      } else {
-        tl.to(keywordEl, {
-          opacity: 0,
-          x: -fromX,
-          duration: 0.3,
-          ease: "power2.in",
-        });
-      }
+      tl.to(keywordEl, {
+        opacity: 0,
+        x: -fromX,
+        duration: 0.3,
+        ease: "power2.in",
+      });
     }
 
     return () => {

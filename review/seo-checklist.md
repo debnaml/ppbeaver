@@ -15,17 +15,17 @@ Track the remaining work needed before we can mark the "SEO pass" todo as comple
 
 ## 3. Social Preview Assets
 
-- [ ] Either add `public/og-image.jpg` (1200×630) to match the current metadata or update `metadata` to point at an existing hero frame.
-- [ ] Document the naming convention so new preview images stay consistent.
+- [x] Either add `public/og-image.jpg` (1200×630) to match the current metadata or update `metadata` to point at an existing hero frame.
+- [x] Document the naming convention so new preview images stay consistent.
 
 ## 4. Structured Data Placement
 
-- [ ] Move the organization JSON-LD script out of `/app/page.tsx` and into the layout `metadata` (or a shared `<Script>` in `RootLayout`) to avoid hydration warnings.
+- [x] Move the organization JSON-LD script out of `/app/page.tsx` and into the layout `metadata` (or a shared `<Script>` in `RootLayout`) to avoid hydration warnings.
 
 ## 5. Performance/LCP Considerations
 
 - [ ] Review the hero preload strategy (`HeroSequence` preloads two fullscreen videos) and add reduced-motion/mobile fallbacks so LCP is not blocked by heavy assets.
-- [ ] Audit `prefers-reduced-motion` handling to ensure it skips timeline heavy animations and serves a lightweight poster.
+- [x] Audit `prefers-reduced-motion` handling to ensure it skips timeline heavy animations and serves a lightweight poster.
 
 ## 6. Outstanding Spec Questions
 

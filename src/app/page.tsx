@@ -6,25 +6,6 @@ import OrbitShowcase from "@/components/OrbitShowcase";
 import OperatorParallax from "@/components/OperatorParallax";
 import ContactSection from "@/components/ContactSection";
 
-const organizationSchema = {
-  "@context": "https://schema.org",
-  "@type": "Organization",
-  name: "Performance Peak",
-  url: "https://performancepeak.com",
-  logo: "https://performancepeak.com/logo.svg",
-  sameAs: [
-    "https://www.linkedin.com/company/performancepeak",
-    "https://www.instagram.com/performancepeak",
-  ],
-  contactPoint: {
-    "@type": "ContactPoint",
-    contactType: "Business",
-    email: "hello@performancepeak.com",
-    areaServed: "Global",
-  },
-  slogan: "Build with intelligence, imagination, and information.",
-};
-
 const primaryNavLinks = [
   { label: "Home", href: "/" },
   { label: "About", href: "/#about" },
@@ -102,11 +83,6 @@ export default function Home() {
 
       <Footer />
 
-        <script
-          type="application/ld+json"
-          suppressHydrationWarning
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationSchema) }}
-        />
       </main>
     </>
   );
