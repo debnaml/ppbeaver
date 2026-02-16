@@ -3,13 +3,14 @@
 import clsx from "clsx";
 import { createRef, useCallback, useEffect, useMemo, useRef, useState } from "react";
 import UnderlineReveal from "@/components/UnderlineReveal";
+import LottieOnView from "@/components/LottieOnView";
 
 type ServiceImage = {
   id: string;
   src: string;
   caption: string;
   accent: string;
-  mediaType?: "image" | "video";
+  mediaType?: "image" | "video" | "lottie";
   poster?: string;
   size?: "sm" | "lg";
   alt?: string;
@@ -58,9 +59,10 @@ const SERVICES: Service[] = [
     images: [
       {
         id: "insight-1",
-        src: "/images/service-images/customer-research-dark-2.png",
+        src: "/lottie/customer-research-dark.json",
         caption: "Customer research",
         accent: "rgba(51, 11, 63, 0.0)",
+        mediaType: "lottie",
         highlightDetail: "Stakeholder & customer research",
       },
     ],
@@ -398,6 +400,12 @@ const OrbitShowcase = () => {
                         >
                           <source src={image.src} type="video/mp4" />
                         </video>
+                      ) : image.mediaType === "lottie" ? (
+                        <LottieOnView
+                          src={image.src}
+                          className="block w-full"
+                          ariaLabel={image.alt ?? image.caption}
+                        />
                       ) : (
                         <img
                           src={image.src}
@@ -518,6 +526,12 @@ const OrbitShowcase = () => {
                         >
                           <source src={image.src} type="video/mp4" />
                         </video>
+                      ) : image.mediaType === "lottie" ? (
+                        <LottieOnView
+                          src={image.src}
+                          className="block w-full"
+                          ariaLabel={image.alt ?? image.caption}
+                        />
                       ) : (
                         <img
                           src={image.src}
