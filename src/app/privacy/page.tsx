@@ -26,7 +26,7 @@ const contentSections = [
   {
     title: "Your choices",
     paragraphs: [      
-      "Email hello@performancepeak.com with any questions and we will walk you through the process, including confirming completion once everything is cleaned up.",
+      "Email hello@performancepeak.co.uk with any questions and we will walk you through the process, including confirming completion once everything is cleaned up.",
     ],
   },
 ];

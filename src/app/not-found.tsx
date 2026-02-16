@@ -18,7 +18,7 @@ const contentSections = [
   {
     title: "Still feeling lost?",
     paragraphs: [
-      "Email hello@performancepeak.com with the page you expected and any clues you have. We'll investigate, fix any broken signposts, and send you the right link plus a cheerful apology gif for the trouble.",
+      "Email hello@performancepeak.co.uk with the page you expected and any clues you have. We'll investigate, fix any broken signposts, and send you the right link plus a cheerful apology gif for the trouble.",
     ],
   },
 ];

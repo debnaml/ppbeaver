@@ -21,7 +21,7 @@ const sourceSans = Source_Sans_3({
 
 const siteName = "Performance Peak";
 const defaultTitle = "Digital Strategy & AI Consultancy | Performance Peak";
-const siteUrl = "https://performancepeak.com";
+const siteUrl = "https://performancepeak.co.uk";
 const siteDescription =
   "We help organisations work smarter with data, AI and thoughtful digital strategy. Practical advice, trusted partners, and technology that just works.";
 const brandColor = "#292d40";
@@ -40,7 +40,7 @@ const organizationSchema = {
   contactPoint: {
     "@type": "ContactPoint",
     contactType: "Business",
-    email: "hello@performancepeak.com",
+    email: "hello@performancepeak.co.uk",
     areaServed: "Global",
   },
   slogan: "Build with intelligence, imagination, and information.",

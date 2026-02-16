@@ -21,7 +21,7 @@ const contentSections = [
     title: "Managing your settings",
     paragraphs: [
       "You can block or clear our cookies at any time through your browser settings or dedicated privacy tools—everything on the site will still be readable, but our analytics numbers may lose a bit of accuracy.",
-      "If you spot anything unexpected or want us to remove historical analytics data tied to your visits, email hello@performancepeak.com and we will take care of it.",
+      "If you spot anything unexpected or want us to remove historical analytics data tied to your visits, email hello@performancepeak.co.uk and we will take care of it.",
     ],
   },
 ];

@@ -4,4 +4,4 @@ Allow: /images/
 Allow: /videos/
 Allow: /hero/
 
-Sitemap: https://performancepeak.com/sitemap.xml
+Sitemap: https://performancepeak.co.uk/sitemap.xml

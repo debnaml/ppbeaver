@@ -50,7 +50,7 @@ const ContactTrigger = () => {
         <p className={emailClasses} style={{ marginTop: "15px" }}>
           Prefer email?{" "}
           <a
-            href="mailto:hello@performancepeak.com"
+            href="mailto:hello@performancepeak.co.uk"
             className="text-[#66f2d5] underline"
             onClick={() =>
               trackEvent("contact_email_click", {
@@ -58,7 +58,7 @@ const ContactTrigger = () => {
               })
             }
           >
-            hello@performancepeak.com
+            hello@performancepeak.co.uk
           </a>
         </p>
       </div>

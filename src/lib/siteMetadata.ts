@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 
 const siteName = "Performance Peak";
-const siteUrl = "https://performancepeak.com";
+const siteUrl = "https://performancepeak.co.uk";
 const defaultOgImage = `${siteUrl}/og-image.jpg`;
 const twitterHandle = "@performancepeak";
 
