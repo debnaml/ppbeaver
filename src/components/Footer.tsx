@@ -23,7 +23,7 @@ const Footer = () => {
       }}
     >
       <nav
-        className="relative z-10 mt-8 mb-40 flex flex-col gap-6 font-heading text-2xl"
+        className="relative z-10 mt-8 mb-40 flex max-w-[22rem] flex-col gap-6 font-heading text-2xl md:max-w-none"
       >
         <div className="flex flex-col gap-4">
           {menuItems.map((item) => (
@@ -46,15 +46,30 @@ const Footer = () => {
         </div>
       </nav>
 
+      <div className="mt-16 flex flex-col gap-5 pb-5 md:hidden">
+        <Image
+          src="/logo-full.svg"
+          alt="Performance Peak"
+          width={220}
+          height={110}
+          className="w-48"
+          style={{ filter: "brightness(0) invert(1)", height: "auto" }}
+        />
+        <div className="h-px w-full bg-white/80" />
+        <p className="font-body text-sm text-white/90">
+          © 2026 Performance Peak (PP Worldwide). Company Number: 15037470
+        </p>
+      </div>
+
       <Image
         src="/logo-full.svg"
         alt="Performance Peak"
         width={240}
         height={120}
-        className="pointer-events-none absolute"
+        className="pointer-events-none absolute hidden md:block"
         style={{
           left: edgeGap,
-          bottom: "calc(5rem + 40px)",
+          bottom: "60px",
           filter: "brightness(0) invert(1)",
           width: "240px",
           height: "auto",
@@ -62,25 +77,24 @@ const Footer = () => {
         aria-hidden
       />
 
-      <div className="absolute bottom-20 left-0 right-0 h-px bg-white/80 md:hidden" />
-
-      <div
-        className="absolute bottom-20 hidden h-px bg-white/90 md:block"
-        style={{
-          left: edgeGap,
-          right: `calc(300px + ${edgeGap} - 60px)`,
-        }}
-      />
-
       <p
-        className="font-body absolute text-sm text-white/90"
+        className="font-body hidden text-sm text-white/90 md:absolute md:block"
         style={{
           left: edgeGap,
-          bottom: "calc(2.25rem - 8px)",
+          bottom: "20px",
         }}
       >
         © 2026 Performance Peak (PP Worldwide). Company Number: 15037470
       </p>
+
+      <div
+        className="absolute hidden h-px bg-white/90 md:block"
+        style={{
+          left: edgeGap,
+          right: `calc(300px + ${edgeGap} - 60px)`,
+          bottom: "40px",
+        }}
+      />
 
       <div
         className="pointer-events-none absolute bottom-0 right-0 hidden md:block"

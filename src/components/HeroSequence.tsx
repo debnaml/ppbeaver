@@ -39,9 +39,9 @@ const HeroSequence = () => {
   return (
     <section
       ref={heroRef}
-      className="relative flex min-h-screen w-full flex-col overflow-hidden bg-[var(--color-supadark)]"
+      className="relative flex min-h-[90vh] md:min-h-screen w-full flex-col overflow-hidden bg-[var(--color-supadark)]"
     >
-      <div className="relative h-screen w-full">
+      <div className="relative h-[90vh] md:h-screen w-full">
         <div className="absolute inset-0">
           {!posterOnlyMode && (
             <>
@@ -167,6 +167,7 @@ const HeroSequence = () => {
           visible={ctaVisible}
           onClick={handleCTA}
           reducedMotion={reducedMotion}
+          hideOnMobile
         />
       </div>
     </section>

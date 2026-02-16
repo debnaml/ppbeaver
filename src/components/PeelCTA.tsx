@@ -8,9 +8,10 @@ interface PeelCTAProps {
   visible: boolean;
   onClick: () => void;
   reducedMotion?: boolean;
+  hideOnMobile?: boolean;
 }
 
-const PeelCTA = ({ visible, onClick, reducedMotion = false }: PeelCTAProps) => {
+const PeelCTA = ({ visible, onClick, reducedMotion = false, hideOnMobile = false }: PeelCTAProps) => {
   const wrapperRef = useRef<HTMLDivElement>(null);
 
   useLayoutEffect(() => {
@@ -35,11 +36,14 @@ const PeelCTA = ({ visible, onClick, reducedMotion = false }: PeelCTAProps) => {
     });
   }, [visible, reducedMotion]);
 
+  const displayClass = hideOnMobile ? "hidden md:flex" : "flex";
+
   return (
     <div
       ref={wrapperRef}
       className={clsx(
-        "pointer-events-none absolute bottom-12 right-6 z-30 flex justify-end sm:bottom-16 sm:right-12",
+        "pointer-events-none absolute bottom-12 right-6 z-30 justify-end sm:bottom-16 sm:right-12",
+        displayClass,
         "drop-shadow-[0_25px_60px_rgba(0,0,0,0.35)]"
       )}
     >
