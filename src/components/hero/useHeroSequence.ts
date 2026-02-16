@@ -10,6 +10,21 @@ const HERO_POSTER_STORAGE_KEY = "ppb:heroPosterMode";
 const HERO_POSTER_STORAGE_TTL = 24 * 60 * 60 * 1000; // 1 day
 type TimeoutHandle = ReturnType<typeof setTimeout> | number;
 
+type NavigatorConnectionInfo = {
+  downlink?: number;
+  effectiveType?: string;
+  saveData?: boolean;
+  addEventListener?: (type: string, listener: () => void) => void;
+  removeEventListener?: (type: string, listener: () => void) => void;
+  onchange?: (() => void) | null;
+};
+
+type NavigatorWithConnection = Navigator & {
+  connection?: NavigatorConnectionInfo;
+  mozConnection?: NavigatorConnectionInfo;
+  webkitConnection?: NavigatorConnectionInfo;
+};
+
 const parsePosterPreference = (raw: string | null) => {
   if (!raw) return false;
   try {
@@ -222,12 +237,6 @@ export const useHeroSequence = () => {
   useEffect(() => {
     if (typeof navigator === "undefined") return;
 
-    type NavigatorWithConnection = Navigator & {
-      connection?: NetworkInformation;
-      mozConnection?: NetworkInformation;
-      webkitConnection?: NetworkInformation;
-    };
-
     const nav = navigator as NavigatorWithConnection;
     const connection = nav.connection ?? nav.mozConnection ?? nav.webkitConnection;
     if (!connection) return;
@@ -249,9 +258,11 @@ export const useHeroSequence = () => {
 
     const handleChange = () => evaluate();
 
-    if (typeof connection.addEventListener === "function") {
-      connection.addEventListener("change", handleChange);
-      return () => connection.removeEventListener("change", handleChange);
+    const addListener = connection.addEventListener;
+    const removeListener = connection.removeEventListener;
+    if (typeof addListener === "function" && typeof removeListener === "function") {
+      addListener.call(connection, "change", handleChange);
+      return () => removeListener.call(connection, "change", handleChange);
     }
 
     const previous = connection.onchange;
@@ -299,8 +310,9 @@ export const useHeroSequence = () => {
     if (typeof document === "undefined" || typeof window === "undefined") return;
     if (isReady || preferStaticPoster) return;
 
-    const shouldLock =
-      window.navigator?.connection?.saveData !== true && !preferStaticPoster;
+    const navWithConnection = window.navigator as NavigatorWithConnection;
+    const saveData = navWithConnection.connection?.saveData === true;
+    const shouldLock = !saveData && !preferStaticPoster;
     const nearTop = window.scrollY <= 48;
     if (!shouldLock || !nearTop) return;
 

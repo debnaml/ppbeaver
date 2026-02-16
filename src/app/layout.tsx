@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Script from "next/script";
+import { Suspense } from "react";
 import { Source_Sans_3, Syne } from "next/font/google";
 
 import AnalyticsTracker from "@/components/analytics/AnalyticsTracker";
@@ -110,7 +111,9 @@ export default function RootLayout({
                 gtag('config', '${GA_MEASUREMENT_ID}', { anonymize_ip: true });
               `}
             </Script>
-            <AnalyticsTracker />
+            <Suspense fallback={null}>
+              <AnalyticsTracker />
+            </Suspense>
           </>
         ) : null}
         {children}

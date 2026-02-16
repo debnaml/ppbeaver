@@ -23,6 +23,8 @@ export type VerificationOption = {
   isCorrect: boolean;
 };
 
+type TimeoutHandle = ReturnType<typeof setTimeout> | number;
+
 const defaultValues: ContactFormValues = {
   name: "",
   company: "",
@@ -85,8 +87,8 @@ export function useContactForm({ isOpen, onClose }: UseContactFormArgs) {
   const [selectedOption, setSelectedOption] = useState<string>("");
   const [displayedOptions, setDisplayedOptions] = useState<VerificationOption[]>(() => shuffleArray(verificationOptions));
   const [incorrectOptionId, setIncorrectOptionId] = useState<string | null>(null);
-  const incorrectHighlightTimeout = useRef<ReturnType<typeof setTimeout> | null>(null);
-  const submitTimeout = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const incorrectHighlightTimeout = useRef<TimeoutHandle | null>(null);
+  const submitTimeout = useRef<TimeoutHandle | null>(null);
   const [submissionError, setSubmissionError] = useState<string | null>(null);
 
   const disableSubmit = useMemo(() => status === "submitting" || status === "success", [status]);
