@@ -25,6 +25,26 @@ const siteUrl = "https://performancepeak.com";
 const siteDescription =
   "We help organisations work smarter with data, AI and thoughtful digital strategy. Practical advice, trusted partners, and technology that just works.";
 const brandColor = "#292d40";
+const defaultOgImage = `${siteUrl}/og-image.png`;
+
+const organizationSchema = {
+  "@context": "https://schema.org",
+  "@type": "Organization",
+  name: siteName,
+  url: siteUrl,
+  logo: `${siteUrl}/logo.svg`,
+  sameAs: [
+    "https://www.linkedin.com/company/performancepeak",
+    "https://www.instagram.com/performancepeak",
+  ],
+  contactPoint: {
+    "@type": "ContactPoint",
+    contactType: "Business",
+    email: "hello@performancepeak.com",
+    areaServed: "Global",
+  },
+  slogan: "Build with intelligence, imagination, and information.",
+};
 
 export const viewport = {
   themeColor: brandColor,
@@ -70,7 +90,7 @@ export const metadata: Metadata = {
     url: siteUrl,
     images: [
       {
-        url: `${siteUrl}/og-image.jpg`,
+        url: defaultOgImage,
         width: 1200,
         height: 630,
         alt: `${siteName} hero preview`,
@@ -82,30 +102,13 @@ export const metadata: Metadata = {
     title: defaultTitle,
     description: siteDescription,
     creator: "@performancepeak",
-    images: [`${siteUrl}/og-image.jpg`],
+    images: [defaultOgImage],
   },
   alternates: {
     canonical: siteUrl,
   },
   other: {
-    "application/ld+json": {
-      "@context": "https://schema.org",
-      "@type": "Organization",
-      name: siteName,
-      url: siteUrl,
-      logo: `${siteUrl}/logo.svg`,
-      sameAs: [
-        "https://www.linkedin.com/company/performancepeak",
-        "https://www.instagram.com/performancepeak",
-      ],
-      contactPoint: {
-        "@type": "ContactPoint",
-        contactType: "Business",
-        email: "hello@performancepeak.com",
-        areaServed: "Global",
-      },
-      slogan: "Build with intelligence, imagination, and information.",
-    },
+    "application/ld+json": JSON.stringify(organizationSchema),
   },
 };
 
