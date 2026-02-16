@@ -8,6 +8,7 @@ import { HERO_SETTINGS, VIDEO_SOURCES, type Layer } from "./config";
 
 const HERO_POSTER_STORAGE_KEY = "ppb:heroPosterMode";
 const HERO_POSTER_STORAGE_TTL = 24 * 60 * 60 * 1000; // 1 day
+type TimeoutHandle = ReturnType<typeof setTimeout> | number;
 
 const parsePosterPreference = (raw: string | null) => {
   if (!raw) return false;
@@ -31,9 +32,9 @@ export const useHeroSequence = () => {
   const heroRef = useRef<HTMLElement | null>(null);
   const videoARef = useRef<HTMLVideoElement>(null);
   const videoBRef = useRef<HTMLVideoElement>(null);
-  const ctaTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
-  const keywordSwapTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
-  const logoMaskTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const ctaTimeoutRef = useRef<TimeoutHandle | null>(null);
+  const keywordSwapTimeoutRef = useRef<TimeoutHandle | null>(null);
+  const logoMaskTimeoutRef = useRef<TimeoutHandle | null>(null);
   const wasDormantRef = useRef(false);
   const resumeFromDormantRef = useRef(false);
 
