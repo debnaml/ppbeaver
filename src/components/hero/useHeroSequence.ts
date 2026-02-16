@@ -80,7 +80,7 @@ export const useHeroSequence = () => {
       if (typeof document === "undefined") return false;
       const target = document.getElementById(id);
       if (!target) return false;
-      target.scrollIntoView({ behavior: reducedMotion ? "auto" : "smooth" });
+      target.scrollIntoView({ behavior: reducedMotion ? "auto" : "smooth", block: "start" });
       return true;
     },
     [reducedMotion]

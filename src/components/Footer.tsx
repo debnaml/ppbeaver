@@ -81,7 +81,7 @@ const Footer = () => {
         className="font-body hidden text-sm text-white/90 md:absolute md:block"
         style={{
           left: edgeGap,
-          bottom: "20px",
+          bottom: "10px",
         }}
       >
         © 2026 Performance Peak (PP Worldwide). Company Number: 15037470
