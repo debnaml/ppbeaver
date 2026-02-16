@@ -1,0 +1,7 @@
+User-agent: *
+Allow: /
+Allow: /images/
+Allow: /videos/
+Allow: /hero/
+
+Sitemap: https://performancepeak.com/sitemap.xml

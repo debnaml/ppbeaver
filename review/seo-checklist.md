@@ -4,8 +4,8 @@ Track the remaining work needed before we can mark the "SEO pass" todo as comple
 
 ## 1. Discovery Files
 
-- [ ] Add `public/robots.txt` with at least `User-agent: *` and an allow list for the hero videos plus a reference to the sitemap.
-- [ ] Generate and expose `public/sitemap.xml` (or wire up `next-sitemap`) so crawlers can discover privacy, cookies, terms, etc.
+- [x] Add `public/robots.txt` with at least `User-agent: *` and an allow list for the hero videos plus a reference to the sitemap.
+- [x] Generate and expose `public/sitemap.xml` (or wire up `next-sitemap`) so crawlers can discover privacy, cookies, terms, etc.
 
 ## 2. Route-Level Metadata
 
