@@ -2,6 +2,8 @@
 
 import clsx from "clsx";
 
+import type { MouseEvent } from "react";
+
 import HeadlineOverlay from "@/components/HeadlineOverlay";
 import LogoLoader from "@/components/LogoLoader";
 import LogoMaskOverlay from "@/components/LogoMaskOverlay";
@@ -91,9 +93,13 @@ const HeroSequence = () => {
         </div>
 
         <div className="pointer-events-auto absolute right-6 top-6 z-30 sm:right-12 sm:top-10">
-          <button
-            type="button"
-            onClick={handleContactClick}
+          <a
+            href="#contact"
+            onClick={(event: MouseEvent<HTMLAnchorElement>) => {
+              if (handleContactClick()) {
+                event.preventDefault();
+              }
+            }}
             aria-label="Scroll to contact section"
             className="cta-circle-button relative flex h-20 w-20 items-center justify-center rounded-full border border-white/30 bg-white/5 text-white sm:h-24 sm:w-24"
           >
@@ -114,7 +120,7 @@ const HeroSequence = () => {
               </text>
             </svg>
             <span className="cta-circle-arrow relative text-2xl font-semibold sm:text-3xl">↓</span>
-          </button>
+          </a>
         </div>
 
         <HeadlineOverlay
@@ -147,11 +153,11 @@ const HeroSequence = () => {
         <div className="noise-overlay" aria-hidden />
 
         {posterOnlyMode && replayAvailable && (
-          <div className="pointer-events-auto absolute inset-0 z-30 flex items-center justify-center">
+          <div className="pointer-events-none absolute inset-0 z-30 flex items-center justify-center">
             <button
               type="button"
               onClick={handleReplay}
-              className="group flex h-24 w-24 items-center justify-center rounded-full border border-white/40 bg-black/40 text-white transition hover:bg-white/10 sm:h-28 sm:w-28"
+              className="group pointer-events-auto flex h-24 w-24 items-center justify-center rounded-full border border-white/40 bg-black/40 text-white transition hover:bg-white/10 sm:h-28 sm:w-28"
               aria-label="Play hero again"
             >
               <svg
