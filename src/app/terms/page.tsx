@@ -27,7 +27,8 @@ const contentSections = [
     title: "Updates and contact",
     paragraphs: [
       "We refresh these Terms of Use whenever we add new features or need to clarify how the site works. The updated date at the bottom of the page shows when the latest changes went live.",
-      "Questions or concerns? Email hello@performancepeak.com and we will respond quickly—usually within one or two working days.",
+      "Questions or concerns? Email hello@performancepeak.com and we will respond quickly, usually within one or two working days.",
+      "The contents of this page were last updated on 15th February 2026.",
     ],
   },
 ];

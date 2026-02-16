@@ -58,7 +58,7 @@ const SERVICES: Service[] = [
     images: [
       {
         id: "insight-1",
-        src: "/images/service-images/customer-research-dark.png",
+        src: "/images/service-images/customer-research-dark-2.png",
         caption: "Customer research",
         accent: "rgba(51, 11, 63, 0.0)",
         highlightDetail: "Stakeholder & customer research",

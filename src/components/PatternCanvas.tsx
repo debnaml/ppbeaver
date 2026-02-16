@@ -32,7 +32,7 @@ const wrapValue = (value: number, max: number) => {
 
 const PatternCanvas = ({ active, colors, reducedMotion = false }: PatternCanvasProps) => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
-  const animationFrameRef = useRef<number>();
+  const animationFrameRef = useRef<number | null>(null);
   const logoRef = useRef<HTMLImageElement | null>(null);
   const glyphsRef = useRef<Glyph[]>([]);
 
@@ -107,7 +107,7 @@ const PatternCanvas = ({ active, colors, reducedMotion = false }: PatternCanvasP
   const stopAnimation = useCallback(() => {
     if (animationFrameRef.current) {
       cancelAnimationFrame(animationFrameRef.current);
-      animationFrameRef.current = undefined;
+      animationFrameRef.current = null;
     }
   }, []);
 
