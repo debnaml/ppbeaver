@@ -87,6 +87,7 @@ const OperatorParallax = () => {
 
   return (
     <section ref={sectionRef} className="relative isolate px-0 py-0">
+      <h2 className="sr-only">Operator spotlight and marquee messaging</h2>
       <div ref={containerRef} className="relative h-[70vh] w-full overflow-hidden">
         <div
           className="absolute inset-0 will-change-transform"

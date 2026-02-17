@@ -43,6 +43,7 @@ const HeroSequence = () => {
       ref={heroRef}
       className="relative flex min-h-[90vh] md:min-h-screen w-full flex-col overflow-hidden bg-[var(--color-supadark)]"
     >
+      <h2 className="sr-only">Performance Peak introduction and hero experience</h2>
       <div className="relative h-[90vh] md:h-screen w-full">
         <div className="absolute inset-0">
           {!posterOnlyMode && (
