@@ -92,13 +92,23 @@ const OperatorParallax = () => {
         <div
           className="absolute inset-0 will-change-transform"
           style={{
-            backgroundImage: "url(/images/operator.jpg)",
-            backgroundSize: "cover",
-            backgroundPosition: "center",
             transform: `translateY(${parallaxOffset}px) scale(1.05)`,
             transition: "transform 120ms ease-out",
           }}
-        />
+          aria-hidden
+        >
+          <picture className="block h-full w-full">
+            <source srcSet="/images/operator.webp" type="image/webp" />
+            <img
+              src="/images/operator.jpg"
+              alt=""
+              className="h-full w-full object-cover"
+              loading="lazy"
+              role="presentation"
+              decoding="async"
+            />
+          </picture>
+        </div>
         <div className="absolute inset-0 bg-gradient-to-b from-black/10 via-black/35 to-black/60" />
         <div className="pointer-events-none absolute inset-0 flex flex-col justify-center gap-6 px-6 sm:px-12">
           {MARQUEE_LINES.map(({ direction, offset }, index) => (
