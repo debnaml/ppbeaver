@@ -98,6 +98,7 @@ const SERVICES: Service[] = [
       "From websites to internal systems, we design and build reliable tools that are simple to use and built to last.",
     detailGrid: [
       "Website design & development",
+      "UX/UI design",
       "Web and mobile apps",
       "Membership portals",
       "E-learning & training systems",
