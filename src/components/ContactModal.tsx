@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useRef } from "react";
 import { createPortal } from "react-dom";
+import Image from "next/image";
 
 import { useContactForm } from "@/hooks/useContactForm";
 import { trackEvent } from "@/lib/analytics";
@@ -287,7 +288,13 @@ const ContactModal = ({ isOpen, onClose }: ContactModalProps) => {
                       aria-pressed={selectedOption === option.id}
                     >
                       <div className="relative aspect-square w-full">
-                        <img src={option.imageSrc} alt={option.alt} className="h-full w-full object-cover" />
+                        <Image
+                          src={option.imageSrc}
+                          alt={option.alt}
+                          fill
+                          className="object-cover"
+                          sizes="(max-width: 640px) 80vw, 220px"
+                        />
                         {incorrectOptionId === option.id && (
                           <div className="absolute inset-0 flex items-center justify-center bg-[rgba(8,0,0,0.55)]">
                             <span className="text-5xl font-black text-[#FF6B6B]">×</span>

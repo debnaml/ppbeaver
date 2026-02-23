@@ -1,6 +1,7 @@
 "use client";
 
 import clsx from "clsx";
+import Image from "next/image";
 import { createRef, useCallback, useEffect, useMemo, useRef, useState } from "react";
 import UnderlineReveal from "@/components/UnderlineReveal";
 import LottieOnView from "@/components/LottieOnView";
@@ -25,18 +26,6 @@ type Service = {
 };
 
 const clampValue = (value: number, min = 0, max = 1) => Math.min(Math.max(value, min), max);
-
-const chunkItems = (items: string[], chunkSize = 2) => {
-  const rows: string[][] = [];
-  items.forEach((item, index) => {
-    if (index % chunkSize === 0) {
-      rows.push([item]);
-    } else {
-      rows[rows.length - 1].push(item);
-    }
-  });
-  return rows;
-};
 
 const ALIGNMENT_THRESHOLD = 16;
 
@@ -156,9 +145,9 @@ const OrbitShowcase = () => {
   const [activeIndex, setActiveIndex] = useState(0);
   const [heroProgress, setHeroProgress] = useState(0);
   const sectionRef = useRef<HTMLElement | null>(null);
-  const serviceRefs = useMemo(() => SERVICES.map(() => createRef<HTMLDivElement>()), []);
+  const serviceRefs = useMemo(() => SERVICES.map(() => createRef<HTMLElement>()), []);
   const imageRefs = useMemo(
-    () => SERVICES.map((service) => service.images.map(() => createRef<HTMLDivElement>())),
+    () => SERVICES.map((service) => service.images.map(() => createRef<HTMLElement>())),
     []
   );
   const detailColumnRef = useRef<HTMLDivElement | null>(null);
@@ -169,7 +158,6 @@ const OrbitShowcase = () => {
   const [activeImageIndices, setActiveImageIndices] = useState(() => SERVICES.map(() => 0));
   const [introVisible, setIntroVisible] = useState(false);
   const activeService = SERVICES[activeIndex];
-  const detailRows = activeService.detailGrid ? chunkItems(activeService.detailGrid) : [];
   const activeImageIndex = activeImageIndices[activeIndex] ?? 0;
   const highlightedDetail = activeService.images[activeImageIndex]?.highlightDetail;
 
@@ -315,7 +303,7 @@ const OrbitShowcase = () => {
   const gridLift = (1 - heroProgress) * 80;
   const isHighlightedDetail = (value?: string) => Boolean(value && highlightedDetail && value === highlightedDetail);
   const assignImageRef = useCallback(
-    (serviceIndex: number, imageIndex: number) => (node: HTMLDivElement | null) => {
+    (serviceIndex: number, imageIndex: number) => (node: HTMLElement | null) => {
       imageRefs[serviceIndex][imageIndex].current = node;
     },
     [imageRefs]
@@ -371,85 +359,99 @@ const OrbitShowcase = () => {
         }}
       >
         <div className="mx-auto w-full max-w-[1600px]">
-          <div className="space-y-12 lg:hidden">
-            {SERVICES.map((service) => (
-              <div key={`${service.id}-mobile`} className="space-y-6">
-                <h4
-                  className="font-heading text-3xl font-semibold text-white"
-                >
-                  {service.title}
-                </h4>
-                <p className="text-base text-white/80">{service.description}</p>
-                <div className="grid grid-cols-2 gap-4">
-                  {service.images.map((image) => (
-                    <article
-                      key={`${service.id}-${image.id}-mobile`}
-                      className={clsx(
-                        "relative overflow-hidden rounded-[10px]",
-                        image.size === "lg" ? "" : ""
-                      )}
-                    >
-                      {image.mediaType === "video" ? (
-                        <video
-                          className="block w-full"
-                          autoPlay
-                          loop
-                          muted
-                          playsInline
-                          preload="metadata"
-                          poster={image.poster}
+          <ul role="list" className="space-y-12 lg:hidden">
+            {SERVICES.map((service) => {
+              const mobileTitleId = `service-${service.id}-title-mobile`;
+              return (
+                <li key={`${service.id}-mobile`}>
+                  <article aria-labelledby={mobileTitleId} className="space-y-6">
+                    <h4 id={mobileTitleId} className="font-heading text-3xl font-semibold text-white">
+                      {service.title}
+                    </h4>
+                    <p className="text-base text-white/80">{service.description}</p>
+                    <div className="grid grid-cols-2 gap-4" role="list">
+                      {service.images.map((image) => (
+                        <figure
+                          key={`${service.id}-${image.id}-mobile`}
+                          className="relative overflow-hidden rounded-[10px]"
                         >
-                          <source src={image.src} type="video/mp4" />
-                        </video>
-                      ) : image.mediaType === "lottie" ? (
-                        <LottieOnView
-                          src={image.src}
-                          className="block w-full"
-                          ariaLabel={image.alt ?? image.caption}
-                        />
-                      ) : (
-                        <img
-                          src={image.src}
-                          alt={image.alt ?? image.caption}
-                          className="block w-full"
-                          loading="lazy"
-                        />
-                      )}
-                    </article>
-                  ))}
-                </div>
-              </div>
-            ))}
-          </div>
+                          {image.mediaType === "video" ? (
+                            <video
+                              className="block w-full"
+                              autoPlay
+                              loop
+                              muted
+                              playsInline
+                              preload="metadata"
+                              poster={image.poster}
+                            >
+                              <source src={image.src} type="video/mp4" />
+                            </video>
+                          ) : image.mediaType === "lottie" ? (
+                            <LottieOnView
+                              src={image.src}
+                              className="block w-full"
+                              ariaLabel={image.alt ?? image.caption}
+                            />
+                          ) : (
+                            <Image
+                              src={image.src}
+                              alt={image.alt ?? image.caption}
+                              width={600}
+                              height={400}
+                              className="block h-auto w-full object-cover"
+                              sizes="(max-width: 1024px) 50vw, 20vw"
+                            />
+                          )}
+                        </figure>
+                      ))}
+                    </div>
+                  </article>
+                </li>
+              );
+            })}
+          </ul>
 
           <div className="hidden gap-10 lg:grid lg:grid-cols-[0.75fr_1.35fr_1.3fr] lg:items-start">
-            <div className="space-y-6 text-left lg:sticky lg:top-28 lg:self-start">
-              {SERVICES.map((service, index) => (
-                <button
-                  key={service.id}
-                  type="button"
-                  onMouseEnter={() => handleSelect(index, false)}
-                  onFocus={() => handleSelect(index, false)}
-                  onClick={() => handleSelect(index, true)}
-                  className={clsx(
-                    "group flex flex-col gap-2 text-left transition-colors",
-                    activeIndex === index ? "text-white" : "text-white/45 hover:text-white/75"
-                  )}
-                >
-                  <span
-                    className="font-heading text-4xl font-semibold leading-none tracking-[-0.04em] sm:text-5xl"
-                  >
-                    {service.title}
-                  </span>
-                  <span
-                    className={clsx(
-                      "mt-1 h-1 w-24 origin-left bg-[#13C390] transition-all duration-500",
-                      activeIndex === index ? "scale-x-100 opacity-100" : "scale-x-0 opacity-0 group-hover:opacity-60"
-                    )}
-                  />
-                </button>
-              ))}
-            </div>
+            <nav aria-label="Service categories" className="lg:sticky lg:top-28 lg:self-start">
+              <ul role="list" className="space-y-6 text-left">
+                {SERVICES.map((service, index) => {
+                  const titleId = `service-${service.id}-title`;
+                  const panelId = `service-panel-${service.id}`;
+                  return (
+                    <li key={service.id}>
+                      <button
+                        type="button"
+                        aria-controls={panelId}
+                        aria-expanded={activeIndex === index}
+                        onMouseEnter={() => handleSelect(index, false)}
+                        onFocus={() => handleSelect(index, false)}
+                        onClick={() => handleSelect(index, true)}
+                        className={clsx(
+                          "group flex flex-col gap-2 text-left transition-colors",
+                          activeIndex === index ? "text-white" : "text-white/45 hover:text-white/75"
+                        )}
+                      >
+                        <span
+                          id={titleId}
+                          className="font-heading text-4xl font-semibold leading-none tracking-[-0.04em] sm:text-5xl"
+                        >
+                          {service.title}
+                        </span>
+                        <span
+                          className={clsx(
+                            "mt-1 h-1 w-24 origin-left bg-[#13C390] transition-all duration-500",
+                            activeIndex === index
+                              ? "scale-x-100 opacity-100"
+                              : "scale-x-0 opacity-0 group-hover:opacity-60"
+                          )}
+                        />
+                      </button>
+                    </li>
+                  );
+                })}
+              </ul>
+            </nav>
 
             <div
               ref={detailColumnRef}
@@ -463,55 +465,56 @@ const OrbitShowcase = () => {
                   {activeService.description}
                 </p>
                 {activeService.detailGrid && (
-                  <table className="w-full border-collapse text-sm text-white/80">
-                    <tbody>
-                      {detailRows.map((row, rowIndex) => (
-                        <tr
-                          key={`${activeService.id}-detail-row-${rowIndex}`}
-                          className="orbit-detail-row border-t border-white/10 first:border-t-0"
-                          style={{ animationDelay: `${rowIndex * 110}ms` }}
+                  <div className="mt-2 border-t border-white/15">
+                    <ul
+                      role="list"
+                      className="grid grid-cols-1 text-sm text-white/80 sm:grid-cols-2"
+                    >
+                      {activeService.detailGrid.map((detail, detailIndex) => {
+                      const rowNumber = Math.floor(detailIndex / 2);
+                      const isSecondColumn = detailIndex % 2 === 1;
+                      const needsRowDivider = rowNumber >= 1;
+
+                      return (
+                        <li
+                          key={`${activeService.id}-detail-${detailIndex}`}
+                          className={clsx(
+                            "orbit-detail-row transition-colors py-3",
+                              needsRowDivider && "border-t border-white/15",
+                              isSecondColumn ? "sm:border-l sm:border-white/15 sm:pl-4" : "sm:pr-4",
+                            isHighlightedDetail(detail) &&
+                              "text-white underline decoration-[#13C390] decoration-2 underline-offset-4"
+                          )}
+                          style={{ animationDelay: `${detailIndex * 90}ms` }}
                         >
-                          <td
-                            className={clsx(
-                              "py-3 pr-4 align-top transition-colors",
-                              isHighlightedDetail(row[0]) &&
-                                "text-white underline decoration-[#13C390] decoration-2 underline-offset-4"
-                            )}
-                          >
-                            {row[0]}
-                          </td>
-                          <td
-                            className={clsx(
-                              "border-l border-white/15 py-3 pl-4 align-top transition-colors",
-                              isHighlightedDetail(row[1]) &&
-                                "text-white underline decoration-[#13C390] decoration-2 underline-offset-4"
-                            )}
-                          >
-                            {row[1] ?? ""}
-                          </td>
-                        </tr>
-                      ))}
-                    </tbody>
-                  </table>
+                          {detail}
+                        </li>
+                      );
+                      })}
+                    </ul>
+                  </div>
                 )}
               </div>
             </div>
 
             <div className="space-y-10 pb-12">
-              {SERVICES.map((service, serviceIndex) => (
-                <div
-                  key={service.id}
-                  ref={serviceRefs[serviceIndex]}
-                  className="space-y-6"
-                >
-                  {service.images.map((image, imageIndex) => (
-                    <article
-                      key={image.id}
-                      className={clsx(
-                        "relative overflow-hidden rounded-[10px]"
-                      )}
-                      ref={assignImageRef(serviceIndex, imageIndex)}
-                    >
+              {SERVICES.map((service, serviceIndex) => {
+                const panelId = `service-panel-${service.id}`;
+                const labelId = `service-${service.id}-title`;
+                return (
+                  <article
+                    key={service.id}
+                    id={panelId}
+                    aria-labelledby={labelId}
+                    ref={serviceRefs[serviceIndex]}
+                    className="space-y-6"
+                  >
+                    {service.images.map((image, imageIndex) => (
+                      <figure
+                        key={image.id}
+                        className="relative overflow-hidden rounded-[10px]"
+                        ref={assignImageRef(serviceIndex, imageIndex)}
+                      >
                       {image.mediaType === "video" ? (
                         <video
                           className={clsx(
@@ -534,17 +537,20 @@ const OrbitShowcase = () => {
                           ariaLabel={image.alt ?? image.caption}
                         />
                       ) : (
-                        <img
+                        <Image
                           src={image.src}
                           alt={image.alt ?? image.caption}
-                          className="block w-full"
-                          loading="lazy"
+                          width={900}
+                          height={600}
+                          className="block h-auto w-full object-cover"
+                          sizes="(max-width: 1024px) 100vw, 30vw"
                         />
                       )}
-                    </article>
+                    </figure>
                   ))}
-                </div>
-              ))}
+                  </article>
+                );
+              })}
             </div>
           </div>
         </div>

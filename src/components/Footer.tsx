@@ -24,26 +24,34 @@ const Footer = () => {
     >
       <nav
         className="relative z-10 mt-8 mb-40 flex max-w-[22rem] flex-col gap-6 font-heading text-2xl md:max-w-none"
+        aria-label="Footer navigation"
       >
-        <div className="flex flex-col gap-4">
+        <ul role="list" className="flex flex-col gap-4">
           {menuItems.map((item) => (
-            <a key={item.label} href={item.href} className="transition hover:opacity-70">
-              {item.label}
-            </a>
+            <li key={item.label}>
+              <a href={item.href} className="transition hover:opacity-70">
+                {item.label}
+              </a>
+            </li>
           ))}
-        </div>
+        </ul>
 
-        <div className="flex flex-col gap-3 text-base uppercase tracking-[0.2em] text-white/80">
-          <a href="/privacy" className="transition hover:text-white">
-            Privacy
-          </a>
-          <a href="/cookies" className="transition hover:text-white">
-            Cookies
-          </a>
-          <a href="/terms" className="transition hover:text-white">
-            Terms
-          </a>
-        </div>
+        <ul
+          role="list"
+          className="flex flex-col gap-3 text-base uppercase tracking-[0.2em] text-white/80"
+        >
+          {[
+            { label: "Privacy", href: "/privacy" },
+            { label: "Cookies", href: "/cookies" },
+            { label: "Terms", href: "/terms" },
+          ].map((link) => (
+            <li key={link.label}>
+              <a href={link.href} className="transition hover:text-white">
+                {link.label}
+              </a>
+            </li>
+          ))}
+        </ul>
       </nav>
 
       <div className="mt-16 flex flex-col gap-5 pb-5 md:hidden">
