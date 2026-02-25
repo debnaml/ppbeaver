@@ -1,6 +1,6 @@
 import type { MetadataRoute } from "next";
 
-const siteUrl = "https://performancepeak.co.uk";
+const siteUrl = "https://www.performancepeak.co.uk";
 
 const routes = ["/", "/privacy", "/cookies", "/terms"];
 

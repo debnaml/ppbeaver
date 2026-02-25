@@ -11,7 +11,7 @@ type SplitHeroHeadingProps = {
 };
 
 export default function SplitHeroHeading({ leadingText, highlightText, className = "" }: SplitHeroHeadingProps) {
-  const containerRef = useRef<HTMLDivElement>(null);
+  const containerRef = useRef<HTMLHeadingElement>(null);
   const [prefersReducedMotion, setPrefersReducedMotion] = useState(false);
 
   useEffect(() => {
@@ -37,8 +37,8 @@ export default function SplitHeroHeading({ leadingText, highlightText, className
   }, [prefersReducedMotion]);
 
   return (
-    <div ref={containerRef} className={clsx("flex flex-col text-left", className)}>
-      <p
+    <h1 ref={containerRef} className={clsx("flex flex-col text-left", className)}>
+      <span
         data-hero-heading-part
         className={clsx(
           "font-heading text-[clamp(2.4rem,4vw,5.6rem)] font-medium leading-tight text-[var(--color-cream)] tracking-[-0.01em] drop-shadow",
@@ -46,7 +46,7 @@ export default function SplitHeroHeading({ leadingText, highlightText, className
         )}
       >
         {leadingText}
-      </p>
+      </span>
       <span
         data-hero-heading-part
         className={clsx(
@@ -56,6 +56,6 @@ export default function SplitHeroHeading({ leadingText, highlightText, className
       >
         {highlightText}
       </span>
-    </div>
+    </h1>
   );
 }

@@ -1,10 +1,8 @@
 import type { Metadata } from "next";
-import Script from "next/script";
-import { Suspense } from "react";
 import { Source_Sans_3, Syne } from "next/font/google";
 
-import AnalyticsTracker from "@/components/analytics/AnalyticsTracker";
-import { GA_MEASUREMENT_ID } from "@/lib/analytics";
+import ConditionalAnalytics from "@/components/analytics/ConditionalAnalytics";
+import CookieConsent from "@/components/CookieConsent";
 import "./globals.css";
 
 const syne = Syne({
@@ -23,13 +21,13 @@ const siteName = "Performance Peak";
 const defaultTitle = "Digital Strategy & AI Consultancy | Performance Peak";
 const siteUrl = "https://www.performancepeak.co.uk";
 const siteDescription =
-  "We help organisations work smarter with data, AI and thoughtful digital strategy. Practical advice, trusted partners, and technology that just works.";
+  "Digital strategy, AI consultancy and hands-on build services. From insight and planning to websites, apps and ongoing optimisation, practical advice that helps organisations work smarter.";
 const brandColor = "#292d40";
 const defaultOgImage = `${siteUrl}/og-image.png`;
 
 const organizationSchema = {
   "@context": "https://schema.org",
-  "@type": "Organization",
+  "@type": "ProfessionalService",
   name: siteName,
   url: siteUrl,
   logo: `${siteUrl}/logo.svg`,
@@ -44,6 +42,48 @@ const organizationSchema = {
     areaServed: "Global",
   },
   slogan: "Build with intelligence, imagination, and information.",
+  hasOfferCatalog: {
+    "@type": "OfferCatalog",
+    name: "Digital Strategy & AI Services",
+    itemListElement: [
+      {
+        "@type": "Offer",
+        itemOffered: {
+          "@type": "Service",
+          name: "Insight",
+          description:
+            "Independent advice grounded in your data, your team and how your organisation actually works. Including data analysis, stakeholder research, process reviews, technology audits, and feasibility studies.",
+        },
+      },
+      {
+        "@type": "Offer",
+        itemOffered: {
+          "@type": "Service",
+          name: "Strategy",
+          description:
+            "Thoughtful planning and experienced guidance to help you prioritise the right changes with confidence. Including transformation roadmaps, AI strategy, integration planning, and delivery leadership.",
+        },
+      },
+      {
+        "@type": "Offer",
+        itemOffered: {
+          "@type": "Service",
+          name: "Build",
+          description:
+            "From websites to internal systems, we design and build reliable tools that are simple to use and built to last. Including website development, UX/UI design, web and mobile apps, e-learning systems, and AI-powered features.",
+        },
+      },
+      {
+        "@type": "Offer",
+        itemOffered: {
+          "@type": "Service",
+          name: "Optimise",
+          description:
+            "We stay with you after launch, refining, supporting and evolving your systems so they continue to deliver value over time. Including analytics, conversion improvements, security reviews, and ongoing support.",
+        },
+      },
+    ],
+  },
 };
 
 export const viewport = {
@@ -120,25 +160,8 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={`${syne.variable} ${sourceSans.variable} antialiased`}>
-        {GA_MEASUREMENT_ID ? (
-          <>
-            <Script
-              src={`https://www.googletagmanager.com/gtag/js?id=${GA_MEASUREMENT_ID}`}
-              strategy="afterInteractive"
-            />
-            <Script id="gtag-init" strategy="afterInteractive">
-              {`
-                window.dataLayer = window.dataLayer || [];
-                function gtag(){dataLayer.push(arguments);}
-                gtag('js', new Date());
-                gtag('config', '${GA_MEASUREMENT_ID}', { anonymize_ip: true });
-              `}
-            </Script>
-            <Suspense fallback={null}>
-              <AnalyticsTracker />
-            </Suspense>
-          </>
-        ) : null}
+        <ConditionalAnalytics />
+        <CookieConsent />
         {children}
       </body>
     </html>

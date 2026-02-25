@@ -15,6 +15,15 @@ export const isAnalyticsEnabled = Boolean(GA_MEASUREMENT_ID);
 const invokeGtag = (...args: unknown[]) => {
   if (typeof window === "undefined") return;
   if (!window.gtag || !isAnalyticsEnabled) return;
+
+  // Respect the user's cookie consent choice
+  try {
+    const match = document.cookie.match(/(?:^|;\s*)pp_cookie_consent=([^;]*)/);
+    if (!match || decodeURIComponent(match[1]) !== "accepted") return;
+  } catch {
+    return;
+  }
+
   window.gtag(...args);
 };
 

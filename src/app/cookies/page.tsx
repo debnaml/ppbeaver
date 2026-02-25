@@ -5,22 +5,35 @@ const contentSections = [
   {
     title: "Why we use cookies",
     paragraphs: [
-      "Cookies let us remember the basics of your visit so pages stay quick, secure, and consistent every time you return.",
-      "We only keep what we need for performance insights, and the data we review is aggregated so it helps us spot trends without profiling individual visitors.",
+      "Cookies let us remember the basics of your visit so pages stay quick, secure and consistent every time you return. We only keep what we need, and no advertising, personalisation or social-media cookies are ever set.",
     ],
   },
   {
-    title: "Analytics cookies in use",
+    title: "Consent cookie",
     paragraphs: [
-      "_ga (Google Analytics) assigns an anonymous ID so we can understand how many people explore each page and how they arrive on the site. It lasts for two years and is refreshed when you return so long-term trends stay accurate.",
-      "_ga_GNTKBV087EC (Google Analytics) keeps short-lived session details, such as which sections you read during a single visit. It typically resets every two years but is mainly used to stitch together activity from the same session.",
-      "We do not set advertising, personalization, or third-party cookies—if analytics is disabled in your browser, these measurements simply drop away.",
+      "pp_cookie_consent — Stores your Accept or Decline choice from the cookie banner. It lasts for one year so we can remember your preference across visits. This cookie is classified as strictly necessary because it records the consent decision itself.",
+    ],
+  },
+  {
+    title: "Analytics cookies (require consent)",
+    paragraphs: [
+      "These cookies are only set after you click 'Accept' on the cookie banner. If you decline, no analytics cookies are placed and the site works exactly the same.",
+      "_ga — Assigns a pseudonymous ID so Google Analytics can count unique visitors and understand how people arrive on the site. It lasts for up to two years and is refreshed on return visits.",
+      "_ga_<property-id> — Keeps session-level details such as which pages you view during a single visit and how long the session lasts. It also persists for up to two years but is primarily used for session stitching.",
+      "We have disabled advertising features and Google Signals in our GA4 configuration. IP addresses are not stored. The aggregate reports we review help us spot trends without identifying individual visitors.",
+    ],
+  },
+  {
+    title: "Local storage",
+    paragraphs: [
+      "We store a small preference in your browser's local storage (ppb:heroPosterMode) to remember whether you prefer the static hero image over the video. This does not contain personal data and expires automatically after 24 hours.",
     ],
   },
   {
     title: "Managing your settings",
     paragraphs: [
-      "You can block or clear our cookies at any time through your browser settings or dedicated privacy tools—everything on the site will still be readable, but our analytics numbers may lose a bit of accuracy.",
+      "You can change your cookie choice at any time using the 'Manage Cookies' link in our website footer, which re-opens the consent banner. If you decline or withdraw consent, any existing analytics cookies are automatically deleted.",
+      "You can also block or clear cookies through your browser settings or dedicated privacy tools — everything on the site will still be readable.",
       "If you spot anything unexpected or want us to remove historical analytics data tied to your visits, email hello@performancepeak.co.uk and we will take care of it.",
     ],
   },

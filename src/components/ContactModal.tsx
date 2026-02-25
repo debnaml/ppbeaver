@@ -263,6 +263,20 @@ const ContactModal = ({ isOpen, onClose }: ContactModalProps) => {
                   {errors.message && <p className="text-sm text-[#FF9B9B]">{errors.message}</p>}
                 </div>
 
+                <p className="text-xs leading-relaxed text-white/60">
+                  We&apos;ll use your details to respond to your enquiry and won&apos;t share them
+                  with third parties. See our{" "}
+                  <a
+                    href="/privacy"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="underline hover:text-white"
+                  >
+                    Privacy Policy
+                  </a>{" "}
+                  for how we handle your data.
+                </p>
+
                 <div className="flex items-center justify-between gap-4 pt-2">
                   <p className="text-xs text-white/60">*Required fields</p>
                   <button

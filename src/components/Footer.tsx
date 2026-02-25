@@ -1,4 +1,5 @@
 import Image from "next/image";
+import CookieSettingsButton from "@/components/CookieSettingsButton";
 
 const menuItems = [
   { label: "Home", href: "/" },
@@ -51,6 +52,9 @@ const Footer = () => {
               </a>
             </li>
           ))}
+          <li>
+            <CookieSettingsButton />
+          </li>
         </ul>
       </nav>
 

@@ -327,7 +327,7 @@ const OrbitShowcase = () => {
               transition: "opacity 200ms ease-out, transform 200ms ease-out, filter 200ms ease-out",
             }}
           >
-            <h3
+            <h2
               className={clsx(
                 "mt-4 font-heading font-semibold leading-[1.02] text-[clamp(2.85rem,5.25vw,6.56rem)] text-white tracking-[-0.02em] orbit-intro-line",
                 introVisible && "orbit-intro-line--visible"
@@ -335,7 +335,7 @@ const OrbitShowcase = () => {
             >
               Practical advice and hands-on support at{" "}
               <UnderlineReveal width={3}>every</UnderlineReveal> stage.
-            </h3>
+            </h2>
             <p
               className={clsx(
                 "mt-12 max-w-3xl text-lg text-white/80 sm:mt-16 sm:text-xl lg:text-2xl orbit-intro-line",
@@ -365,9 +365,9 @@ const OrbitShowcase = () => {
               return (
                 <li key={`${service.id}-mobile`}>
                   <article aria-labelledby={mobileTitleId} className="space-y-6">
-                    <h4 id={mobileTitleId} className="font-heading text-3xl font-semibold text-white">
+                    <h3 id={mobileTitleId} className="font-heading text-3xl font-semibold text-white">
                       {service.title}
-                    </h4>
+                    </h3>
                     <p className="text-base text-white/80">{service.description}</p>
                     <div className="grid grid-cols-2 gap-4" role="list">
                       {service.images.map((image) => (
