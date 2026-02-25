@@ -15,7 +15,7 @@ const cspDirectives = [
   "img-src 'self' data: blob:",
   "font-src 'self'",
   "media-src 'self' https://customer-wsmbmuhwgz78t75t.cloudflarestream.com",
-  "connect-src 'self' https://www.googletagmanager.com https://www.google-analytics.com https://analytics.google.com https://customer-wsmbmuhwgz78t75t.cloudflarestream.com",
+  "connect-src 'self' https://www.googletagmanager.com https://*.google-analytics.com https://analytics.google.com https://customer-wsmbmuhwgz78t75t.cloudflarestream.com",
   "frame-src 'none'",
   "object-src 'none'",
   "base-uri 'self'",
