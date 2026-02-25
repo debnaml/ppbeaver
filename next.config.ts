@@ -32,7 +32,7 @@ const securityHeaders = [
      31536000 (1 year) once confident. */
   {
     key: "Strict-Transport-Security",
-    value: "max-age=86400",
+    value: "max-age=2592000",
   },
   { key: "X-Content-Type-Options", value: "nosniff" },
   { key: "X-Frame-Options", value: "DENY" },
