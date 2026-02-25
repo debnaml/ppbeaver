@@ -224,19 +224,19 @@ Log a sanitised message server-side and ensure the Resend SDK error objects do n
 
 ## Summary of Recommendations (Priority Order)
 
-| Priority | Action                                                                                    | Status        |
-| -------- | ----------------------------------------------------------------------------------------- | ------------- |
-| 🟠 1     | Add comprehensive security headers (CSP, HSTS, X-Frame-Options, etc.) to `next.config.ts` | ✅ Done*      |
-| 🟠 2     | Implement server-side rate limiting on `/api/contact`                                     | Open          |
-| 🟡 3     | Add server-side verification (signed token or Turnstile) for the contact form             | Open          |
-| 🟡 4     | Add Origin/CSRF validation to the API endpoint                                            | Open          |
-| 🟡 5     | Confirm `.env.local` is gitignored; rotate key if needed; restrict API key scope          | Open          |
-| 🟡 6     | Add nonce-based CSP for inline GA scripts                                                 | Deferred**    |
-| 🟢 7     | Consider signed Cloudflare Stream URLs                                                    | Open          |
-| 🟢 8     | Add `rel="noopener noreferrer"` to external links                                         | Open          |
-| 🟢 9     | Consider SRI or self-hosting for third-party scripts                                      | Open          |
-| 🟢 10    | Tighten email validation                                                                  | Open          |
-| 🟢 11    | Sanitise server-side error logging                                                        | Open          |
+| Priority | Action                                                                                    | Status       |
+| -------- | ----------------------------------------------------------------------------------------- | ------------ |
+| 🟠 1     | Add comprehensive security headers (CSP, HSTS, X-Frame-Options, etc.) to `next.config.ts` | ✅ Done\*    |
+| 🟠 2     | Implement server-side rate limiting on `/api/contact`                                     | Open         |
+| 🟡 3     | Add server-side verification (signed token or Turnstile) for the contact form             | Open         |
+| 🟡 4     | Add Origin/CSRF validation to the API endpoint                                            | Open         |
+| 🟡 5     | Confirm `.env.local` is gitignored; rotate key if needed; restrict API key scope          | Open         |
+| 🟡 6     | Add nonce-based CSP for inline GA scripts                                                 | Deferred\*\* |
+| 🟢 7     | Consider signed Cloudflare Stream URLs                                                    | Open         |
+| 🟢 8     | Add `rel="noopener noreferrer"` to external links                                         | Open         |
+| 🟢 9     | Consider SRI or self-hosting for third-party scripts                                      | Open         |
+| 🟢 10    | Tighten email validation                                                                  | Open         |
+| 🟢 11    | Sanitise server-side error logging                                                        | Open         |
 
 \*CSP is in **Report-Only** mode — monitor browser console for violations, then switch to enforcing. HSTS starts at `max-age=300` (5 min), domain-only, no `includeSubDomains`, no `preload` — step up gradually once verified.
 

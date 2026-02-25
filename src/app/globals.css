@@ -50,6 +50,29 @@ main {
   color: var(--color-ink);
 }
 
+/* ------------------------------------------------------------------ */
+/*  Global focus-visible indicator (accessibility)                    */
+/*  Applies a consistent, high-contrast outline to all focusable      */
+/*  elements when navigated via keyboard. Uses box-shadow instead of  */
+/*  outline so it respects border-radius.                             */
+/* ------------------------------------------------------------------ */
+:focus-visible {
+  outline: none;
+  box-shadow:
+    0 0 0 2px var(--color-ink),
+    0 0 0 4px var(--color-highlight);
+}
+
+/* Inputs already have a highlight border on focus — keep that and    */
+/* skip the double ring so it doesn't look cluttered.                 */
+input:focus-visible,
+textarea:focus-visible,
+select:focus-visible {
+  box-shadow: none;
+  outline: 2px solid var(--color-highlight);
+  outline-offset: -1px;
+}
+
 
 .contact-pattern {
   position: relative;

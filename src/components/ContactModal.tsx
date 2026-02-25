@@ -189,8 +189,10 @@ const ContactModal = ({ isOpen, onClose }: ContactModalProps) => {
                       className={fieldClasses}
                       placeholder="Name"
                       required
+                      aria-invalid={errors.name ? true : undefined}
+                      aria-describedby={errors.name ? "contact-name-error" : undefined}
                     />
-                    {errors.name && <p className="text-sm text-[#FF9B9B]">{errors.name}</p>}
+                    {errors.name && <p id="contact-name-error" role="alert" className="text-sm text-[#FF9B9B]">{errors.name}</p>}
                   </div>
 
                   <div className="space-y-1">
@@ -241,8 +243,10 @@ const ContactModal = ({ isOpen, onClose }: ContactModalProps) => {
                       className={fieldClasses}
                       placeholder="Email"
                       required
+                      aria-invalid={errors.email ? true : undefined}
+                      aria-describedby={errors.email ? "contact-email-error" : undefined}
                     />
-                    {errors.email && <p className="text-sm text-[#FF9B9B]">{errors.email}</p>}
+                    {errors.email && <p id="contact-email-error" role="alert" className="text-sm text-[#FF9B9B]">{errors.email}</p>}
                   </div>
                 </div>
 
@@ -259,8 +263,10 @@ const ContactModal = ({ isOpen, onClose }: ContactModalProps) => {
                     className={`${fieldClasses} resize-none leading-relaxed`}
                     placeholder="What should we know?"
                     required
+                    aria-invalid={errors.message ? true : undefined}
+                    aria-describedby={errors.message ? "contact-message-error" : undefined}
                   />
-                  {errors.message && <p className="text-sm text-[#FF9B9B]">{errors.message}</p>}
+                  {errors.message && <p id="contact-message-error" role="alert" className="text-sm text-[#FF9B9B]">{errors.message}</p>}
                 </div>
 
                 <p className="text-xs leading-relaxed text-white/60">
@@ -326,7 +332,7 @@ const ContactModal = ({ isOpen, onClose }: ContactModalProps) => {
                 </div>
 
                 {submissionError && (
-                  <p className="text-sm text-[#FF9B9B] text-right">{submissionError}</p>
+                  <p role="alert" className="text-sm text-[#FF9B9B] text-right">{submissionError}</p>
                 )}
 
                 <div className="flex items-center justify-between gap-4 pt-2">
