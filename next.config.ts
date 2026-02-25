@@ -22,9 +22,9 @@ const cspDirectives = [
 ].join("; ");
 
 const securityHeaders = [
-  /* CSP — Report-Only until verified (see comment above) */
+  /* CSP — Enforced */
   {
-    key: "Content-Security-Policy-Report-Only",
+    key: "Content-Security-Policy",
     value: cspDirectives,
   },
   /* HSTS — domain-only, no includeSubDomains, no preload.
@@ -32,7 +32,7 @@ const securityHeaders = [
      31536000 (1 year) once confident. */
   {
     key: "Strict-Transport-Security",
-    value: "max-age=300",
+    value: "max-age=86400",
   },
   { key: "X-Content-Type-Options", value: "nosniff" },
   { key: "X-Frame-Options", value: "DENY" },
