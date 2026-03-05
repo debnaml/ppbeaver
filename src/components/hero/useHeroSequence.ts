@@ -70,9 +70,10 @@ export const useHeroSequence = () => {
   const [networkPrefersPoster, setNetworkPrefersPoster] = useState(false);
   const [posterReady, setPosterReady] = useState(false);
   const [persistentPosterMode, setPersistentPosterMode] = useState(false);
+  const [clickToPlayPending, setClickToPlayPending] = useState(true);
 
   const sequenceDormant = !heroInView || !windowFocused;
-  const preferStaticPoster = reducedMotion || networkPrefersPoster || persistentPosterMode;
+  const preferStaticPoster = reducedMotion || networkPrefersPoster || persistentPosterMode || clickToPlayPending;
   const posterVisible = preferStaticPoster || heroFrozen;
 
   const scrollToSection = useCallback(
@@ -725,10 +726,11 @@ export const useHeroSequence = () => {
       return reachedPrimary;
     }, [scrollToSection]);
 
-  const replayAvailable = persistentPosterMode && !reducedMotion && !networkPrefersPoster;
+  const replayAvailable = (persistentPosterMode || clickToPlayPending) && !reducedMotion && !networkPrefersPoster;
 
   const handleReplay = useCallback(() => {
     if (!replayAvailable) return;
+    setClickToPlayPending(false);
     clearPosterPreference();
     if (ctaTimeoutRef.current) {
       clearTimeout(ctaTimeoutRef.current);
