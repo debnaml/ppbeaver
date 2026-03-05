@@ -295,50 +295,50 @@ Despite the F rating driven by video, the site demonstrates many genuine sustain
 
 ### 8.2 High Impact 🟠
 
-| #   | Recommendation                                                                                                                                                                               | Current         | Target      | Est. Saving         |
-| --- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------- | ----------- | ------------------- |
-| 5   | **Get verified green hosting** — Register with the Green Web Foundation (see Section 6.3). This alone reduces the score by ~9 %.                                                             | Not verified    | Verified    | ~0.06 g/visit (9 %) |
-| 6   | **Reduce Lottie JSON size** — Minify/optimise the Lottie file (492 KB raw; 63 KB compressed). Tools like `lottie-minify` or converting to `dotLottie` format can reduce raw size by 50–80 %. | 63 KB (gzip)    | ~20–30 KB   | ~35 KB/visit        |
-| 7   | **Compress the OG image** — The `og-image.png` is 1,103 KB (1.1 MB). Social crawlers transfer this on every share. Convert to JPEG or WebP at q=80, target 1200 × 630.                       | 1,103 KB        | ~100–200 KB | ~900 KB/crawl       |
-| 8   | **Lazy-load below-fold service images** — Verify `loading="lazy"` is applied via Next.js `Image` props for OrbitShowcase images well below the initial viewport.                             | Loaded eagerly? | Lazy        | ~156 KB deferred    |
+| #   | Recommendation                                                                                                                                                        | Current      | Target   | Est. Saving         |
+| --- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------ | -------- | ------------------- |
+| 5   | **Get verified green hosting** — Register with the Green Web Foundation (see Section 6.3). This alone reduces the score by ~9 %.                                      | Not verified | Verified | ~0.06 g/visit (9 %) |
+| 6   | ~~**Reduce Lottie JSON size**~~ — Already optimised: no high-precision floats found. Switched to `lottie_light` SVG-only build (88 KB → 59 KB gzip, **29 KB saved**). | 88 KB (gzip) | 59 KB    | ✅ 29 KB saved      |
+| 7   | ~~**Compress the OG image**~~ — Done: 1,103 KB → 308 KB PNG + 68 KB WebP.                                                                                             | 1,103 KB     | 308 KB   | ✅ ~800 KB saved    |
+| 8   | ~~**Lazy-load below-fold service images**~~ — Already lazy: Next.js `Image` defaults to `loading="lazy"` when `priority` is not set.                                  | Already lazy | —        | ✅ No change needed |
 
 ### 8.3 Medium Impact 🟡
 
-| #   | Recommendation                                         | Detail                                                                                                                                                                                                  | Est. Saving                   |
-| --- | ------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------- |
-| 9   | **Audit the largest JS chunks**                        | `1c59271764b24e65.js` (94 KB) and `aee6c7720838f8a2.js` (71 KB) together are 165 KB. Running `@next/bundle-analyzer` may reveal tree-shaking opportunities (e.g., is all of gsap/lottie-web imported?). | ~20–50 KB potential           |
-| 10  | **Convert remaining JPEG service images to WebP/AVIF** | Source files like `web.jpg` (832 KB raw) and `e-learning.png` (320 KB raw) could be stored as WebP at source.                                                                                           | CPU savings on build          |
-| 11  | **Subset fonts further**                               | The 2 fonts are served in full `latin` subset. If only ASCII characters are used, a custom subset saves 20–40 %.                                                                                        | ~15–25 KB                     |
-| 12  | **Add `Cache-Control: immutable` headers**             | Verify Vercel sets `immutable` on `_next/static/` assets and fonts to eliminate revalidation on return visits.                                                                                          | Reduced return-visit requests |
+| #   | Recommendation                                                                                                                                                                                                                             | Detail                                                                                                         | Est. Saving                   |
+| --- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | -------------------------------------------------------------------------------------------------------------- | ----------------------------- |
+| 9   | ~~**Audit the largest JS chunks**~~ — Completed. `lottie-web` switched to `lottie_light` (SVG-only, 29 KB gzip saved). GSAP converted to dynamic `import()` — deferred from critical render path. Total initial JS reduced by ~57 KB gzip. | ✅ Done                                                                                                        | ✅ Done                       |
+| 10  | ~~**Convert remaining JPEG service images to WebP/AVIF**~~ — All service images and page images converted to WebP.                                                                                                                         | ✅ Done                                                                                                        | ✅ Done                       |
+| 11  | **Subset fonts further** — Skipped: only ASCII + 8 special chars used; savings ~15–25 KB deemed not worth the build complexity.                                                                                                            | Skipped                                                                                                        | —                             |
+| 12  | **Add `Cache-Control: immutable` headers**                                                                                                                                                                                                 | Verify Vercel sets `immutable` on `_next/static/` assets and fonts to eliminate revalidation on return visits. | Reduced return-visit requests |
 
 ### 8.4 Low Impact 🟢
 
-| #   | Recommendation                                | Detail                                                                                                                                                                                 |
-| --- | --------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| 13  | **Remove unused images from `/public`**       | Several images (site-fox.jpg, site-pig.jpg, site-croc.jpg, site-beaver.jpg, lost-mole.jpg, cookie.jpg, eagle.jpg) appear unreferenced in source. Removing saves ~1.5 MB deploy weight. |
-| 14  | **Add `fetchpriority="high"` on hero poster** | Ensures the LCP image loads without contention from lower-priority resources.                                                                                                          |
-| 15  | **Add a sustainability statement**            | Including a carbon/sustainability note in the footer signals environmental awareness to users and search engines.                                                                      |
+| #   | Recommendation                                    | Detail                                                                                                            |
+| --- | ------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------- |
+| 13  | ~~**Remove unused images from `/public`**~~       | ✅ Done — 7 unused images removed, 11 WebP versions added.                                                        |
+| 14  | ~~**Add `fetchpriority="high"` on hero poster**~~ | ✅ Already set — `HeroPoster.tsx` has `fetchPriority="high"` and `loading="eager"`.                               |
+| 15  | **Add a sustainability statement**                | Including a carbon/sustainability note in the footer signals environmental awareness to users and search engines. |
 
 ---
 
 ## 9. Sustainability Scorecard
 
-| Category                           | Score                                                      | Rating     |
-| ---------------------------------- | ---------------------------------------------------------- | ---------- |
-| **Page weight (no video)**         | 830 KB — 65 % below 2,400 KB median                        | ⭐⭐⭐⭐⭐ |
-| **Page weight (with video)**       | ~5,200 KB — 2× the median, drives the F                    | ⭐⭐       |
-| **Green hosting**                  | NOT verified in Green Web Foundation database              | ⭐         |
-| **Image optimisation**             | WebP, responsive images, Next.js Image component           | ⭐⭐⭐⭐⭐ |
-| **Font efficiency**                | Self-hosted woff2, `swap` display, 63 KB total             | ⭐⭐⭐⭐   |
-| **JavaScript efficiency**          | 347 KB compressed JS (code-split), but two large chunks    | ⭐⭐⭐⭐   |
-| **Third-party impact**             | Conditional analytics only; no ads/trackers/social embeds  | ⭐⭐⭐⭐⭐ |
-| **Reduced-motion support**         | Video completely eliminated for `prefers-reduced-motion`   | ⭐⭐⭐⭐⭐ |
-| **Caching strategy**               | Static generation + immutable hashed assets                | ⭐⭐⭐⭐   |
-| **Video sustainability**           | 3 auto-playing HLS streams, no user opt-in, no bitrate cap | ⭐         |
-|                                    |                                                            |            |
-| **websitecarbon.com Grade**        |                                                            | **F**      |
-| **Overall (accounting for video)** |                                                            | **D**      |
-| **Overall (poster-only mode)**     |                                                            | **A**      |
+| Category                           | Score                                                                                                       | Rating     |
+| ---------------------------------- | ----------------------------------------------------------------------------------------------------------- | ---------- |
+| **Page weight (no video)**         | 830 KB — 65 % below 2,400 KB median                                                                         | ⭐⭐⭐⭐⭐ |
+| **Page weight (with video)**       | ~5,200 KB — 2× the median, drives the F                                                                     | ⭐⭐       |
+| **Green hosting**                  | NOT verified in Green Web Foundation database                                                               | ⭐         |
+| **Image optimisation**             | WebP, responsive images, Next.js Image component                                                            | ⭐⭐⭐⭐⭐ |
+| **Font efficiency**                | Self-hosted woff2, `swap` display, 63 KB total                                                              | ⭐⭐⭐⭐   |
+| **JavaScript efficiency**          | ~290 KB compressed JS; lottie_light SVG-only build; GSAP dynamically imported (deferred from critical path) | ⭐⭐⭐⭐⭐ |
+| **Third-party impact**             | Conditional analytics only; no ads/trackers/social embeds                                                   | ⭐⭐⭐⭐⭐ |
+| **Reduced-motion support**         | Video completely eliminated for `prefers-reduced-motion`                                                    | ⭐⭐⭐⭐⭐ |
+| **Caching strategy**               | Static generation + immutable hashed assets                                                                 | ⭐⭐⭐⭐   |
+| **Video sustainability**           | 3 auto-playing HLS streams, no user opt-in, no bitrate cap                                                  | ⭐         |
+|                                    |                                                                                                             |            |
+| **websitecarbon.com Grade**        |                                                                                                             | **F**      |
+| **Overall (accounting for video)** |                                                                                                             | **D**      |
+| **Overall (poster-only mode)**     |                                                                                                             | **A**      |
 
 ---
 

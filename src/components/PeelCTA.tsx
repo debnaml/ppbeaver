@@ -1,7 +1,6 @@
 "use client";
 
-import { useEffect, useLayoutEffect, useRef } from "react";
-import { gsap } from "gsap";
+import { useEffect, useRef } from "react";
 import clsx from "clsx";
 
 interface PeelCTAProps {
@@ -14,26 +13,21 @@ interface PeelCTAProps {
 const PeelCTA = ({ visible, onClick, reducedMotion = false, hideOnMobile = false }: PeelCTAProps) => {
   const wrapperRef = useRef<HTMLDivElement>(null);
 
-  useLayoutEffect(() => {
-    if (!wrapperRef.current) return;
-    gsap.set(wrapperRef.current, {
-      y: 120,
-      opacity: 0,
-      rotateX: -8,
-      transformPerspective: 1000,
-    });
-  }, []);
-
   useEffect(() => {
     if (!wrapperRef.current) return;
-    gsap.to(wrapperRef.current, {
-      y: visible ? 0 : 120,
-      opacity: visible ? 1 : 0,
-      rotateX: visible && !reducedMotion ? 0 : -8,
-      transformPerspective: 1000,
-      duration: reducedMotion ? 0.2 : 0.9,
-      ease: visible ? "elastic.out(1, 0.8)" : "power2.in",
+    let cancelled = false;
+    import("gsap").then(({ gsap }) => {
+      if (cancelled || !wrapperRef.current) return;
+      gsap.to(wrapperRef.current, {
+        y: visible ? 0 : 120,
+        opacity: visible ? 1 : 0,
+        rotateX: visible && !reducedMotion ? 0 : -8,
+        transformPerspective: 1000,
+        duration: reducedMotion ? 0.2 : 0.9,
+        ease: visible ? "elastic.out(1, 0.8)" : "power2.in",
+      });
     });
+    return () => { cancelled = true; };
   }, [visible, reducedMotion]);
 
   const displayClass = hideOnMobile ? "hidden md:flex" : "flex";
@@ -41,6 +35,7 @@ const PeelCTA = ({ visible, onClick, reducedMotion = false, hideOnMobile = false
   return (
     <div
       ref={wrapperRef}
+      style={{ transform: "translateY(120px) rotateX(-8deg)", opacity: 0, perspective: 1000 }}
       className={clsx(
         "pointer-events-none absolute bottom-12 right-6 z-30 justify-end sm:bottom-16 sm:right-12",
         displayClass,

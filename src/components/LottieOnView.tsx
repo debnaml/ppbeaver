@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import clsx from "clsx";
-import lottie, { type AnimationItem } from "lottie-web";
+import lottie, { type AnimationItem } from "lottie-web/build/player/lottie_light";
 
 interface LottieOnViewProps {
   src: string;

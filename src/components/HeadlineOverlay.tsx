@@ -1,7 +1,6 @@
 "use client";
 
 import { useEffect, useRef } from "react";
-import { gsap } from "gsap";
 import clsx from "clsx";
 
 interface HeadlineOverlayProps {
@@ -31,25 +30,33 @@ const HeadlineOverlay = ({
       return;
     }
     const fromX = direction === "rtl" ? 60 : -60;
-    const tl = gsap.timeline();
+    let cancelled = false;
+    let tl: { kill: () => void } | null = null;
 
-    if (visible) {
-      tl.fromTo(
-        keywordEl,
-        { opacity: 0, x: -fromX },
-        { opacity: 1, x: 0, duration: 0.3, ease: "power2.out" }
-      );
-    } else {
-      tl.to(keywordEl, {
-        opacity: 0,
-        x: -fromX,
-        duration: 0.3,
-        ease: "power2.in",
-      });
-    }
+    import("gsap").then(({ gsap }) => {
+      if (cancelled || !keywordRef.current) return;
+      const timeline = gsap.timeline();
+      tl = timeline;
+
+      if (visible) {
+        timeline.fromTo(
+          keywordEl,
+          { opacity: 0, x: -fromX },
+          { opacity: 1, x: 0, duration: 0.3, ease: "power2.out" }
+        );
+      } else {
+        timeline.to(keywordEl, {
+          opacity: 0,
+          x: -fromX,
+          duration: 0.3,
+          ease: "power2.in",
+        });
+      }
+    });
 
     return () => {
-      tl.kill();
+      cancelled = true;
+      tl?.kill();
     };
   }, [visible, direction, reducedMotion, keyword]);
 

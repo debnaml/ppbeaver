@@ -2,7 +2,6 @@
 
 import { useEffect, useRef, useState } from "react";
 import clsx from "clsx";
-import { gsap } from "gsap";
 
 type SplitHeroHeadingProps = {
   leadingText: string;
@@ -25,15 +24,24 @@ export default function SplitHeroHeading({ leadingText, highlightText, className
 
   useEffect(() => {
     if (prefersReducedMotion) return;
-    const context = gsap.context(() => {
-      gsap.fromTo(
-        "[data-hero-heading-part]",
-        { opacity: 0, x: -60 },
-        { opacity: 1, x: 0, duration: 0.65, ease: "power3.out", stagger: 0.15 }
-      );
-    }, containerRef);
+    let context: { revert: () => void } | null = null;
+    let cancelled = false;
 
-    return () => context.revert();
+    import("gsap").then(({ gsap }) => {
+      if (cancelled) return;
+      context = gsap.context(() => {
+        gsap.fromTo(
+          "[data-hero-heading-part]",
+          { opacity: 0, x: -60 },
+          { opacity: 1, x: 0, duration: 0.65, ease: "power3.out", stagger: 0.15 }
+        );
+      }, containerRef);
+    });
+
+    return () => {
+      cancelled = true;
+      context?.revert();
+    };
   }, [prefersReducedMotion]);
 
   return (
