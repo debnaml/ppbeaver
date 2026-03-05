@@ -27,7 +27,7 @@ export default function NotFoundPage() {
   return (
     <LegalPageLayout
       // TODO: Replace placeholder image once the bespoke 404 artwork is ready.
-      heroImage={{ src: "/images/lost-mole.jpg", alt: "Illustration of a mole lost in the snow." }}
+      heroImage={{ src: "/images/lost-mole.webp", alt: "Illustration of a mole lost in the snow." }}
       heading={{ leadingText: "Well this is", highlightText: "awkward" }}
       contactId="not-found-contact"
       contactHeading="Need a human guide?"

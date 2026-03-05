@@ -49,7 +49,7 @@ export const metadata = buildPageMetadata({
 export default function CookiesPage() {
   return (
     <LegalPageLayout
-      heroImage={{ src: "/images/cookie.jpg", alt: "Cookies stacked on a dark surface" }}
+      heroImage={{ src: "/images/cookie.webp", alt: "Cookies stacked on a dark surface" }}
       heading={{ leadingText: "Those pesky", highlightText: "cookies" }}
       contactId="cookies-contact"
       contentSections={contentSections}

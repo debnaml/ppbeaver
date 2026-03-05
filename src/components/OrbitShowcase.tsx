@@ -73,7 +73,7 @@ const SERVICES: Service[] = [
     images: [
       {
         id: "strategy-1",
-        src: "/images/service-images/service-mobile.jpg",
+        src: "/images/service-images/service-mobile.webp",
         caption: "Product design",
         accent: "rgba(212,173,255,0.35)",
         highlightDetail: "Product & service design",
@@ -98,7 +98,7 @@ const SERVICES: Service[] = [
     images: [      
       {
         id: "build-1",
-        src: "/images/service-images/e-learning.png",
+        src: "/images/service-images/e-learning.webp",
         caption: "eLearning & training",
         accent: "rgba(60,13,57,0.35)",
         size: "lg",
@@ -106,7 +106,7 @@ const SERVICES: Service[] = [
       },
       {
         id: "build-2",
-        src: "/images/service-images/web.jpg",
+        src: "/images/service-images/web.webp",
         caption: "eLearning & training",
         accent: "rgba(60,13,57,0.35)",
         size: "lg",
@@ -131,7 +131,7 @@ const SERVICES: Service[] = [
     images: [
       {
         id: "optimise-1",
-        src: "/images/orbit-operator.jpg",
+        src: "/images/orbit-operator.webp",
         caption: "Runbook reviews",
         accent: "rgba(14,27,52,0.55)",
         highlightDetail: "Support & maintenance",

@@ -43,7 +43,7 @@ export const metadata = buildPageMetadata({
 export default function TermsPage() {
   return (
     <LegalPageLayout
-      heroImage={{ src: "/images/eagle.jpg", alt: "Close up of an eagle" }}
+      heroImage={{ src: "/images/eagle.webp", alt: "Close up of an eagle" }}
       heading={{ leadingText: "The details", highlightText: "matter" }}
       contactId="terms-contact"
       contentSections={contentSections}

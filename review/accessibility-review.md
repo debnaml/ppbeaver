@@ -285,18 +285,18 @@ No action required for WCAG compliance. If any future video includes meaningful 
 
 ## Summary of Recommendations (Priority Order)
 
-| Priority | Action                                                                            | Status  |
-| -------- | --------------------------------------------------------------------------------- | ------- |
-| 🟠 1     | Audit and fix colour contrast ratios across all text/background pairs             | Open    |
-| 🟠 2     | Add visible focus indicators to all custom interactive elements                   | ✅ Done |
-| 🟠 3     | Add `aria-describedby`, `aria-invalid`, and `role="alert"` to form errors         | ✅ Done |
-| 🟡 4     | Add hidden navigation and `<header>` landmark to legal/404 pages                  | Open    |
-| 🟡 5     | Fix heading hierarchy (add `<h1>` to legal pages, flatten OrbitShowcase headings) | ✅ Done*|
-| 🟡 6     | Add ARIA tabs pattern or improved keyboard nav to OrbitShowcase                   | Open    |
-| 🟡 7     | Update modal title / add aria-live on step change                                 | Open    |
-| 🟡 8     | Fix duplicate/mismatched image alt attributes                                     | Open    |
-| 🟡 9     | Ensure footer nav links meet 24×24 CSS px minimum touch target                    | Open    |
-| 🟢 10    | Use explicit `aria-hidden="true"` throughout                                      | Open    |
-| 🟢 11    | Add `aria-busy` to hero section during load; review scroll lock timeout           | Open    |
+| Priority | Action                                                                            | Status    |
+| -------- | --------------------------------------------------------------------------------- | --------- |
+| 🟠 1     | Audit and fix colour contrast ratios across all text/background pairs             | Open      |
+| 🟠 2     | Add visible focus indicators to all custom interactive elements                   | ✅ Done   |
+| 🟠 3     | Add `aria-describedby`, `aria-invalid`, and `role="alert"` to form errors         | ✅ Done   |
+| 🟡 4     | Add hidden navigation and `<header>` landmark to legal/404 pages                  | Open      |
+| 🟡 5     | Fix heading hierarchy (add `<h1>` to legal pages, flatten OrbitShowcase headings) | ✅ Done\* |
+| 🟡 6     | Add ARIA tabs pattern or improved keyboard nav to OrbitShowcase                   | Open      |
+| 🟡 7     | Update modal title / add aria-live on step change                                 | Open      |
+| 🟡 8     | Fix duplicate/mismatched image alt attributes                                     | Open      |
+| 🟡 9     | Ensure footer nav links meet 24×24 CSS px minimum touch target                    | Open      |
+| 🟢 10    | Use explicit `aria-hidden="true"` throughout                                      | Open      |
+| 🟢 11    | Add `aria-busy` to hero section during load; review scroll lock timeout           | Open      |
 
-*Item 5: `<h1>` added to legal pages and OrbitShowcase headings flattened in SEO work.
+\*Item 5: `<h1>` added to legal pages and OrbitShowcase headings flattened in SEO work.

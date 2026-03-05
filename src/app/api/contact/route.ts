@@ -1,7 +1,19 @@
 import { NextResponse } from "next/server";
 import { Resend } from "resend";
 
-const resend = new Resend(process.env.RESEND_API_KEY);
+/* Lazily initialise Resend so the module can be imported at build time
+   (e.g. during Next.js page-data collection) without requiring the API key
+   to be present in the build environment. The key is only needed at runtime
+   when a POST request is actually handled. */
+let _resend: Resend | null = null;
+const getResend = () => {
+  if (!_resend) {
+    const key = process.env.RESEND_API_KEY;
+    if (!key) throw new Error("RESEND_API_KEY is not set");
+    _resend = new Resend(key);
+  }
+  return _resend;
+};
 
 const FROM_ADDRESS = "Performance Peak Enquiries <enquiry@updates.pp-worldwide.com>";
 const TO_ADDRESS = "lee@pp-worldwide.com";
@@ -91,7 +103,7 @@ export async function POST(request: Request) {
 
     const textContent = `New contact enquiry\n\n${textLines.join("\n")}\n\nMessage:\n${trimmedMessage}`;
 
-    await resend.emails.send({
+    await getResend().emails.send({
       from: FROM_ADDRESS,
       to: TO_ADDRESS,
       subject,

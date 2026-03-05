@@ -79,7 +79,7 @@ export const metadata = buildPageMetadata({
 export default function PrivacyPage() {
   return (
     <LegalPageLayout
-      heroImage={{ src: "/images/eagle.jpg", alt: "Eagle captured mid flight" }}
+      heroImage={{ src: "/images/eagle.webp", alt: "Eagle captured mid flight" }}
       heading={{ leadingText: "Protecting your", highlightText: "privacy" }}
       contactId="privacy-contact"
       contentSections={contentSections}
