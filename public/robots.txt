@@ -3,5 +3,6 @@ Allow: /
 Allow: /images/
 Allow: /videos/
 Allow: /hero/
+Disallow: /nyc_training_log.html
 
 Sitemap: https://www.performancepeak.co.uk/sitemap.xml
