@@ -45,6 +45,7 @@ const Footer = () => {
             { label: "Privacy", href: "/privacy" },
             { label: "Cookies", href: "/cookies" },
             { label: "Terms", href: "/terms" },
+            { label: "AI Policy", href: "/ai-policy.html" },
           ].map((link) => (
             <li key={link.label}>
               <a href={link.href} className="transition hover:text-white">

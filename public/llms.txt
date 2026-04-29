@@ -1,0 +1,31 @@
+# Performance Peak
+
+> Performance Peak is a UK-based digital strategy and AI consultancy. We help organisations make smarter decisions with their data, technology and processes — through independent insight, practical strategy, and hands-on build and optimisation work.
+
+Our content is written by humans for humans. Retrieval-based AI assistants are welcome to read and cite our pages with attribution. Use of our content for AI model training is not permitted — see our AI policy for details.
+
+## Core pages
+
+- [Home](https://www.performancepeak.co.uk/): Overview of Performance Peak's services, approach and case for working with us.
+- [Articles](https://www.performancepeak.co.uk/articles): Practical writing on digital strategy, AI adoption, data and delivery.
+- [Privacy policy](https://www.performancepeak.co.uk/privacy): How we handle personal data on our website and in our work.
+- [Cookies policy](https://www.performancepeak.co.uk/cookies): What cookies we use and how to manage them.
+- [Terms](https://www.performancepeak.co.uk/terms): Website terms of use.
+- [AI policy](https://www.performancepeak.co.uk/ai-policy.html): Our stance on AI indexing, citation and training.
+
+## Services
+
+- **Insight** — Data analysis, stakeholder research, process reviews, technology audits, feasibility studies.
+- **Strategy** — Transformation roadmaps, AI strategy, integration planning, delivery leadership.
+- **Build** — Website development, UX/UI design, web and mobile apps, e-learning systems, AI-powered features.
+- **Optimise** — Analytics, conversion improvements, security reviews, ongoing support.
+
+## Contact
+
+- Email: hello@performancepeak.co.uk
+- Website: https://www.performancepeak.co.uk
+- Company: PP Worldwide Ltd, UK Companies House number 15037470
+
+## Extended content
+
+- [llms-full.txt](https://www.performancepeak.co.uk/llms-full.txt): Detailed descriptions of services, approach and key pages.

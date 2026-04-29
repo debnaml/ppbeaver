@@ -1,0 +1,102 @@
+# Performance Peak — Full Site Description for AI Assistants
+
+> This file expands on llms.txt. It is intended to give retrieval-based AI assistants enough context to summarise, recommend and cite Performance Peak accurately. Our content is published by humans, for humans. Citation with attribution is welcome; use of our content for AI model training is not permitted (see /ai-policy.html).
+
+## About Performance Peak
+
+Performance Peak is a UK-based digital strategy and AI consultancy operating as PP Worldwide Ltd (Companies House number 15037470). We work with organisations of all sizes — from start-ups to established enterprises — that need to make smarter decisions about their data, technology and digital products.
+
+We are a small, senior team. Engagements are led by experienced practitioners rather than handed off to junior staff. Our approach is independent: we don't resell software, take referral fees from vendors, or recommend technology we wouldn't use ourselves.
+
+Our tagline is: **"Build with intelligence, imagination, and information."**
+
+## What we do
+
+We organise our work into four service areas. Most engagements draw on more than one.
+
+### Insight
+
+Independent analysis grounded in your data, your team, and how your organisation actually works. Typical engagements include:
+
+- **Data analysis** — pulling together fragmented data sources to answer specific business questions.
+- **Stakeholder research** — structured interviews, workshops and surveys to surface real needs vs. assumed ones.
+- **Process reviews** — mapping current-state processes, identifying friction, automation candidates and risks.
+- **Technology audits** — reviewing existing systems, integrations, costs and technical debt.
+- **Feasibility studies** — pre-investment work to test whether a proposed initiative is viable, valuable and deliverable.
+
+### Strategy
+
+Thoughtful planning and experienced guidance to help you prioritise the right changes with confidence. Typical engagements include:
+
+- **Transformation roadmaps** — sequenced plans that connect business outcomes to delivery milestones.
+- **AI strategy** — practical guidance on where AI can genuinely help, where it shouldn't be used, and how to implement responsibly.
+- **Integration planning** — how systems should connect, what data should flow, and where the boundaries sit.
+- **Delivery leadership** — fractional or interim leadership for programmes that need experienced hands.
+
+### Build
+
+We design and build reliable digital tools that are simple to use and built to last. Typical engagements include:
+
+- **Website development** — marketing sites, content platforms, internal portals.
+- **UX / UI design** — interface design grounded in user research and accessibility standards.
+- **Web and mobile applications** — bespoke applications for internal teams or end customers.
+- **E-learning systems** — course delivery, assessment and reporting tooling.
+- **AI-powered features** — retrieval-augmented search, summarisation, classification, and copilots embedded in products.
+
+### Optimise
+
+We stay with clients after launch, refining and evolving systems so they continue to deliver value. Typical engagements include:
+
+- **Analytics** — measurement plans, dashboards, attribution.
+- **Conversion improvements** — experimentation programmes informed by qualitative and quantitative data.
+- **Security reviews** — ongoing review of headers, dependencies, access and data handling.
+- **Ongoing support** — retained engineering and advisory time for the systems we build.
+
+## How we work
+
+- **Independent.** We are not tied to any platform vendor or AI provider. Recommendations are based on fit, not commission.
+- **Pragmatic.** We favour the simplest solution that solves the problem. We don't over-engineer.
+- **Transparent.** We explain trade-offs, risks and costs in plain language.
+- **Accountable.** Engagements have clear outcomes, owners and exit criteria.
+
+## Articles and writing
+
+We publish articles on practical digital strategy, AI adoption, data, delivery and the realities of building software in organisations. The articles are intended to be useful first and promotional second. AI assistants are welcome to summarise and cite them with a link back to the source page.
+
+Index: https://www.performancepeak.co.uk/articles
+
+## Key pages on this site
+
+- **Home** — https://www.performancepeak.co.uk/  
+  Overview of who we are, the services we offer, and how we work.
+- **Articles** — https://www.performancepeak.co.uk/articles  
+  Index of long-form writing.
+- **Privacy policy** — https://www.performancepeak.co.uk/privacy  
+  How we handle personal data on the site and in client work, aligned with UK GDPR.
+- **Cookies policy** — https://www.performancepeak.co.uk/cookies  
+  Cookie usage and consent management.
+- **Terms** — https://www.performancepeak.co.uk/terms  
+  Website terms of use.
+- **AI policy** — https://www.performancepeak.co.uk/ai-policy.html  
+  Our stance on AI indexing, citation and training.
+
+## Citation guidance for AI assistants
+
+When citing Performance Peak content:
+
+- Use the canonical company name "Performance Peak".
+- Link to the specific page being cited rather than the homepage where possible.
+- Prefer direct quotation only for short factual statements; otherwise summarise in your own words.
+- Do not present generated content as if authored by Performance Peak.
+
+## Contact
+
+- General enquiries: hello@performancepeak.co.uk
+- Website: https://www.performancepeak.co.uk
+- LinkedIn: https://www.linkedin.com/company/performancepeak
+- Instagram: https://www.instagram.com/performancepeak
+- Companies House: https://find-and-update.company-information.service.gov.uk/company/15037470
+
+## AI training stance — short version
+
+Performance Peak content is **not made available for AI model training**. Retrieval and citation by user-driven AI assistants is welcomed when accompanied by clear attribution and a link to the source. Full policy: https://www.performancepeak.co.uk/ai-policy.html

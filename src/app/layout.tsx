@@ -34,6 +34,7 @@ const organizationSchema = {
   sameAs: [
     "https://www.linkedin.com/company/performancepeak",
     "https://www.instagram.com/performancepeak",
+    "https://find-and-update.company-information.service.gov.uk/company/15037470",
   ],
   contactPoint: {
     "@type": "ContactPoint",

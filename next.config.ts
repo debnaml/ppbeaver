@@ -43,6 +43,10 @@ const securityHeaders = [
       "camera=(), microphone=(), geolocation=(), interest-cohort=()",
   },
   { key: "X-XSS-Protection", value: "1; mode=block" },
+  /* TDM / AI training reservation. Signals that content on this
+     domain is not made available for AI model training or for
+     building commercial datasets. See /ai-policy.html. */
+  { key: "X-Robots-Tag", value: "noai, noimageai" },
 ];
 
 const nextConfig: NextConfig = {
