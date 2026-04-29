@@ -1,4 +1,5 @@
 import LegalPageLayout from "@/components/legal/LegalPageLayout";
+import BreadcrumbSchema from "@/components/BreadcrumbSchema";
 import { buildPageMetadata } from "@/lib/siteMetadata";
 
 const contentSections = [
@@ -42,11 +43,19 @@ export const metadata = buildPageMetadata({
 
 export default function TermsPage() {
   return (
-    <LegalPageLayout
-      heroImage={{ src: "/images/eagle.webp", alt: "Close up of an eagle" }}
-      heading={{ leadingText: "The details", highlightText: "matter" }}
-      contactId="terms-contact"
-      contentSections={contentSections}
-    />
+    <>
+      <BreadcrumbSchema
+        items={[
+          { name: "Home", path: "/" },
+          { name: "Terms", path: "/terms" },
+        ]}
+      />
+      <LegalPageLayout
+        heroImage={{ src: "/images/eagle.webp", alt: "Close up of an eagle" }}
+        heading={{ leadingText: "The details", highlightText: "matter" }}
+        contactId="terms-contact"
+        contentSections={contentSections}
+      />
+    </>
   );
 }

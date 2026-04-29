@@ -5,6 +5,7 @@ const menuItems = [
   { label: "Home", href: "/" },
   { label: "About", href: "/#about" },
   { label: "Services", href: "/#services" },
+  { label: "Articles", href: "/articles" },
   { label: "Contact Us", href: "/#contact" },
 ];
 
@@ -70,6 +71,13 @@ const Footer = () => {
         />
         <div className="h-px w-full bg-white/80" />
         <p className="font-body text-sm text-white/90">
+          <a href="mailto:hello@performancepeak.co.uk" className="hover:text-white">
+            hello@performancepeak.co.uk
+          </a>
+          <span className="px-2 text-white/50">·</span>
+          <span>Ipswich, United Kingdom</span>
+        </p>
+        <p className="font-body text-sm text-white/90">
           © 2026 Performance Peak (PP Worldwide). Company Number: 15037470
         </p>
       </div>
@@ -97,7 +105,13 @@ const Footer = () => {
           bottom: "10px",
         }}
       >
-        © 2026 Performance Peak (PP Worldwide). Company Number: 15037470
+        <a href="mailto:hello@performancepeak.co.uk" className="hover:text-white">
+          hello@performancepeak.co.uk
+        </a>
+        <span className="px-2 text-white/50">·</span>
+        <span>Ipswich, United Kingdom</span>
+        <span className="px-2 text-white/50">·</span>
+        <span>© 2026 Performance Peak (PP Worldwide). Company Number: 15037470</span>
       </p>
 
       <div

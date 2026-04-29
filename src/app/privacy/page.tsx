@@ -1,4 +1,5 @@
 import LegalPageLayout from "@/components/legal/LegalPageLayout";
+import BreadcrumbSchema from "@/components/BreadcrumbSchema";
 import { buildPageMetadata } from "@/lib/siteMetadata";
 
 const contentSections = [
@@ -78,11 +79,19 @@ export const metadata = buildPageMetadata({
 
 export default function PrivacyPage() {
   return (
-    <LegalPageLayout
-      heroImage={{ src: "/images/eagle.webp", alt: "Eagle captured mid flight" }}
-      heading={{ leadingText: "Protecting your", highlightText: "privacy" }}
-      contactId="privacy-contact"
-      contentSections={contentSections}
-    />
+    <>
+      <BreadcrumbSchema
+        items={[
+          { name: "Home", path: "/" },
+          { name: "Privacy", path: "/privacy" },
+        ]}
+      />
+      <LegalPageLayout
+        heroImage={{ src: "/images/eagle.webp", alt: "Eagle captured mid flight" }}
+        heading={{ leadingText: "Protecting your", highlightText: "privacy" }}
+        contactId="privacy-contact"
+        contentSections={contentSections}
+      />
+    </>
   );
 }

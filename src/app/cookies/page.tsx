@@ -1,4 +1,5 @@
 import LegalPageLayout from "@/components/legal/LegalPageLayout";
+import BreadcrumbSchema from "@/components/BreadcrumbSchema";
 import { buildPageMetadata } from "@/lib/siteMetadata";
 
 const contentSections = [
@@ -48,11 +49,19 @@ export const metadata = buildPageMetadata({
 
 export default function CookiesPage() {
   return (
-    <LegalPageLayout
-      heroImage={{ src: "/images/cookie.webp", alt: "Cookies stacked on a dark surface" }}
-      heading={{ leadingText: "Those pesky", highlightText: "cookies" }}
-      contactId="cookies-contact"
-      contentSections={contentSections}
-    />
+    <>
+      <BreadcrumbSchema
+        items={[
+          { name: "Home", path: "/" },
+          { name: "Cookies", path: "/cookies" },
+        ]}
+      />
+      <LegalPageLayout
+        heroImage={{ src: "/images/cookie.webp", alt: "Cookies stacked on a dark surface" }}
+        heading={{ leadingText: "Those pesky", highlightText: "cookies" }}
+        contactId="cookies-contact"
+        contentSections={contentSections}
+      />
+    </>
   );
 }

@@ -32,16 +32,25 @@ const organizationSchema = {
   url: siteUrl,
   logo: `${siteUrl}/logo.svg`,
   sameAs: [
-    "https://www.linkedin.com/company/performancepeak",
+    "https://www.linkedin.com/company/performance-peak-ai-digital-transformation/",
     "https://www.instagram.com/performancepeak",
     "https://find-and-update.company-information.service.gov.uk/company/15037470",
   ],
-  contactPoint: {
-    "@type": "ContactPoint",
-    contactType: "Business",
-    email: "hello@performancepeak.co.uk",
-    areaServed: "Global",
+  email: "hello@performancepeak.co.uk",
+  address: {
+    "@type": "PostalAddress",
+    addressLocality: "Ipswich",
+    addressCountry: "GB",
   },
+  contactPoint: [
+    {
+      "@type": "ContactPoint",
+      contactType: "customer support",
+      email: "hello@performancepeak.co.uk",
+      areaServed: "GB",
+      availableLanguage: ["English"],
+    },
+  ],
   slogan: "Build with intelligence, imagination, and information.",
   hasOfferCatalog: {
     "@type": "OfferCatalog",
@@ -148,9 +157,6 @@ export const metadata: Metadata = {
   alternates: {
     canonical: siteUrl,
   },
-  other: {
-    "application/ld+json": JSON.stringify(organizationSchema),
-  },
 };
 
 export default function RootLayout({
@@ -161,6 +167,12 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={`${syne.variable} ${sourceSans.variable} antialiased`}>
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify(organizationSchema),
+          }}
+        />
         <ConditionalAnalytics />
         <CookieConsent />
         {children}
