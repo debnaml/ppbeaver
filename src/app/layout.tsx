@@ -35,6 +35,7 @@ const organizationSchema = {
     "https://www.linkedin.com/company/performance-peak-ai-digital-transformation/",
     "https://www.instagram.com/performancepeak",
     "https://find-and-update.company-information.service.gov.uk/company/15037470",
+    "https://www.wikidata.org/wiki/Q139591828",
   ],
   email: "hello@performancepeak.co.uk",
   address: {
