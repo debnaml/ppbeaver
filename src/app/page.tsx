@@ -19,15 +19,17 @@ export default function Home() {
       <a className="skip-link" href="#main-content">
         Skip to main content
       </a>
-      <nav className="visually-hidden" aria-label="Primary navigation">
-        <ul>
-          {primaryNavLinks.map((item) => (
-            <li key={item.href}>
-              <a href={item.href}>{item.label}</a>
-            </li>
-          ))}
-        </ul>
-      </nav>
+      <header className="visually-hidden">
+        <nav aria-label="Primary navigation">
+          <ul>
+            {primaryNavLinks.map((item) => (
+              <li key={item.href}>
+                <a href={item.href}>{item.label}</a>
+              </li>
+            ))}
+          </ul>
+        </nav>
+      </header>
       <main id="main-content" className="bg-[var(--color-supadark)] text-[var(--color-cream)]">
         <h1 className="visually-hidden">
           Digital Strategy & AI Consultancy | Performance Peak

@@ -25,7 +25,18 @@ const LegalPageLayout = ({
   contentSections,
 }: LegalPageLayoutProps) => {
   return (
-    <main className="bg-[var(--color-supadark)] text-[var(--color-cream)]">
+    <>
+      <header className="visually-hidden">
+        <nav aria-label="Primary navigation">
+          <ul>
+            <li><a href="/">Home</a></li>
+            <li><a href="/#about">About</a></li>
+            <li><a href="/#services">Services</a></li>
+            <li><a href="/#contact">Contact</a></li>
+          </ul>
+        </nav>
+      </header>
+      <main className="bg-[var(--color-supadark)] text-[var(--color-cream)]">
       <section className="relative isolate flex min-h-[70vh] items-end overflow-hidden px-6 pb-16 pt-28 sm:px-12">
         <HeroChrome ctaTargetId={contactId} />
 
@@ -77,6 +88,7 @@ const LegalPageLayout = ({
 
       <Footer />
     </main>
+    </>
   );
 };
 
