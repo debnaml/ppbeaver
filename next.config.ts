@@ -28,11 +28,12 @@ const securityHeaders = [
     value: cspDirectives,
   },
   /* HSTS — domain-only, no includeSubDomains, no preload.
-     Starting at 5 minutes; increase to 86400 (1 day) then
-     31536000 (1 year) once confident. */
+     1 year. Avoid adding includeSubDomains/preload until every
+     current and future subdomain is guaranteed HTTPS — preload
+     is effectively permanent. */
   {
     key: "Strict-Transport-Security",
-    value: "max-age=2592000",
+    value: "max-age=31536000",
   },
   { key: "X-Content-Type-Options", value: "nosniff" },
   { key: "X-Frame-Options", value: "DENY" },
