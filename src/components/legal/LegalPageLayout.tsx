@@ -27,6 +27,14 @@ const LegalPageLayout = ({
   return (
     <>
       <header className="visually-hidden">
+        <a href="/" aria-label="Performance Peak home">
+          <Image
+            src="/logo-full.svg"
+            alt="Performance Peak"
+            width={220}
+            height={110}
+          />
+        </a>
         <nav aria-label="Primary navigation">
           <ul>
             <li><a href="/">Home</a></li>

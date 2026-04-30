@@ -1,3 +1,4 @@
+import Image from "next/image";
 import HeroSequence from "@/components/HeroSequence";
 import Footer from "@/components/Footer";
 import RevealParagraph from "@/components/RevealParagraph";
@@ -20,6 +21,15 @@ export default function Home() {
         Skip to main content
       </a>
       <header className="visually-hidden">
+        <a href="/" aria-label="Performance Peak home">
+          <Image
+            src="/logo-full.svg"
+            alt="Performance Peak"
+            width={220}
+            height={110}
+            priority
+          />
+        </a>
         <nav aria-label="Primary navigation">
           <ul>
             {primaryNavLinks.map((item) => (
