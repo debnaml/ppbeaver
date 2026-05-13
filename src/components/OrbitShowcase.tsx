@@ -78,6 +78,13 @@ const SERVICES: Service[] = [
         accent: "rgba(212,173,255,0.35)",
         highlightDetail: "Product & service design",
       },
+      {
+        id: "strategy-2",
+        src: "/images/service-images/prompt.webp",
+        caption: "Technology & AI strategy",
+        accent: "rgba(212,173,255,0.35)",
+        highlightDetail: "Technology & AI strategy",
+      },
     ],
   },
   {
