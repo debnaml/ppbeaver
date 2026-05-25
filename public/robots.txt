@@ -10,6 +10,7 @@ Allow: /images/
 Allow: /videos/
 Allow: /hero/
 Disallow: /nyc_training_log.html
+Disallow: /nyc90.html
 
 # ---------------------------------------------------------------
 # Retrieval / answer-engine bots — ALLOWED
