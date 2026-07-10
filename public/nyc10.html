@@ -1,0 +1,773 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="NYC Final 10">
+<meta name="theme-color" content="#0A0A0A">
+<title>NYC Final 10 · Training Log</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Inter+Tight:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0A0A0A;
+    --bg-elev: #141414;
+    --bg-card: #1A1A1A;
+    --border: #262626;
+    --border-strong: #3A3A3A;
+    --text: #FAFAFA;
+    --text-dim: #A0A0A0;
+    --text-dimmer: #606060;
+    --accent: #FF4D2E;
+    --accent-glow: rgba(255, 77, 46, 0.15);
+    --success: #4ADE80;
+    --warn: #FBBF24;
+    --joint: #38BDF8;
+    --joint-bg: rgba(56, 189, 248, 0.1);
+    --display: 'Archivo Black', sans-serif;
+    --sans: 'Inter Tight', sans-serif;
+    --mono: 'JetBrains Mono', monospace;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+
+  html, body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--sans);
+    min-height: 100vh;
+    overscroll-behavior: none;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  body {
+    padding: env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);
+    background-image:
+      radial-gradient(circle at 20% 0%, var(--accent-glow) 0%, transparent 40%),
+      radial-gradient(circle at 80% 100%, rgba(255, 77, 46, 0.05) 0%, transparent 50%);
+    background-attachment: fixed;
+  }
+
+  .screen { display: none; min-height: 100vh; padding: 20px 16px 100px; }
+  .screen.active { display: block; }
+
+  /* HOME */
+  .home-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 24px;
+  }
+  .home-header .label {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--text-dimmer);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+  }
+
+  .countdown-card {
+    background: linear-gradient(135deg, #1A0A08 0%, #0A0A0A 100%);
+    border: 1px solid var(--border-strong);
+    border-radius: 20px;
+    padding: 28px 24px;
+    margin-bottom: 16px;
+    position: relative;
+    overflow: hidden;
+  }
+  .countdown-card::before {
+    content: '';
+    position: absolute;
+    top: -50%; right: -30%;
+    width: 300px; height: 300px;
+    background: radial-gradient(circle, var(--accent-glow), transparent 70%);
+    pointer-events: none;
+  }
+  .countdown-label {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--accent);
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    margin-bottom: 8px;
+  }
+  .countdown-number {
+    font-family: var(--display);
+    font-size: 96px;
+    line-height: 0.9;
+    letter-spacing: -0.04em;
+    color: var(--text);
+    margin-bottom: 4px;
+  }
+  .countdown-unit {
+    font-family: var(--sans);
+    font-size: 14px;
+    color: var(--text-dim);
+    font-weight: 500;
+  }
+  .countdown-date {
+    font-family: var(--mono);
+    font-size: 12px;
+    color: var(--text-dimmer);
+    margin-top: 16px;
+    padding-top: 16px;
+    border-top: 1px solid var(--border);
+  }
+  .phase-tag {
+    display: inline-block;
+    background: var(--accent);
+    color: #000;
+    font-family: var(--mono);
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    padding: 3px 8px;
+    border-radius: 5px;
+    margin-left: 6px;
+  }
+
+  .joint-card {
+    background: var(--joint-bg);
+    border: 1px solid rgba(56, 189, 248, 0.3);
+    border-radius: 14px;
+    padding: 14px 16px;
+    margin-bottom: 28px;
+    font-size: 12.5px;
+    color: #BAE6FD;
+    line-height: 1.5;
+  }
+  .joint-card strong { color: var(--joint); font-weight: 700; }
+
+  .section-title {
+    font-family: var(--display);
+    font-size: 14px;
+    letter-spacing: 0.1em;
+    color: var(--text-dim);
+    text-transform: uppercase;
+    margin: 28px 4px 12px;
+  }
+
+  .workout-grid { display: grid; gap: 10px; }
+  .workout-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 18px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    cursor: pointer;
+    transition: background 0.15s, border-color 0.15s, transform 0.1s;
+  }
+  .workout-card:active {
+    transform: scale(0.98);
+    background: var(--bg-elev);
+    border-color: var(--border-strong);
+  }
+  .workout-card .day-num {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--text-dimmer);
+    letter-spacing: 0.1em;
+    margin-bottom: 4px;
+  }
+  .workout-card .name {
+    font-family: var(--display);
+    font-size: 19px;
+    letter-spacing: -0.01em;
+  }
+  .workout-card .focus {
+    font-size: 12px;
+    color: var(--text-dim);
+    margin-top: 3px;
+  }
+  .workout-card .arrow { font-size: 22px; color: var(--text-dimmer); }
+  .workout-card.rest { background: transparent; border-style: dashed; }
+  .workout-card.rest .name {
+    color: var(--text-dim);
+    font-family: var(--sans);
+    font-weight: 600;
+    font-size: 15px;
+  }
+
+  .history-link {
+    display: block;
+    text-align: center;
+    padding: 16px;
+    margin-top: 20px;
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    color: var(--text);
+    font-family: var(--mono);
+    font-size: 12px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: background 0.15s;
+  }
+  .history-link:active { background: var(--bg-elev); }
+
+  /* WORKOUT */
+  .back-bar {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 20px;
+    padding-top: 4px;
+  }
+  .back-btn {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    color: var(--text);
+    width: 40px; height: 40px;
+    border-radius: 50%;
+    font-size: 20px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .back-btn:active { background: var(--bg-elev); }
+
+  .workout-header { margin-bottom: 8px; }
+  .workout-header .label {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--accent);
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    margin-bottom: 4px;
+  }
+  .workout-header h1 {
+    font-family: var(--display);
+    font-size: 34px;
+    line-height: 1;
+    letter-spacing: -0.03em;
+  }
+  .workout-header .sub {
+    font-size: 13px;
+    color: var(--text-dim);
+    margin-top: 6px;
+  }
+
+  .session-joint-note {
+    background: var(--joint-bg);
+    border: 1px solid rgba(56, 189, 248, 0.3);
+    border-radius: 12px;
+    padding: 12px 14px;
+    margin: 16px 0 8px;
+    font-size: 12.5px;
+    color: #BAE6FD;
+    line-height: 1.5;
+  }
+  .session-joint-note strong { color: var(--joint); }
+
+  .last-session {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--text-dimmer);
+    margin: 18px 4px 8px;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+  }
+
+  .exercise-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 18px 18px 14px;
+    margin-bottom: 14px;
+  }
+  .exercise-name {
+    font-family: var(--display);
+    font-size: 16px;
+    letter-spacing: -0.01em;
+    margin-bottom: 4px;
+  }
+  .exercise-target {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--text-dim);
+    margin-bottom: 3px;
+  }
+  .exercise-suggested {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--accent);
+    margin-bottom: 4px;
+  }
+  .exercise-swap {
+    font-size: 11.5px;
+    color: var(--joint);
+    margin-bottom: 14px;
+    display: flex;
+    align-items: flex-start;
+    gap: 5px;
+    line-height: 1.4;
+  }
+
+  .sets-header {
+    display: grid;
+    grid-template-columns: 32px 1fr 1fr;
+    gap: 8px;
+    font-family: var(--mono);
+    font-size: 10px;
+    color: var(--text-dimmer);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    margin-bottom: 8px;
+    padding: 0 2px;
+  }
+  .sets-grid {
+    display: grid;
+    grid-template-columns: 32px 1fr 1fr;
+    gap: 8px;
+    align-items: center;
+    margin-bottom: 6px;
+  }
+  .set-num {
+    font-family: var(--mono);
+    font-size: 13px;
+    color: var(--text-dim);
+    text-align: center;
+  }
+  .set-input {
+    background: var(--bg-elev);
+    border: 1px solid var(--border);
+    color: var(--text);
+    font-family: var(--mono);
+    font-size: 15px;
+    font-weight: 700;
+    padding: 10px 12px;
+    border-radius: 10px;
+    width: 100%;
+    text-align: center;
+    -webkit-appearance: none;
+    appearance: none;
+  }
+  .set-input:focus {
+    outline: none;
+    border-color: var(--accent);
+    background: #1F1410;
+  }
+  .set-input::placeholder { color: var(--text-dimmer); font-weight: 500; }
+
+  .exercise-notes {
+    width: 100%;
+    background: transparent;
+    border: none;
+    border-top: 1px solid var(--border);
+    color: var(--text-dim);
+    font-family: var(--sans);
+    font-size: 13px;
+    padding: 10px 0 2px;
+    margin-top: 10px;
+    resize: none;
+    min-height: 22px;
+  }
+  .exercise-notes:focus { outline: none; color: var(--text); }
+  .exercise-notes::placeholder { color: var(--text-dimmer); }
+
+  .finish-btn {
+    position: fixed;
+    bottom: calc(20px + env(safe-area-inset-bottom));
+    left: 16px;
+    right: 16px;
+    background: var(--accent);
+    color: #000;
+    border: none;
+    padding: 18px;
+    border-radius: 14px;
+    font-family: var(--display);
+    font-size: 14px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    cursor: pointer;
+    box-shadow: 0 10px 30px rgba(255, 77, 46, 0.4);
+    z-index: 100;
+  }
+  .finish-btn:active { transform: translateY(1px); }
+  .finish-btn.saved {
+    background: var(--success);
+    box-shadow: 0 10px 30px rgba(74, 222, 128, 0.4);
+  }
+
+  /* HISTORY */
+  .history-session {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 16px 18px;
+    margin-bottom: 10px;
+  }
+  .history-session .date {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--text-dimmer);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+  }
+  .history-session .workout-name {
+    font-family: var(--display);
+    font-size: 18px;
+    margin: 4px 0 10px;
+  }
+  .history-session .ex-row {
+    font-family: var(--mono);
+    font-size: 12px;
+    color: var(--text-dim);
+    padding: 4px 0;
+    display: flex;
+    justify-content: space-between;
+    gap: 12px;
+  }
+  .history-session .ex-row span:first-child { color: var(--text); }
+  .empty {
+    text-align: center;
+    color: var(--text-dimmer);
+    font-size: 14px;
+    padding: 60px 20px;
+    font-family: var(--mono);
+  }
+
+  .install-hint {
+    background: var(--bg-card);
+    border: 1px dashed var(--border-strong);
+    border-radius: 12px;
+    padding: 14px 16px;
+    margin-top: 24px;
+    font-size: 12px;
+    color: var(--text-dim);
+    line-height: 1.5;
+  }
+  .install-hint strong { color: var(--text); font-weight: 700; }
+</style>
+</head>
+<body>
+
+<!-- HOME -->
+<div class="screen active" id="screen-home">
+  <div class="home-header">
+    <div><div class="label">Final 10 · Peak</div></div>
+    <div style="text-align: right;"><div class="label" id="today-date">-</div></div>
+  </div>
+
+  <div class="countdown-card">
+    <div class="countdown-label">Days to New York</div>
+    <div class="countdown-number" id="days-number">-</div>
+    <div class="countdown-unit" id="days-unit">days remaining</div>
+    <div class="countdown-date">Mon 20 Jul 2026 <span class="phase-tag">PEAK &amp; PROTECT</span></div>
+  </div>
+
+  <div class="joint-card">
+    <strong>Joint-safe mode on.</strong> Machines and cables, relaxed neutral grips, higher reps, lighter loads. Never grip to failure. If a movement bites your fingers or wrists, stop the set and swap it. Looking full and protecting the joints are the same job right now.
+  </div>
+
+  <div class="section-title">Pick Today's Session</div>
+  <div class="workout-grid" id="workout-grid"></div>
+
+  <div class="history-link" id="open-history">View History ↗</div>
+
+  <div class="install-hint">
+    <strong>Suggested weights</strong> are conservative starting points for a 79kg lifter around your level. Pick a load where the last 2 to 3 reps are hard but form and grip stay relaxed. Adjust down any day the joints feel off. Once you log a session, next time it pre-fills what you actually lifted.
+  </div>
+</div>
+
+<!-- WORKOUT -->
+<div class="screen" id="screen-workout">
+  <div class="back-bar">
+    <button class="back-btn" onclick="goHome()">←</button>
+    <div style="font-family: var(--mono); font-size: 11px; color: var(--text-dimmer); letter-spacing: 0.1em; text-transform: uppercase;" id="workout-date">-</div>
+  </div>
+  <div class="workout-header">
+    <div class="label" id="workout-day-label">-</div>
+    <h1 id="workout-title">-</h1>
+    <div class="sub" id="workout-sub">-</div>
+  </div>
+  <div class="session-joint-note" id="session-joint-note"></div>
+  <div class="last-session" id="last-session-label">-</div>
+  <div id="exercises-container"></div>
+  <button class="finish-btn" id="finish-btn" onclick="saveWorkout()">Save Session</button>
+</div>
+
+<!-- HISTORY -->
+<div class="screen" id="screen-history">
+  <div class="back-bar">
+    <button class="back-btn" onclick="goHome()">←</button>
+    <div style="font-family: var(--mono); font-size: 11px; color: var(--text-dimmer); letter-spacing: 0.1em; text-transform: uppercase;">Session History</div>
+  </div>
+  <div id="history-container"></div>
+</div>
+
+<script>
+/* =========================================================
+   FINAL 10 DAYS : JOINT-FRIENDLY DISPLAY PLAN
+   Machines + cables, neutral relaxed grips, higher reps.
+   Suggested weights: conservative, 79kg, early-intermediate.
+   ========================================================= */
+const PLAN = {
+  delts_arms: {
+    name: "Delts & Arms",
+    focus: "The show muscles · pump focus",
+    dayLabel: "Session A",
+    jointNote: "Rope and cable work keeps the wrist neutral and lets the hand stay open. Do not squeeze hard. Let attachments rest in the fingers rather than gripping tight.",
+    exercises: [
+      { id: "a_machine_ohp", name: "Machine Shoulder Press", target: "3 × 10-12", suggested: "30-40kg", swap: "Neutral handles, wrist straight, palm drives the weight", sets: 3 },
+      { id: "a_cable_lat", name: "Cable Lateral Raise (1 arm)", target: "4 × 12-15", suggested: "5-7.5kg", swap: "Loop the strap over your wrist if the handle grip aches", sets: 4 },
+      { id: "a_db_lat", name: "DB Lateral Raise (light)", target: "3 × 12-15", suggested: "7.5kg / hand", swap: "Light and controlled, thumb slightly up, relaxed grip", sets: 3 },
+      { id: "a_face_pull", name: "Cable Rope Face Pull", target: "3 × 15", suggested: "15-20kg", swap: "Rope keeps wrists neutral, great for shoulder health", sets: 3 },
+      { id: "a_hammer", name: "Cable Rope Hammer Curl", target: "3 × 12", suggested: "15-25kg", swap: "Rope = neutral wrist, kindest curl for finger joints", sets: 3 },
+      { id: "a_preacher", name: "Machine Preacher Curl", target: "3 × 12", suggested: "25-35kg", swap: "Arm pad takes the load, minimal wrist strain", sets: 3 },
+      { id: "a_pushdown", name: "Rope Pushdown", target: "3 × 12-15", suggested: "20-30kg", swap: "Open hand, let the rope sit in your fingers", sets: 3 },
+      { id: "a_oh_ext", name: "Overhead Rope Extension", target: "3 × 12", suggested: "15-25kg", swap: "", sets: 3 },
+    ]
+  },
+  chest_back: {
+    name: "Chest & Back",
+    focus: "Width and fullness · pump focus",
+    dayLabel: "Session B",
+    jointNote: "Use neutral-grip handles on every pull. They spare the wrists far more than a pronated bar. No deadlifts and no pull-ups this block, both load the grip hard.",
+    exercises: [
+      { id: "b_machine_press", name: "Machine Chest Press", target: "3 × 10-12", suggested: "40-55kg", swap: "Palm-driven, wrist stays straight, no bar to grip", sets: 3 },
+      { id: "b_incline_machine", name: "Incline Machine Press", target: "3 × 10-12", suggested: "35-45kg", swap: "Targets upper chest, the part that shows in a shirt", sets: 3 },
+      { id: "b_pec_deck", name: "Pec Deck", target: "3 × 12-15", suggested: "40-55kg", swap: "Forearm pads mean zero gripping", sets: 3 },
+      { id: "b_cable_fly", name: "Cable Fly", target: "3 × 12-15", suggested: "10-12.5kg / side", swap: "", sets: 3 },
+      { id: "b_lat_pulldown", name: "Lat Pulldown (neutral grip)", target: "3 × 10-12", suggested: "45-60kg", swap: "Neutral V-handle is much kinder on wrists than the wide bar", sets: 3 },
+      { id: "b_machine_row", name: "Chest-Supported Machine Row", target: "3 × 12", suggested: "40-55kg", swap: "Chest pad takes the load, neutral handles for the wrists", sets: 3 },
+      { id: "b_cable_row", name: "Seated Cable Row (rope)", target: "3 × 12", suggested: "45-60kg", swap: "Rope or neutral handle, relaxed grip", sets: 3 },
+    ]
+  },
+  legs_abs: {
+    name: "Legs & Abs",
+    focus: "Light machine work + core",
+    dayLabel: "Session C",
+    jointNote: "All leg work here is machine-based so your hands do nothing. No barbell squats or deadlifts, they load both the spine and the grip. For abs, use the forearm-supported captain's chair, never a hanging bar.",
+    exercises: [
+      { id: "c_leg_press", name: "Leg Press", target: "3 × 12-15", suggested: "100-140kg", swap: "No grip needed at all, easy on the hands", sets: 3 },
+      { id: "c_leg_ext", name: "Leg Extension", target: "3 × 15", suggested: "40-55kg", swap: "", sets: 3 },
+      { id: "c_leg_curl", name: "Lying Leg Curl", target: "3 × 15", suggested: "35-50kg", swap: "", sets: 3 },
+      { id: "c_calf", name: "Standing Calf Raise (machine)", target: "4 × 12-15", suggested: "bodyweight +20-40kg", swap: "Shoulder pad carries the load, not the hands", sets: 4 },
+      { id: "c_cable_crunch", name: "Cable Crunch (rope)", target: "3 × 15", suggested: "30-45kg", swap: "", sets: 3 },
+      { id: "c_captains", name: "Captain's Chair Leg Raise", target: "3 × 12-15", suggested: "bodyweight", swap: "Forearm-supported, NO hanging. Protects grip and wrists", sets: 3 },
+    ]
+  },
+  quick_pump: {
+    name: "Quick Pump",
+    focus: "Short session · final days",
+    dayLabel: "Session D",
+    jointNote: "Very light, 25 to 30 minutes, just to draw blood into the show muscles before you go out. Nothing near failure. This is polish, not training.",
+    exercises: [
+      { id: "d_chest", name: "Machine Chest Press", target: "2 × 15", suggested: "lighter than Session B", swap: "", sets: 2 },
+      { id: "d_lat", name: "Cable Lateral Raise", target: "3 × 15", suggested: "5kg", swap: "", sets: 3 },
+      { id: "d_curl", name: "Cable Rope Curl", target: "2 × 15", suggested: "15-20kg", swap: "Rope keeps the wrist neutral", sets: 2 },
+      { id: "d_pushdown", name: "Rope Pushdown", target: "2 × 15", suggested: "15-25kg", swap: "", sets: 2 },
+      { id: "d_crunch", name: "Cable Crunch", target: "2 × 15", suggested: "30kg", swap: "", sets: 2 },
+    ]
+  }
+};
+
+const TRIP_DATE = new Date(2026, 6, 20); // 20 July 2026
+const STORAGE_KEY = "nyc_training_log_v1";
+
+function loadSessions() {
+  try {
+    const data = localStorage.getItem(STORAGE_KEY);
+    return data ? JSON.parse(data) : [];
+  } catch (e) { console.error(e); return []; }
+}
+function saveSessions(sessions) { localStorage.setItem(STORAGE_KEY, JSON.stringify(sessions)); }
+function getLastSession(workoutId) {
+  const sessions = loadSessions().filter(s => s.workoutId === workoutId);
+  if (sessions.length === 0) return null;
+  sessions.sort((a, b) => new Date(b.date) - new Date(a.date));
+  return sessions[0];
+}
+
+function daysBetween(a, b) {
+  const ms = b.setHours(0,0,0,0) - a.setHours(0,0,0,0);
+  return Math.round(ms / (1000 * 60 * 60 * 24));
+}
+
+function renderHome() {
+  const today = new Date();
+  const days = daysBetween(new Date(today), new Date(TRIP_DATE));
+  document.getElementById("days-number").textContent = days >= 0 ? days : 0;
+  document.getElementById("days-unit").textContent =
+    days === 1 ? "day remaining" : days === 0 ? "it's today" : days < 0 ? "trip done" : "days remaining";
+  document.getElementById("today-date").textContent =
+    today.toLocaleDateString("en-GB", { weekday: "short", day: "numeric", month: "short" });
+
+  const grid = document.getElementById("workout-grid");
+  grid.innerHTML = "";
+  Object.entries(PLAN).forEach(([id, w]) => {
+    const card = document.createElement("div");
+    card.className = "workout-card";
+    card.onclick = () => openWorkout(id);
+    card.innerHTML = `
+      <div>
+        <div class="day-num">${w.dayLabel}</div>
+        <div class="name">${w.name}</div>
+        <div class="focus">${w.focus}</div>
+      </div>
+      <div class="arrow">›</div>`;
+    grid.appendChild(card);
+  });
+  const rest = document.createElement("div");
+  rest.className = "workout-card rest";
+  rest.innerHTML = `
+    <div>
+      <div class="day-num">Rest / Walk</div>
+      <div class="name">Active Recovery · 10-12k steps</div>
+    </div>`;
+  grid.appendChild(rest);
+}
+
+let currentWorkoutId = null;
+
+function openWorkout(workoutId) {
+  currentWorkoutId = workoutId;
+  const w = PLAN[workoutId];
+  const today = new Date();
+
+  document.getElementById("workout-day-label").textContent = w.dayLabel;
+  document.getElementById("workout-title").textContent = w.name;
+  document.getElementById("workout-sub").textContent = w.focus;
+  document.getElementById("workout-date").textContent =
+    today.toLocaleDateString("en-GB", { weekday: "long", day: "numeric", month: "long" });
+
+  const jn = document.getElementById("session-joint-note");
+  jn.innerHTML = `<strong>Joint note:</strong> ${w.jointNote}`;
+
+  const last = getLastSession(workoutId);
+  document.getElementById("last-session-label").textContent =
+    last ? `Last: ${new Date(last.date).toLocaleDateString("en-GB", { day: "numeric", month: "short" })} · pre-filled below` : "First time · suggested weights shown";
+
+  const container = document.getElementById("exercises-container");
+  container.innerHTML = "";
+
+  w.exercises.forEach(ex => {
+    const lastEx = last ? (last.exercises || []).find(e => e.id === ex.id) : null;
+    const card = document.createElement("div");
+    card.className = "exercise-card";
+
+    let setsHTML = `<div class="sets-header"><div>#</div><div>Weight (kg)</div><div>Reps</div></div>`;
+    for (let i = 0; i < ex.sets; i++) {
+      const lastSet = lastEx && lastEx.sets && lastEx.sets[i] ? lastEx.sets[i] : null;
+      const lastWeight = lastSet ? lastSet.weight || "" : "";
+      const lastReps = lastSet ? lastSet.reps || "" : "";
+      const wPlaceholder = lastWeight || "–";
+      const rPlaceholder = lastReps || "–";
+      setsHTML += `
+        <div class="sets-grid">
+          <div class="set-num">${i + 1}</div>
+          <input type="text" inputmode="decimal" class="set-input weight-input"
+                 data-ex="${ex.id}" data-set="${i}" placeholder="${wPlaceholder}" value="${lastWeight}">
+          <input type="text" inputmode="numeric" class="set-input reps-input"
+                 data-ex="${ex.id}" data-set="${i}" placeholder="${rPlaceholder}" value="${lastReps}">
+        </div>`;
+    }
+
+    const lastNotes = lastEx && lastEx.notes ? lastEx.notes : "";
+    const swapHTML = ex.swap ? `<div class="exercise-swap">◆ ${ex.swap}</div>` : "";
+
+    card.innerHTML = `
+      <div class="exercise-name">${ex.name}</div>
+      <div class="exercise-target">Target: ${ex.target}</div>
+      <div class="exercise-suggested">Suggested start: ${ex.suggested}</div>
+      ${swapHTML}
+      ${setsHTML}
+      <textarea class="exercise-notes" data-ex="${ex.id}" placeholder="Notes (how the joint felt, load used)…" rows="1">${lastNotes}</textarea>`;
+    container.appendChild(card);
+  });
+
+  setTimeout(() => {
+    document.querySelectorAll(".exercise-notes").forEach(t => {
+      t.addEventListener("input", () => { t.style.height = "auto"; t.style.height = t.scrollHeight + "px"; });
+      t.style.height = "auto"; t.style.height = t.scrollHeight + "px";
+    });
+  }, 0);
+
+  const btn = document.getElementById("finish-btn");
+  btn.textContent = "Save Session";
+  btn.classList.remove("saved");
+  showScreen("screen-workout");
+  window.scrollTo(0, 0);
+}
+
+function saveWorkout() {
+  const w = PLAN[currentWorkoutId];
+  const exercisesData = [];
+  w.exercises.forEach(ex => {
+    const sets = [];
+    for (let i = 0; i < ex.sets; i++) {
+      const wEl = document.querySelector(`.weight-input[data-ex="${ex.id}"][data-set="${i}"]`);
+      const rEl = document.querySelector(`.reps-input[data-ex="${ex.id}"][data-set="${i}"]`);
+      sets.push({ weight: wEl ? wEl.value.trim() : "", reps: rEl ? rEl.value.trim() : "" });
+    }
+    const notesEl = document.querySelector(`.exercise-notes[data-ex="${ex.id}"]`);
+    exercisesData.push({ id: ex.id, name: ex.name, sets, notes: notesEl ? notesEl.value.trim() : "" });
+  });
+
+  const session = {
+    id: Date.now(),
+    workoutId: currentWorkoutId,
+    workoutName: w.name,
+    date: new Date().toISOString(),
+    exercises: exercisesData
+  };
+  const sessions = loadSessions();
+  sessions.push(session);
+  saveSessions(sessions);
+
+  const btn = document.getElementById("finish-btn");
+  btn.textContent = "✓ Saved";
+  btn.classList.add("saved");
+  setTimeout(() => goHome(), 700);
+}
+
+function openHistory() {
+  const sessions = loadSessions().sort((a, b) => new Date(b.date) - new Date(a.date));
+  const container = document.getElementById("history-container");
+  container.innerHTML = "";
+  if (sessions.length === 0) {
+    container.innerHTML = `<div class="empty">No sessions logged yet.<br>Let's get after it.</div>`;
+    showScreen("screen-history");
+    return;
+  }
+  sessions.forEach(s => {
+    const d = new Date(s.date);
+    const card = document.createElement("div");
+    card.className = "history-session";
+    let rowsHTML = "";
+    (s.exercises || []).forEach(ex => {
+      const bestSet = (ex.sets || [])
+        .filter(x => x.weight || x.reps)
+        .map(x => `${x.weight || "–"}kg × ${x.reps || "–"}`)
+        .join(" · ");
+      if (bestSet) rowsHTML += `<div class="ex-row"><span>${ex.name}</span><span>${bestSet}</span></div>`;
+    });
+    card.innerHTML = `
+      <div class="date">${d.toLocaleDateString("en-GB", { weekday: "short", day: "numeric", month: "short" })} · ${d.toLocaleTimeString("en-GB", { hour: "2-digit", minute: "2-digit" })}</div>
+      <div class="workout-name">${s.workoutName}</div>
+      ${rowsHTML || '<div class="ex-row"><span style="color: var(--text-dimmer)">No sets logged</span></div>'}`;
+    container.appendChild(card);
+  });
+  showScreen("screen-history");
+}
+
+function showScreen(id) {
+  document.querySelectorAll(".screen").forEach(s => s.classList.remove("active"));
+  document.getElementById(id).classList.add("active");
+  window.scrollTo(0, 0);
+}
+function goHome() { renderHome(); showScreen("screen-home"); }
+
+document.getElementById("open-history").onclick = openHistory;
+renderHome();
+</script>
+</body>
+</html>
