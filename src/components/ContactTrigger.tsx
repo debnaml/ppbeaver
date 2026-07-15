@@ -3,6 +3,7 @@
 import dynamic from "next/dynamic";
 import { useEffect, useRef, useState } from "react";
 
+import Magnetic from "@/components/Magnetic";
 import { trackEvent } from "@/lib/analytics";
 
 const ContactModal = dynamic(() => import("./ContactModal"), {
@@ -38,15 +39,17 @@ const ContactTrigger = () => {
   return (
     <>
       <div className="mt-12 flex flex-col items-center gap-3 text-center">
-        <button
-          type="button"
-          aria-label="Open contact form"
-          className={buttonClasses}
-          onClick={handleOpen}
-          ref={triggerRef}
-        >
-          Let&apos;s talk
-        </button>
+        <Magnetic strength={0.35}>
+          <button
+            type="button"
+            aria-label="Open contact form"
+            className={buttonClasses}
+            onClick={handleOpen}
+            ref={triggerRef}
+          >
+            Let&apos;s talk
+          </button>
+        </Magnetic>
         <p className={emailClasses} style={{ marginTop: "15px" }}>
           Prefer email?{" "}
           <a

@@ -109,12 +109,13 @@ const OperatorParallax = () => {
             />
           </picture>
         </div>
-        <div className="absolute inset-0 bg-gradient-to-b from-black/10 via-black/35 to-black/60" />
+        <div className="absolute inset-0 bg-gradient-to-b from-black/15 via-black/45 to-black/65" />
         <div className="pointer-events-none absolute inset-0 flex flex-col justify-center gap-6 px-6 sm:px-12">
           {MARQUEE_LINES.map(({ direction, offset }, index) => (
             <div key={`marquee-${index}`} className="overflow-hidden">
               <p
-                className="font-heading text-[clamp(2.5rem,6vw,5rem)] font-semibold tracking-[0.1em] text-white/80"
+                className="font-heading text-[clamp(2.5rem,6vw,5rem)] font-semibold tracking-[0.1em] text-white/90"
+                style={{ textShadow: "0 2px 28px rgba(0, 0, 0, 0.55)" }}
               >
                 <span
                   className="inline-flex min-w-full whitespace-nowrap will-change-transform"

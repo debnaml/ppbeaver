@@ -5,6 +5,7 @@ import Image from "next/image";
 import { createRef, useCallback, useEffect, useMemo, useRef, useState } from "react";
 import UnderlineReveal from "@/components/UnderlineReveal";
 import LottieOnView from "@/components/LottieOnView";
+import TiltCard from "@/components/TiltCard";
 
 type ServiceImage = {
   id: string;
@@ -320,7 +321,8 @@ const OrbitShowcase = () => {
     <section
       id="services"
       ref={sectionRef}
-      className="relative isolate bg-[#2D829B] px-6 py-24 text-[var(--color-cream)] sm:px-12"
+      data-morph-bg="#2D829B"
+      className="bg-grain relative isolate px-6 py-24 text-[var(--color-cream)] sm:px-12"
     >
       <div ref={heroWrapperRef} className="relative min-h-[200vh]">
         <div className="sticky top-0 z-10 flex h-screen items-center justify-center px-2 sm:px-6">
@@ -519,9 +521,10 @@ const OrbitShowcase = () => {
                     {service.images.map((image, imageIndex) => (
                       <figure
                         key={image.id}
-                        className="relative overflow-hidden rounded-[10px]"
+                        className="relative rounded-[10px]"
                         ref={assignImageRef(serviceIndex, imageIndex)}
                       >
+                      <TiltCard className="overflow-hidden rounded-[10px]">
                       {image.mediaType === "video" ? (
                         <video
                           className={clsx(
@@ -553,6 +556,7 @@ const OrbitShowcase = () => {
                           sizes="(max-width: 1024px) 100vw, 30vw"
                         />
                       )}
+                      </TiltCard>
                     </figure>
                   ))}
                   </article>

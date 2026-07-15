@@ -7,6 +7,7 @@ import type { MouseEvent } from "react";
 import HeadlineOverlay from "@/components/HeadlineOverlay";
 import LogoLoader from "@/components/LogoLoader";
 import LogoMaskOverlay from "@/components/LogoMaskOverlay";
+import Magnetic from "@/components/Magnetic";
 import PeelCTA from "@/components/PeelCTA";
 import HeroPoster from "@/components/hero/HeroPoster";
 import { HERO_SETTINGS } from "@/components/hero/config";
@@ -94,6 +95,7 @@ const HeroSequence = () => {
         </div>
 
         <div className="pointer-events-auto absolute right-6 top-6 z-30 sm:right-12 sm:top-10">
+          <Magnetic strength={0.25}>
           <a
             href="#contact"
             onClick={(event: MouseEvent<HTMLAnchorElement>) => {
@@ -122,6 +124,7 @@ const HeroSequence = () => {
             </svg>
             <span className="cta-circle-arrow relative text-2xl font-semibold sm:text-3xl">↓</span>
           </a>
+          </Magnetic>
         </div>
 
         <HeadlineOverlay

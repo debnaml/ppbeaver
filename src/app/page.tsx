@@ -1,5 +1,6 @@
 import Image from "next/image";
 import HeroSequence from "@/components/HeroSequence";
+import ScrollBackdrop from "@/components/ScrollBackdrop";
 import Footer from "@/components/Footer";
 import RevealParagraph from "@/components/RevealParagraph";
 import UnderlineReveal from "@/components/UnderlineReveal";
@@ -40,7 +41,12 @@ export default function Home() {
           </ul>
         </nav>
       </header>
-      <main id="main-content" className="bg-[var(--color-supadark)] text-[var(--color-cream)]">
+      <main
+        id="main-content"
+        className="text-[var(--color-cream)]"
+        style={{ backgroundColor: "var(--page-bg, var(--color-supadark))" }}
+      >
+        <ScrollBackdrop />
         <h1 className="visually-hidden">
           Digital Strategy & AI Consultancy | Performance Peak
         </h1>

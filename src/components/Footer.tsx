@@ -137,6 +137,7 @@ const Footer = () => {
             filter: "brightness(0) invert(1)",
             objectFit: "contain",
             display: "block",
+            height: "auto",
           }}
         />
       </div>
@@ -157,7 +158,7 @@ const Footer = () => {
           width={700}
           height={280}
           className="block w-full"
-          style={{ filter: "brightness(0)" }}
+          style={{ filter: "brightness(0)", height: "auto" }}
         />
       </div>
     </footer>

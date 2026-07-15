@@ -78,23 +78,21 @@ select:focus-visible {
   position: relative;
   overflow: hidden;
   isolation: isolate;
-  background-color: #292d40;
 }
 
 .contact-pattern::before {
   content: "";
   position: absolute;
-  inset: -40px 0;
+  inset: 0;
   z-index: -1;
   opacity: 0.08;
   pointer-events: none;
   background-image: url("/logo.svg");
   background-size: 200px auto;
-  background-repeat: repeat;
-  background-position: center;
+  background-repeat: round;
+  background-position: top center;
   filter: brightness(0) saturate(100%);
   mix-blend-mode: normal;
-  background-color: #292d40;
 }
 
 @supports (mask-image: url("")) or (-webkit-mask-image: url("")) {
@@ -107,10 +105,10 @@ select:focus-visible {
     -webkit-mask-image: url("/logo.svg");
     mask-size: 200px auto;
     -webkit-mask-size: 200px auto;
-    mask-repeat: repeat;
-    -webkit-mask-repeat: repeat;
-    mask-position: center;
-    -webkit-mask-position: center;
+    mask-repeat: round;
+    -webkit-mask-repeat: round;
+    mask-position: top center;
+    -webkit-mask-position: top center;
     mix-blend-mode: normal;
   }
 }
@@ -198,6 +196,92 @@ select:focus-visible {
     radial-gradient(circle at 80% 0%, rgba(255, 255, 255, 0.03), transparent 30%);
   mix-blend-mode: screen;
   opacity: 0.35;
+}
+
+/* Filmic grain overlay — apply to a relatively-positioned section.     */
+/* Kept above section content (pointer-events: none) for a subtle,      */
+/* even texture over flat colour fills and imagery.                     */
+.bg-grain::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 40;
+  pointer-events: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  background-size: 180px 180px;
+  opacity: 0.045;
+  mix-blend-mode: overlay;
+}
+
+/* Beaver polaroid card in the contact section */
+.beaver-stamp {
+  position: relative;
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.55rem;
+  padding: 0.7rem 0.7rem 0.85rem;
+  margin-bottom: 2.5rem;
+  background: var(--color-cream);
+  border-radius: 8px;
+  box-shadow: 0 18px 40px rgba(0, 0, 0, 0.35);
+  transform: rotate(-5deg) translateY(40px) scale(0.6);
+  opacity: 0;
+}
+
+.beaver-stamp--visible {
+  animation: beaver-stamp-pop 0.7s cubic-bezier(0.34, 1.56, 0.64, 1) 0.15s forwards;
+}
+
+.beaver-stamp:hover {
+  animation: beaver-stamp-wiggle 0.5s ease-in-out;
+  animation-fill-mode: none;
+  opacity: 1;
+  transform: rotate(-5deg) translateY(0) scale(1);
+}
+
+.beaver-stamp-caption {
+  font-family: var(--font-syne), "Syne", system-ui, sans-serif;
+  font-size: 0.85rem;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+  color: var(--color-ink);
+}
+
+@keyframes beaver-stamp-pop {
+  from {
+    opacity: 0;
+    transform: rotate(-14deg) translateY(40px) scale(0.6);
+  }
+  to {
+    opacity: 1;
+    transform: rotate(-5deg) translateY(0) scale(1);
+  }
+}
+
+@keyframes beaver-stamp-wiggle {
+  0%,
+  100% {
+    transform: rotate(-5deg) translateY(0) scale(1);
+  }
+  35% {
+    transform: rotate(-1deg) translateY(-4px) scale(1.03);
+  }
+  70% {
+    transform: rotate(-7deg) translateY(0) scale(1.01);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .beaver-stamp {
+    opacity: 1;
+    transform: rotate(-5deg);
+  }
+
+  .beaver-stamp--visible,
+  .beaver-stamp:hover {
+    animation: none;
+  }
 }
 
 .hero-progress-fill {
